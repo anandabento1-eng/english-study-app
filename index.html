@@ -530,44 +530,51 @@ function stopS(){
 
 function cleanForTTS(text){
   var s=text.replace(/\|/g,' ').replace(/\s+/g,' ').trim();
-  // Replace blank placeholders with the word blank
   s=s.replace(/_+/g,' blank ');
-  // Replace symbols
   s=s.replace(/→/g,' becomes ').replace(/↔/g,' is the opposite of ').replace(/\+/g,' plus ').replace(/=/g,' equals ');
-  // Convert ALL-CAPS words to lowercase (includes single letter A)
   var map={
     'THE':'the','A':'a','AN':'an','OR':'or','AND':'and','NOT':'not',
     'IS':'is','ARE':'are','WAS':'was','WERE':'were','BE':'be',
     'NOUN':'noun','VERB':'verb','NOUNS':'nouns','VERBS':'verbs',
     'SINGULAR':'singular','PLURAL':'plural','CAPITAL':'capital',
-    'BEFORE':'before','AFTER':'after','AGAIN':'again',
-    'MOST':'most','MORE':'more','WILL':'will','NOW':'now',
-    'NEVER':'never','ALWAYS':'always','MAIN':'main',
-    'WHO':'who','WHAT':'what','WHEN':'when','WHERE':'where',
-    'WHY':'why','HOW':'how','NO':'no','YES':'yes',
-    'ONE':'one','TWO':'two','ALL':'all','EACH':'each',
-    'TRUE':'true','FALSE':'false','BOTH':'both',
-    'ONLY':'only','JUST':'just','VERY':'very',
-    'FIRST':'first','THEN':'then','LAST':'last',
+    'BEFORE':'before','AFTER':'after','AGAIN':'again','MOST':'most',
+    'MORE':'more','WILL':'will','NOW':'now','NEVER':'never','ALWAYS':'always',
+    'WHO':'who','WHAT':'what','WHEN':'when','WHERE':'where','WHY':'why',
+    'HOW':'how','NO':'no','YES':'yes','TRUE':'true','FALSE':'false',
   };
-  // Replace ALL-CAPS words (1 or more chars)
-  s=s.replace(/\b([A-Z]+)\b/g,function(m){
-    return map[m]||m.charAt(0)+m.slice(1).toLowerCase();
-  });
+  s=s.replace(/\b([A-Z]+)\b/g,function(m){return map[m]||m.charAt(0)+m.slice(1).toLowerCase();});
   s=s.replace(/\s+/g,' ').trim();
   return s;
 }
 
-// Convert plain text to SSML for better pauses and prosody
 function toSSML(text){
-  var s=cleanForTTS(text);
-  // Add breaks at punctuation
-  s=s.replace(/\.\s+/g,'.<break time="400ms"/> ');
-  s=s.replace(/\!\s+/g,'!<break time="400ms"/> ');
-  s=s.replace(/\?\s+/g,'?<break time="400ms"/> ');
-  s=s.replace(/,\s+/g,',<break time="200ms"/> ');
-  s=s.replace(/—\s*/g,'<break time="250ms"/>');
-  s=s.replace(/\.\s*$/,'.<break time="300ms"/>');
+  var s=text.replace(/\|/g,' ').replace(/\s+/g,' ').trim();
+  s=s.replace(/_+/g,' blank ');
+  s=s.replace(/→/g,' becomes ').replace(/↔/g,' is the opposite of ').replace(/\+/g,' plus ').replace(/=/g,' equals ');
+  // THE → emphasised so it sounds like "THEE" not flat "the"
+  s=s.replace(/\bTHE\b/g,'<emphasis level="strong">the</emphasis>');
+  // A (standalone ALL-CAPS) → say as letter "AY" not Afrikaans "n"
+  s=s.replace(/\bA\b/g,'<say-as interpret-as="characters">a</say-as>');
+  // AN → moderate emphasis
+  s=s.replace(/\bAN\b/g,'<emphasis level="moderate">an</emphasis>');
+  // Other ALL-CAPS → lowercase
+  var map2={
+    'OR':'or','AND':'and','NOT':'not','IS':'is','ARE':'are','WAS':'was',
+    'WERE':'were','NOUN':'noun','VERB':'verb','NOUNS':'nouns','VERBS':'verbs',
+    'SINGULAR':'singular','PLURAL':'plural','CAPITAL':'capital',
+    'BEFORE':'before','AFTER':'after','AGAIN':'again','MOST':'most',
+    'MORE':'more','WILL':'will','NOW':'now','NEVER':'never','ALWAYS':'always',
+    'WHO':'who','WHAT':'what','WHEN':'when','WHERE':'where','WHY':'why',
+    'HOW':'how','NO':'no','YES':'yes','TRUE':'true','FALSE':'false',
+  };
+  s=s.replace(/\b([A-Z]{2,})\b/g,function(m){return map2[m]||m.charAt(0)+m.slice(1).toLowerCase();});
+  // Pauses at punctuation
+  s=s.replace(/\.\s+/g,'.<break time="450ms"/> ');
+  s=s.replace(/!\s+/g,'!<break time="450ms"/> ');
+  s=s.replace(/\?\s+/g,'?<break time="450ms"/> ');
+  s=s.replace(/,\s+/g,',<break time="220ms"/> ');
+  s=s.replace(/—\s*/g,'<break time="300ms"/>');
+  s=s.replace(/\.\s*$/,'.<break time="350ms"/>');
   return '<speak>'+s+'</speak>';
 }
 
