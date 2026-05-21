@@ -265,9 +265,98 @@ html,body{background:#0F0F1A;min-height:100vh}
 .rd{font-size:13px;color:#9CA3AF;line-height:1.8}
 .tip-card{border-radius:14px;padding:13px;border-left:3px solid;display:flex;gap:9px;align-items:flex-start}
 .tip-txt{font-size:13px;line-height:1.8;font-weight:500}
+
+/* ── CONFETTI ──────────────────────────────────────────────── */
+#confetti-stage{
+  position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden;
+}
+.cf{
+  position:absolute;top:-12px;width:10px;height:10px;
+  border-radius:2px;opacity:1;
+  animation:cf-fall linear forwards;
+}
+@keyframes cf-fall{
+  0%{transform:translateY(0) rotate(0deg);opacity:1}
+  80%{opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+
+/* ── XP PULSE ──────────────────────────────────────────────── */
+@keyframes xp-ping{
+  0%{transform:scale(1)}
+  40%{transform:scale(1.35)}
+  70%{transform:scale(0.95)}
+  100%{transform:scale(1)}
+}
+.xp-ping{animation:xp-ping .5s ease;}
+
+/* ── WORD HIGHLIGHT (figures of speech) ────────────────────── */
+.hl-simile{
+  background:#0A2E1A;color:#6EE7B7;
+  padding:1px 5px;border-radius:5px;
+  border-bottom:2px solid #10B981;font-weight:700;
+}
+.hl-metaphor{
+  background:#0A1628;color:#93C5FD;
+  padding:1px 5px;border-radius:5px;
+  border-bottom:2px solid #2563EB;font-weight:700;
+}
+.hl-person{
+  background:#1A0A1A;color:#D8B4FE;
+  padding:1px 5px;border-radius:5px;
+  border-bottom:2px solid #A855F7;font-weight:700;
+}
+.hl-alliteration{
+  background:#1A1A0A;color:#FDE68A;
+  padding:1px 5px;border-radius:5px;
+  border-bottom:2px solid #EAB308;font-weight:700;
+}
+.hl-key{
+  background:#1C0A00;color:#FED7AA;
+  padding:1px 5px;border-radius:5px;
+  border-bottom:2px solid #FB923C;font-weight:700;
+}
+.hl-label{
+  font-size:11px;font-weight:600;letter-spacing:.05em;
+  padding:2px 8px;border-radius:6px;display:inline-block;margin-bottom:6px;
+}
+
+/* ── COLOUR-CODED SENTENCE BLOCKS ──────────────────────────── */
+.cc-sent{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.cc-word{
+  padding:7px 13px;border-radius:10px;
+  font-size:14px;font-weight:600;border:2px solid transparent;
+}
+.cc-subj{background:#1A1032;border-color:#7C3AED;color:#A78BFA}
+.cc-verb{background:#0A1F1A;border-color:#10B981;color:#6EE7B7}
+.cc-obj {background:#1C1005;border-color:#FB923C;color:#FED7AA}
+.cc-conj{background:#1A0A1A;border-color:#A855F7;color:#D8B4FE}
+.cc-prep{background:#0A1A1A;border-color:#06B6D4;color:#67E8F9}
+.cc-adj {background:#1A0A0A;border-color:#EF4444;color:#FCA5A5}
+.cc-adv {background:#1A1A0A;border-color:#EAB308;color:#FDE68A}
+.cc-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.cc-leg{display:flex;align-items:center;gap:5px;font-size:11px;color:#9CA3AF}
+.cc-dot{width:8px;height:8px;border-radius:2px}
+
+/* ── CORRECT ANSWER GLOW ────────────────────────────────────── */
+@keyframes correct-glow{
+  0%{box-shadow:0 0 0 0 rgba(16,185,129,0)}
+  30%{box-shadow:0 0 0 8px rgba(16,185,129,0.3)}
+  100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}
+}
+.correct-glow{animation:correct-glow .6s ease;}
+
+/* ── STREAK FLAME PULSE ─────────────────────────────────────── */
+@keyframes flame-pulse{
+  0%,100%{transform:scale(1) rotate(-2deg)}
+  50%{transform:scale(1.2) rotate(2deg)}
+}
+.flame-active{display:inline-block;animation:flame-pulse .7s ease-in-out infinite;}
+
 </style>
 </head>
 <body>
+<div id="confetti-stage"></div>
 <div id="R">
 <div id="HV">
   <div class="home-bg">
@@ -306,6 +395,116 @@ html,body{background:#0F0F1A;min-height:100vh}
 <div id="TV" style="display:none;min-height:100vh"></div>
 </div>
 <script>
+
+// ── Visual engine ──────────────────────────────────────────────
+
+// Confetti burst on correct answer
+var CF_COLOURS=['#7C3AED','#10B981','#38BDF8','#FB923C','#A855F7','#F59E0B','#EF4444','#6EE7B7'];
+function showConfetti(){
+  var stage=document.getElementById('confetti-stage');
+  if(!stage) return;
+  // Clear any existing pieces
+  stage.innerHTML='';
+  var count=28;
+  for(var i=0;i<count;i++){
+    var el=document.createElement('div');
+    el.className='cf';
+    el.style.left=(5+Math.random()*90)+'%';
+    el.style.background=CF_COLOURS[Math.floor(Math.random()*CF_COLOURS.length)];
+    el.style.width=(6+Math.random()*8)+'px';
+    el.style.height=(6+Math.random()*8)+'px';
+    el.style.borderRadius=Math.random()>0.5?'50%':'2px';
+    var dur=0.9+Math.random()*0.8;
+    var delay=Math.random()*0.4;
+    el.style.animationDuration=dur+'s';
+    el.style.animationDelay=delay+'s';
+    stage.appendChild(el);
+  }
+  // Clean up after animation
+  setTimeout(function(){if(stage)stage.innerHTML='';}, 2000);
+}
+
+// Animate XP bar change
+function animateXP(oldXP, newXP){
+  var el=document.getElementById('xpFill');
+  if(!el)return;
+  el.style.width=Math.round(newXP/500*100)+'%';
+  // Ping the level badge area
+  var lbl=document.getElementById('xpVal');
+  if(lbl){
+    lbl.textContent=newXP;
+    lbl.classList.remove('xp-ping');
+    void lbl.offsetWidth; // force reflow
+    lbl.classList.add('xp-ping');
+    setTimeout(function(){lbl.classList.remove('xp-ping');},600);
+  }
+  // Pulse streak flame if streak increased
+  var sf=document.getElementById('streakFlame');
+  if(sf){
+    sf.classList.add('flame-active');
+    setTimeout(function(){sf.classList.remove('flame-active');},2100);
+  }
+}
+
+// Award XP with visuals — call this instead of manually updating XP
+function awardXP(amount){
+  var old=xp;
+  xp=Math.min(xp+amount,500);
+  streak++;
+  doneSet[cTopic.id]=true;
+  animateXP(old, xp);
+  document.getElementById('strVal').textContent=streak;
+  showConfetti();
+}
+
+// Render a colour-coded sentence from structured data
+// tokens: [{text:'The dog', role:'subj'}, {text:'barked', role:'verb'}, ...]
+function renderCCSent(tokens, legend){
+  var html='<div class="cc-sent">';
+  for(var i=0;i<tokens.length;i++){
+    html+='<span class="cc-word cc-'+tokens[i].role+'">'+esc(tokens[i].text)+'</span>';
+  }
+  html+='</div>';
+  if(legend!==false){
+    var shown={};
+    var legMap={
+      subj:{label:'Subject',color:'#7C3AED'},
+      verb:{label:'Verb',color:'#10B981'},
+      obj:{label:'Object',color:'#FB923C'},
+      conj:{label:'Conjunction',color:'#A855F7'},
+      prep:{label:'Preposition',color:'#06B6D4'},
+      adj:{label:'Adjective',color:'#EF4444'},
+      adv:{label:'Adverb',color:'#EAB308'},
+    };
+    html+='<div class="cc-legend">';
+    for(var j=0;j<tokens.length;j++){
+      var r=tokens[j].role;
+      if(!shown[r]&&legMap[r]){
+        shown[r]=true;
+        html+='<div class="cc-leg"><div class="cc-dot" style="background:'+legMap[r].color+'"></div>'+legMap[r].label+'</div>';
+      }
+    }
+    html+='</div>';
+  }
+  return html;
+}
+
+// Apply word highlights to a passage string
+// highlights: [{word:'like', type:'simile'}, ...]
+function applyHighlights(text, highlights){
+  if(!highlights||!highlights.length) return esc(text);
+  var result=esc(text);
+  for(var i=0;i<highlights.length;i++){
+    var h=highlights[i];
+    var escaped=esc(h.word);
+    result=result.replace(
+      new RegExp('('+escaped.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','g'),
+      '<span class="hl-'+h.type+'">$1</span>'
+    );
+  }
+  return result;
+}
+
 // ── Mute ──────────────────────────────────────────────────────
 var muted=false;
 function toggleMute(){
@@ -415,7 +614,7 @@ function spkMM(mm){if(muted)return;var tx='Mind map for '+mm.c+'. ';for(var i=0;
 function spkR(rules,tip){if(muted)return;var tx='';for(var i=0;i<rules.length;i++)tx+='Rule '+rules[i].n+'. '+rules[i].t+'. '+rules[i].d+'. ';tx+='Tip: '+tip;speakT(tx);}
 
 // ── State ──────────────────────────────────────────────────────
-var xp=240,streak=3,doneSet={};
+var xp=0,streak=0,doneSet={};
 var cTerm=1,cTopic=null,cMode='fc',fcIdx=0,attempts=0,revealed=false,selectedWrong=[],choiceCache={};
 
 var COLS=[
@@ -430,7 +629,15 @@ var COLS=[
 ];
 // ── Topic data ─────────────────────────────────────────────────
 // Types: mc=multiple choice, fill=fill-blank(word bank), fix=correct the sentence, id=identify/type answer
-var T={1:[
+// ── Subject registry ── Add new subjects here ─────────────────
+// Each subject: { id, name, subtitle, icon, color, terms:{1:[],2:[]} }
+// T always points to the current subject's terms — all existing code unchanged.
+var SUBJECTS={};
+// Register English (current subject)
+SUBJECTS.english={
+  id:'english',name:'English',subtitle:'Home Language',
+  icon:'📚',color:'#7C3AED',grade:6,
+  terms:{1:[
 {id:'nouns',sec:'Grammar',icon:'🅰️',ttl:'Nouns',sub:'Common, proper, abstract, collective, possessive',fc:[
 {type:'mc',q:'What is a common noun?',a:'A general name for any person, place or thing',eg:'dog, city, table, teacher',w:['A specific name that starts with a capital letter','A word that shows an action or state','A word that joins two sentences']},
 {type:'mc',q:'What is a proper noun?',a:'A specific name that always starts with a CAPITAL letter',eg:'Cape Town, Jamie, Monday',w:['A general name for ordinary things','A word that describes a noun','A group name for animals']},
@@ -546,10 +753,10 @@ tip:{t:"Read the sentence out loud. Wrong apostrophes and missing question marks
 
 {id:'fig1',sec:'Figurative language',icon:'🪄',ttl:'Simile, metaphor, personification',sub:'The three most common figures of speech',fc:[
 {type:'mc',q:'What is a simile?',a:'It compares two things using the words like or as',eg:'He is as fast as lightning. She ran like the wind.',w:['It says one thing IS another without like or as','It gives human qualities to a non-human thing','It is a short wise saying about everyday life']},
-{type:'id',q:'Identify the figure of speech in this sentence.',pass:'John is as wise as an elephant.',a:'Simile',hint:'Look for the word AS. It compares John to an elephant using AS.',eg:'as wise as = using AS to compare two things = simile'},
+{type:'id',q:'Identify the figure of speech in this sentence.',pass:'John is as wise as an elephant.',highlights:[{word:'as wise as',type:'simile'}],a:'Simile',hint:'Look for the word AS. It compares John to an elephant using AS.',eg:'as wise as = using AS to compare two things = simile'},
 {type:'mc',q:'What is a metaphor?',a:'It says one thing IS another — without using like or as',eg:'Life is a journey. The classroom was a zoo.',w:['It compares two things using like or as','It gives human qualities to a non-human thing','It cannot be taken literally']},
-{type:'id',q:'Identify the figure of speech in this sentence.',pass:'The old car coughed and spluttered down the road.',a:'Personification',hint:'Coughing is a human action — a car cannot cough. Non-human thing doing a human action = personification.',eg:'coughed = human action given to the car = personification'},
-{type:'id',q:'Identify the figure of speech in this sentence.',pass:'The classroom was a zoo by the end of the day.',a:'Metaphor',hint:'The classroom is directly called a zoo — no like or as used. One thing IS said to BE another thing.',eg:'classroom IS a zoo — no like or as = metaphor'},
+{type:'id',q:'Identify the figure of speech in this sentence.',pass:'The old car coughed and spluttered down the road.',highlights:[{word:'coughed',type:'person'},{word:'spluttered',type:'person'}],a:'Personification',hint:'Coughing is a human action — a car cannot cough. Non-human thing doing a human action = personification.',eg:'coughed = human action given to the car = personification'},
+{type:'id',q:'Identify the figure of speech in this sentence.',pass:'The classroom was a zoo by the end of the day.',highlights:[{word:'was',type:'metaphor'}],a:'Metaphor',hint:'The classroom is directly called a zoo — no like or as used. One thing IS said to BE another thing.',eg:'classroom IS a zoo — no like or as = metaphor'},
 {type:'mc',q:'What is personification?',a:'It gives human qualities or actions to a non-human thing',eg:'The wind whispered. The sun smiled down.',w:['It compares two things using like or as','It says one thing IS another without like or as','It repeats the same starting sound in words']},
 ,
 {type:'tf',q:'The classroom was a zoo is an example of a simile.',a:'false',explanation:'This is a metaphor. The classroom is directly called a zoo without using like or as. A simile would say the classroom was like a zoo.'},
@@ -564,7 +771,7 @@ tip:{t:"Draw it! Take any simile and sketch the literal image. Her smile was sun
 
 {id:'idioms',sec:'Figurative language',icon:'💬',ttl:'Idioms, proverbs, alliteration',sub:'Expressions whose meaning is not literal',fc:[
 {type:'mc',q:'What is an idiom?',a:"A phrase whose meaning is completely different from the actual words — you cannot take it literally",eg:"It's raining cats and dogs means it is raining very heavily",w:['A short wise saying that gives life advice','The repetition of the same starting sound','A comparison using like or as']},
-{type:'id',q:'Paragraph 5 uses alliteration. Write down THREE words that illustrate the alliteration.',pass:'The dog was furious and charged at the animals, snarling, scowling and snapping his jaws!',a:'snarling, scowling, snapping',hint:'Alliteration = same starting sound repeated. Look for words starting with the same letter.',eg:'snarling, scowling, snapping — all start with the S sound'},
+{type:'id',q:'Paragraph 5 uses alliteration. Write down THREE words that illustrate the alliteration.',pass:'The dog was furious and charged at the animals, snarling, scowling and snapping his jaws!',highlights:[{word:'snarling',type:'alliteration'},{word:'scowling',type:'alliteration'},{word:'snapping',type:'alliteration'}],a:'snarling, scowling, snapping',hint:'Alliteration = same starting sound repeated. Look for words starting with the same letter.',eg:'snarling, scowling, snapping — all start with the S sound'},
 {type:'mc',q:"What does the idiom under the weather mean?",a:'Feeling sick or unwell',eg:'She stayed home because she was feeling under the weather.',w:['Standing outside in the rain','Feeling very excited and energetic','Being confused about the weather forecast']},
 {type:'mc',q:'What is a proverb?',a:'A short well-known saying that gives life advice or a moral truth',eg:"Don't judge a book by its cover means don't judge by appearances",w:['A phrase whose real meaning differs from the words','The repetition of the same starting sound','A comparison using like or as']},
 {type:'id',q:'Write down the IDIOM in this sentence and explain its meaning.',pass:'Despite losing the match, the team decided to face the music and speak to their coach.',a:'face the music — to accept the consequences of your actions',hint:'Which phrase sounds impossible if taken literally? That is the idiom.',eg:'Face the music does not mean turning toward sound — it means accepting consequences'},
@@ -689,8 +896,8 @@ tip:{t:"Cover the speech marks. Read what is left. Change every I to he/she and 
 tip:{t:"Word tree. Draw a trunk with the root word. Branches left = prefixes. Branches right = suffixes. Leaves = the full new words.",c:'#0A1F1A',b:'#10B981',tc:'#6EE7B7'}},
 
 {id:'sents',sec:'Grammar',icon:'⛓️',ttl:'Sentence types',sub:'Simple, compound and complex sentences',fc:[
-{type:'mc',q:'What is a simple sentence?',a:'One main clause with one subject and one verb — makes complete sense on its own',eg:'The dog barked. She laughed. Rain fell heavily.',w:['Two main clauses joined by and or but','A main clause plus a clause that cannot stand alone','A sentence that contains more than one verb']},
-{type:'fill',q:'Join these two sentences using the conjunction in brackets.',pass:'The tortoise did not run. The tortoise went into her shell. [because]',blanks:['The tortoise did not run because she went into her shell.'],opts:['The tortoise did not run because she went into her shell.','Because the tortoise did not run the shell.','The tortoise went because she did not run into her shell.','She did not run the tortoise because into her shell.'],eg:'Because joins a reason — the tortoise did not run BECAUSE she went into her shell'},
+{type:'mc',q:'What is a simple sentence?',a:'One main clause with one subject and one verb — makes complete sense on its own',eg:'The dog barked. She laughed. Rain fell heavily.',tokens:[{text:'The dog',role:'subj'},{text:'barked',role:'verb'}],w:['Two main clauses joined by and or but','A main clause plus a clause that cannot stand alone','A sentence that contains more than one verb']},
+{type:'fill',q:'Join these two sentences using the conjunction in brackets.',pass:'The tortoise did not run. The tortoise went into her shell. [because]',tokens:[{text:'The tortoise',role:'subj'},{text:'did not run',role:'verb'},{text:'because',role:'conj'},{text:'she',role:'subj'},{text:'went into her shell',role:'verb'}],blanks:['The tortoise did not run because she went into her shell.'],opts:['The tortoise did not run because she went into her shell.','Because the tortoise did not run the shell.','The tortoise went because she did not run into her shell.','She did not run the tortoise because into her shell.'],eg:'Because joins a reason — the tortoise did not run BECAUSE she went into her shell'},
 {type:'id',q:'Identify the sentence type.',pass:'Do flamingos live in South America?',a:'Question',hint:'Look at the word order and the punctuation at the end. Does it have a question mark?',eg:'Flamingos live in South America = statement. Do flamingos live...? = question'},
 {type:'mc',q:'What is a complex sentence?',a:'One main clause plus a subordinate clause — the subordinate clause cannot stand alone',eg:'She stayed inside because it was raining.',w:['Two main clauses joined by and or but','A single short sentence with one verb','Three or more clauses joined together']},
 {type:'fix',q:'Rewrite as a COMPLEX sentence using the conjunction given.',pass:'Jamie studied hard. Jamie passed the exam. [although]',a:'Although Jamie studied hard, he passed the exam.',hint:'Although introduces the subordinate clause. Main clause (he passed the exam) is the main idea.',eg:'Although + subordinate clause + comma + main clause'},
@@ -851,7 +1058,10 @@ tip:{t:"Read the sentence backwards word by word. This breaks the flow and force
 {l:'Language features',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['Past tense throughout','Third person (he/she/they)','Short punchy sentences','Include one eyewitness quote','Factual and objective — no opinions']},
 ]},rules:[{n:'1',c:'#2563EB',t:'Headline rules',d:'Short (5 words maximum). Present tense. Capital letters. Punchy — tell the story in one line.'},{n:'2',c:'#10B981',t:'Introduction must have 5 Ws',d:'Pack Who, What, When, Where and Why/How into the opening 1-2 sentences. The most important information comes first.'},{n:'3',c:'#FB923C',t:'Format marks are easy marks',d:'Write the newspaper name, headline and byline even under time pressure. These format marks cost zero creativity.'}],
 tip:{t:"Mind map first. Put the event in the centre. Five branches = 5 Ws. Fill each branch. Then write your introduction sentence using all five branches at once.",c:'#0A1A1A',b:'#06B6D4',tc:'#67E8F9'}},
-]};
+]}};
+// Set T to active subject terms (all existing code uses T unchanged)
+var cSubject='english';
+var T=SUBJECTS[cSubject].terms;
 // ── Helpers ────────────────────────────────────────────────────
 function allT(){return T[1].concat(T[2]);}
 function findT(id){var a=allT();for(var i=0;i<a.length;i++)if(a[i].id===id)return a[i];return null;}
@@ -870,6 +1080,17 @@ function updateProg(){
 }
 
 // ── Tab switch ─────────────────────────────────────────────────
+// Switch to a different subject (e.g. switchSubject('maths'))
+function switchSubject(id){
+  if(!SUBJECTS[id])return;
+  cSubject=id;
+  T=SUBJECTS[id].terms;
+  cTerm=1;cTopic=null;cMode='fc';
+  fcIdx=0;attempts=0;revealed=false;selectedWrong=[];
+  fillSelected=null;fillSelections=[];
+  choiceCache={};
+  renderHome();
+}
 function swTab(t){
   cTerm=t;
   document.getElementById('tb1').className='term-btn '+(t===1?'on':'off');
@@ -984,13 +1205,14 @@ function renderFC(t,tc){
   var qBadgeMap={mc:'mc',fill:'fill',fix:'fix',id:'id',tf:'tf'};
   var qLabelMap={mc:'Multiple choice',fill:'Fill in the blank',fix:'Correct the sentence',id:'Identify and explain',tf:'True or false'};
   var qBadge=qBadgeMap[card.type]||'mc',qLabel=qLabelMap[card.type]||'';
-
+  var passHTML=card.pass?'<div class="passage">'+(card.highlights?applyHighlights(card.pass,card.highlights):esc(card.pass))+'</div>':'';
+  var ccHTML=card.tokens?renderCCSent(card.tokens):'';
   return hdr+
     '<div class="q-box">'+
       '<span class="q-badge '+qBadge+'">'+qLabel+'</span>'+
       '<div class="q-text">'+esc(card.q)+'</div>'+
-      (card.pass?'<div class="passage">'+esc(card.pass)+'</div>':'')+
-      (card.hint&&!revealed?'<div class="hint-box">💡'+esc(card.hint)+'</div>':'')+
+      passHTML+ccHTML+
+      (card.hint&&!revealed?'<div class="hint-box">'+esc(card.hint)+'</div>':'')+
     '</div>'+
     body+
     (card.type==='mc'?'<div class="att-row"><span style="font-size:12px;color:#6B7280;margin-right:4px">Attempts</span><div class="adot'+(attempts>=1?' red':'')+'"></div><div class="adot'+(attempts>=2?' red':'')+'"></div></div>':'')+
@@ -1048,11 +1270,7 @@ function pickMC(c){
   if(already)return;
   var card=cTopic.fc[fcIdx];
   if(c===card.a){
-    revealed=true;doneSet[cTopic.id]=true;
-    xp=Math.min(xp+10,500);streak++;
-    document.getElementById('xpVal').textContent=xp;
-    document.getElementById('xpFill').style.width=Math.round(xp/500*100)+'%';
-    document.getElementById('strVal').textContent=streak;
+    awardXP(10);
     spkOK(card.a,card.eg);
   }else{
     selectedWrong.push(c);attempts++;
@@ -1106,10 +1324,7 @@ function pickFillIdx(i){
     revealed=true;
     var allOk=card.blanks.every(function(b){return fillSelections.indexOf(b)!==-1;});
     if(allOk){
-      doneSet[cTopic.id]=true;xp=Math.min(xp+10,500);streak++;
-      document.getElementById('xpVal').textContent=xp;
-      document.getElementById('xpFill').style.width=Math.round(xp/500*100)+'%';
-      document.getElementById('strVal').textContent=streak;
+      awardXP(10);
       spkOK(card.blanks.join(' and '),card.eg);
     }else spkW2(card.blanks.join(' and '),card.eg);
   }
@@ -1189,6 +1404,7 @@ function checkID(){
   if(!inp||!inp.value.trim())return;
   revealed=true;
   doneSet[cTopic.id]=true;
+  showConfetti();
   spkW2(card.a,card.eg);
   var chk=document.getElementById('chkBtn');
   if(chk)chk.disabled=true;
@@ -1250,10 +1466,7 @@ function checkFix(){
   var card=cTopic.fc[fcIdx],inp=document.getElementById('typeIn');
   if(!inp||!inp.value.trim())return;
   var correct=inp.value.trim().toLowerCase()===card.a.toLowerCase();
-  if(correct){inp.className='type-in ok';doneSet[cTopic.id]=true;xp=Math.min(xp+10,500);streak++;
-    document.getElementById('xpVal').textContent=xp;
-    document.getElementById('xpFill').style.width=Math.round(xp/500*100)+'%';
-    document.getElementById('strVal').textContent=streak;
+  if(correct){inp.className='type-in ok';awardXP(10);
     spkOK(card.a,card.eg);
   }else{inp.className='type-in ko';spkW2(card.a,card.eg);}
   revealed=true;
@@ -1298,10 +1511,7 @@ function pickTF(answer){
   var card=cTopic.fc[fcIdx],correct=(answer===card.a);
   revealed=true;
   if(correct){
-    doneSet[cTopic.id]=true;xp=Math.min(xp+10,500);streak++;
-    document.getElementById('xpVal').textContent=xp;
-    document.getElementById('xpFill').style.width=Math.round(xp/500*100)+'%';
-    document.getElementById('strVal').textContent=streak;
+    awardXP(10);
     speakT('Correct! That is '+(card.a==='true'?'true':'false')+'. '+card.explanation);
   }else speakT('Not quite. The answer is '+(card.a==='true'?'true':'false')+'. '+card.explanation);
   renderTopic();
