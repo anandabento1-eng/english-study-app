@@ -331,10 +331,45 @@ function stopS(){
 
 function cleanForTTS(text){
   var s=text.replace(/\|/g,' ').replace(/\s+/g,' ').trim();
-  var map={'THE':'the','A':'a','OR':'or','AND':'and','NOT':'not','IS':'is','ARE':'are','WAS':'was','WERE':'were','NOUN':'noun','VERB':'verb','NOUNS':'nouns','VERBS':'verbs','SINGULAR':'singular','PLURAL':'plural','CAPITAL':'capital','BEFORE':'before','AFTER':'after','AGAIN':'again','MOST':'most','MORE':'more','WILL':'will','NOW':'now','NEVER':'never','ALWAYS':'always','MAIN':'main','WHO':'who','WHAT':'what','WHEN':'when','WHERE':'where','WHY':'why','HOW':'how'};
-  s=s.replace(/\b([A-Z]{2,})\b/g,function(m){return map[m]||m.charAt(0)+m.slice(1).toLowerCase();});
+  // Replace blank placeholders with the word blank
+  s=s.replace(/_+/g,' blank ');
+  // Replace symbols
   s=s.replace(/→/g,' becomes ').replace(/↔/g,' is the opposite of ').replace(/\+/g,' plus ').replace(/=/g,' equals ');
+  // Convert ALL-CAPS words to lowercase (includes single letter A)
+  var map={
+    'THE':'the','A':'a','AN':'an','OR':'or','AND':'and','NOT':'not',
+    'IS':'is','ARE':'are','WAS':'was','WERE':'were','BE':'be',
+    'NOUN':'noun','VERB':'verb','NOUNS':'nouns','VERBS':'verbs',
+    'SINGULAR':'singular','PLURAL':'plural','CAPITAL':'capital',
+    'BEFORE':'before','AFTER':'after','AGAIN':'again',
+    'MOST':'most','MORE':'more','WILL':'will','NOW':'now',
+    'NEVER':'never','ALWAYS':'always','MAIN':'main',
+    'WHO':'who','WHAT':'what','WHEN':'when','WHERE':'where',
+    'WHY':'why','HOW':'how','NO':'no','YES':'yes',
+    'ONE':'one','TWO':'two','ALL':'all','EACH':'each',
+    'TRUE':'true','FALSE':'false','BOTH':'both',
+    'ONLY':'only','JUST':'just','VERY':'very',
+    'FIRST':'first','THEN':'then','LAST':'last',
+  };
+  // Replace ALL-CAPS words (1 or more chars)
+  s=s.replace(/\b([A-Z]+)\b/g,function(m){
+    return map[m]||m.charAt(0)+m.slice(1).toLowerCase();
+  });
+  s=s.replace(/\s+/g,' ').trim();
   return s;
+}
+
+// Convert plain text to SSML for better pauses and prosody
+function toSSML(text){
+  var s=cleanForTTS(text);
+  // Add breaks at punctuation
+  s=s.replace(/\.\s+/g,'.<break time="400ms"/> ');
+  s=s.replace(/\!\s+/g,'!<break time="400ms"/> ');
+  s=s.replace(/\?\s+/g,'?<break time="400ms"/> ');
+  s=s.replace(/,\s+/g,',<break time="200ms"/> ');
+  s=s.replace(/—\s*/g,'<break time="250ms"/>');
+  s=s.replace(/\.\s*$/,'.<break time="300ms"/>');
+  return '<speak>'+s+'</speak>';
 }
 
 function speakT(text){
@@ -343,13 +378,16 @@ function speakT(text){
   var clean=cleanForTTS(text);
   if(!clean)return;
   if(!GOOGLE_TTS_KEY||GOOGLE_TTS_KEY==='YOUR_API_KEY_HERE'){browserSpeak(clean);return;}
-  if(ttsCache[clean]){playBase64(ttsCache[clean]);return;}
+  // Use SSML for better pauses and pronunciation
+  var ssml=toSSML(text);
+  var cacheKey=clean;
+  if(ttsCache[cacheKey]){playBase64(ttsCache[cacheKey]);return;}
   fetch('https://texttospeech.googleapis.com/v1/text:synthesize?key='+GOOGLE_TTS_KEY,{
     method:'POST',mode:'cors',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({input:{text:clean},voice:TTS_VOICE,audioConfig:TTS_CONFIG})
+    body:JSON.stringify({input:{ssml:ssml},voice:TTS_VOICE,audioConfig:TTS_CONFIG})
   }).then(function(r){return r.json();}).then(function(data){
-    if(data.audioContent){ttsCache[clean]=data.audioContent;playBase64(data.audioContent);}
+    if(data.audioContent){ttsCache[cacheKey]=data.audioContent;playBase64(data.audioContent);}
     else browserSpeak(clean);
   }).catch(function(){browserSpeak(clean);});
 }
@@ -964,15 +1002,23 @@ function speakCurrent(){
   if(muted)return;
   var card=cTopic.fc[fcIdx];
   var text=card.q;
-  if(card.pass)text+='. '+card.pass;
-  if(card.type==='mc'&&!revealed){
+  if(card.type==='fill'){
+    // For fill questions, read the sentence with "blank" replacing underscores
+    var sent=card.pass||card.q;
+    sent=sent.replace(/_+/g,'blank');
+    text=card.q+'. '+sent;
+    if(card.opts&&!revealed)text+='. Your options are: '+card.opts.join(', ')+'.';
+  } else if(card.type==='mc'&&!revealed){
+    if(card.pass)text+='. '+card.pass;
     var choices=getChoices(cTopic.id,fcIdx),labels=['A','B','C'];
     text+='. Your options are: ';
     for(var i=0;i<choices.length;i++)text+=labels[i]+'. '+choices[i]+'. ';
+  } else if(card.type==='tf'){
+    text='True or false? '+card.q+(card.pass?'. '+card.pass:'');
+  } else {
+    if(card.pass)text+='. '+card.pass;
+    if((card.type==='fix'||card.type==='id')&&card.hint)text+='. Hint: '+card.hint;
   }
-  if(card.type==='fill'&&card.opts&&!revealed)text+='. Choose from: '+card.opts.join(', ')+'.';
-  if((card.type==='fix'||card.type==='id')&&card.hint)text+='. Hint: '+card.hint;
-  if(card.type==='tf')text='True or false? '+card.q+(card.pass?'. '+card.pass:'');
   speakT(text);
 }
 
