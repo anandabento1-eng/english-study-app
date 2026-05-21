@@ -130,7 +130,7 @@ html,body{background:#0F0F1A;min-height:100vh}
   background:#221B42 !important;
   color:#E2E8F0 !important;
 }
-.choice.cor{background:#052E16 !important;border-color:#10B981 !important;color:#6EE7B7 !important}
+.choice.cor{background:#052E16 !important;border-color:#10B981 !important;color:#6EE7B7 !important;box-shadow:0 0 0 3px rgba(16,185,129,0.4)}
 .choice.wrg{background:#450A0A !important;border-color:#EF4444 !important;color:#FCA5A5 !important}
 .choice.dim{background:#0F0F1A !important;color:#374151 !important;border-color:#1E1B3A !important}
 .choice[disabled]{cursor:default}
@@ -157,7 +157,7 @@ html,body{background:#0F0F1A;min-height:100vh}
 }
 .bopt:not([disabled]):hover{border-color:#7C3AED;background:#221B42;color:#C4B5FD}
 .bopt.sel{border-color:#7C3AED;background:#2D1B69;color:#C4B5FD}
-.bopt.ok{border-color:#10B981;background:#052E16;color:#6EE7B7}
+.bopt.ok{border-color:#10B981 !important;background:#052E16 !important;color:#6EE7B7 !important;box-shadow:0 0 0 2px rgba(16,185,129,0.4) !important}
 .bopt.ko{border-color:#EF4444;background:#450A0A;color:#FCA5A5}
 .bopt[disabled]{cursor:default}
 
@@ -190,7 +190,7 @@ html,body{background:#0F0F1A;min-height:100vh}
 .adot{width:10px;height:10px;border-radius:50%;border:2px solid #312E5A;background:#1E1B3A}
 .adot.red{background:#EF4444;border-color:#EF4444}
 .reveal{padding:14px;border-radius:14px;border:1.5px solid}
-.reveal.ok{background:#022C22;border-color:#10B981}
+.reveal.ok{background:#022C22;border-color:#10B981;animation:slideUp .3s ease}
 .reveal.ko{background:#1C0A00;border-color:#FB923C}
 .rv-ttl{font-size:14px;font-weight:700;margin-bottom:5px}
 .reveal.ok .rv-ttl{color:#34D399}
@@ -219,18 +219,6 @@ html,body{background:#0F0F1A;min-height:100vh}
   -webkit-appearance:none;
 }
 
-/* Fill in blank */
-.fill-sent{font-size:16px;color:#fff;line-height:2.2;font-weight:500}
-.blank{display:inline-block;min-width:100px;padding:2px 10px;border-bottom:2px solid #7C3AED;color:#A78BFA;font-weight:600;text-align:center;vertical-align:bottom}
-.blank.ok{color:#6EE7B7;border-color:#10B981}
-.blank.ko{color:#FCA5A5;border-color:#EF4444}
-.bopts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.bopt{padding:9px 18px;border-radius:10px;border:2px solid #312E5A;background:#1A1032;color:#A78BFA;font-family:'Lexend',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;-webkit-appearance:none;outline:none;}
-.bopt:not([disabled]):hover{border-color:#7C3AED;background:#221B42;color:#C4B5FD}
-.bopt.sel{border-color:#7C3AED;background:#2D1B69;color:#C4B5FD}
-.bopt.ok{border-color:#10B981;background:#052E16;color:#6EE7B7}
-.bopt.ko{border-color:#EF4444;background:#450A0A;color:#FCA5A5}
-.bopt[disabled]{cursor:default}
 /* Fix/ID input */
 .err-box{background:#0F0F1A;border:1.5px solid #312E5A;border-radius:12px;padding:14px;margin-bottom:10px}
 .err-lbl{font-size:11px;font-weight:600;color:#6B7280;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
@@ -263,6 +251,10 @@ html,body{background:#0F0F1A;min-height:100vh}
 .rnm{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;color:#fff}
 .rt{font-size:14px;font-weight:600;margin-bottom:3px}
 .rd{font-size:13px;color:#9CA3AF;line-height:1.8}
+.rule-eg{margin-top:8px;padding:9px 11px;background:#0A0A14;border-radius:8px;border-left:2px solid #312E5A}
+.rule-eg-row{display:flex;align-items:flex-start;gap:8px;padding:3px 0;font-size:13px;line-height:1.7}
+.rule-eg-lbl{font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;flex-shrink:0;margin-top:1px;letter-spacing:.04em}
+.rule-eg-txt{color:#CBD5E1;flex:1}
 .tip-card{border-radius:14px;padding:13px;border-left:3px solid;display:flex;gap:9px;align-items:flex-start}
 .tip-txt{font-size:13px;line-height:1.8;font-weight:500}
 
@@ -339,6 +331,7 @@ html,body{background:#0F0F1A;min-height:100vh}
 .cc-dot{width:8px;height:8px;border-radius:2px}
 
 /* ── CORRECT ANSWER GLOW ────────────────────────────────────── */
+@keyframes slideUp{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
 @keyframes correct-glow{
   0%{box-shadow:0 0 0 0 rgba(16,185,129,0)}
   30%{box-shadow:0 0 0 8px rgba(16,185,129,0.3)}
@@ -353,15 +346,65 @@ html,body{background:#0F0F1A;min-height:100vh}
 }
 .flame-active{display:inline-block;animation:flame-pulse .7s ease-in-out infinite;}
 
+
+/* ── Name setup screen ─────────────────────────────────────── */
+#NAME-SCREEN{
+  position:fixed;inset:0;background:#0F0F1A;z-index:1000;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+}
+.ns-card{
+  background:#1A1032;border:1.5px solid #312E5A;border-radius:24px;
+  padding:32px 22px;width:100%;max-width:360px;text-align:center;
+}
+.ns-icon{font-size:52px;margin-bottom:12px}
+.ns-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:6px}
+.ns-sub{font-size:14px;color:#6B7280;margin-bottom:24px;line-height:1.6}
+.ns-input{
+  width:100%;padding:14px 16px;border-radius:12px;
+  border:2px solid #312E5A;background:#131320;
+  color:#E2E8F0;font-family:'Lexend',sans-serif;font-size:16px;
+  outline:none;transition:border-color .15s;-webkit-appearance:none;
+  text-align:center;
+}
+.ns-input:focus{border-color:#7C3AED}
+.ns-btn{
+  width:100%;padding:15px;border:none;border-radius:12px;
+  font-family:'Lexend',sans-serif;font-size:15px;font-weight:700;
+  cursor:pointer;background:linear-gradient(135deg,#7C3AED,#4F46E5);
+  color:#fff;margin-top:12px;-webkit-appearance:none;
+}
+.ns-btn:disabled{opacity:.4;cursor:default}
+.ns-greeting{
+  position:fixed;top:0;left:0;right:0;
+  background:#1A1032;border-bottom:1.5px solid #312E5A;
+  padding:8px 16px;display:flex;align-items:center;
+  justify-content:space-between;z-index:50;
+}
+.ns-user{font-size:13px;color:#A78BFA;font-weight:600}
+.ns-switch{font-size:12px;color:#6B7280;cursor:pointer;padding:4px 8px;
+  border:1px solid #312E5A;border-radius:8px;background:none;
+  font-family:'Lexend',sans-serif;-webkit-appearance:none;}
+
 </style>
 </head>
 <body>
 <div id="confetti-stage"></div>
-<div id="R">
+
+<!-- Name setup screen -->
+<div id="NAME-SCREEN" style="display:none">
+  <div class="ns-card">
+    <div class="ns-icon">📚</div>
+    <div class="ns-title">Welcome!</div>
+    <div class="ns-sub">Enter your name to start studying.<br>Your progress will be saved automatically.</div>
+    <input class="ns-input" id="nsInput" type="text" placeholder="Your first name" maxlength="30" autocomplete="given-name">
+    <button class="ns-btn" id="nsBtn" onclick="saveName()" disabled>Let's go! →</button>
+  </div>
+</div>
+<div id="R" style="display:none">
 <div id="HV">
   <div class="home-bg">
     <div class="top-bar">
-      <div class="avatar">G6</div>
+      <div class="avatar" id="avatarBadge" onclick="switchUser()" style="cursor:pointer;title:'Switch user'">G6</div>
       <div class="xp-wrap">
         <div class="xp-lbl">LEVEL 3 — <span id="xpVal">0</span> / 500 XP</div>
         <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
@@ -447,14 +490,67 @@ function animateXP(oldXP, newXP){
 }
 
 // Award XP with visuals — call this instead of manually updating XP
+function markAnswered(topicId, qIdx){
+  answeredSet[topicId+'_'+qIdx]=true;
+  // Topic complete only when every question has been answered
+  var t=findT(topicId);
+  var allDone=true;
+  for(var i=0;i<t.fc.length;i++){
+    if(!answeredSet[topicId+'_'+i]){allDone=false;break;}
+  }
+  if(allDone){
+    doneSet[topicId]=true;
+    // Show completion banner if just finished
+    window._justCompleted=(window._justCompleted||0)+1;
+  } else {
+    delete doneSet[topicId];
+  }
+  updateProg();
+}
+
 function awardXP(amount){
   var old=xp;
   xp=Math.min(xp+amount,500);
   streak++;
-  doneSet[cTopic.id]=true;
+  markAnswered(cTopic.id, fcIdx);
   animateXP(old, xp);
   document.getElementById('strVal').textContent=streak;
   showConfetti();
+  saveUser();
+  // Apply green glow to correct answer button after next render
+  window._pendingGlow=true;
+}
+
+function applyGlowIfPending(){
+  if(!window._pendingGlow)return;
+  window._pendingGlow=false;
+  // Highlight the correct answer button — stays green permanently
+  var cor=document.querySelector('.choice.cor');
+  if(cor){
+    cor.classList.add('correct-glow');
+    cor.style.boxShadow='0 0 0 3px rgba(16,185,129,0.5), 0 0 20px rgba(16,185,129,0.3)';
+  }
+  // TF correct button
+  var tfCor=document.querySelector('.tf-btn.sel-cor');
+  if(tfCor){
+    tfCor.style.boxShadow='0 0 0 3px rgba(16,185,129,0.5), 0 0 20px rgba(16,185,129,0.3)';
+  }
+  // Reveal block entrance
+  var rev=document.querySelector('.reveal.ok');
+  if(rev) rev.style.animation='slideUp .35s ease';
+  // Topic complete banner
+  if(window._justCompleted){
+    window._justCompleted=0;
+    var sa=document.querySelector('.study-area');
+    if(sa){
+      var banner=document.createElement('div');
+      banner.style.cssText='background:linear-gradient(135deg,#052E16,#065F46);border:2px solid #10B981;border-radius:14px;padding:16px;text-align:center;animation:slideUp .4s ease;margin-top:8px';
+      banner.innerHTML='<div style="font-size:28px;margin-bottom:6px">🎉</div>'+
+        '<div style="font-size:16px;font-weight:700;color:#34D399;margin-bottom:4px">Topic complete!</div>'+
+        '<div style="font-size:13px;color:#6EE7B7">You answered every question in this topic.<br>Head back to tick it off!</div>';
+      sa.appendChild(banner);
+    }
+  }
 }
 
 // Render a colour-coded sentence from structured data
@@ -504,6 +600,115 @@ function applyHighlights(text, highlights){
   }
   return result;
 }
+
+
+// ── User name + localStorage progress ──────────────────────────
+
+var STORE_KEY = 'eng_app_v1';
+var currentUser = null; // {name, xp, streak, doneTopics}
+
+function loadUser(){
+  try {
+    var raw = localStorage.getItem(STORE_KEY);
+    if(raw) return JSON.parse(raw);
+  } catch(e){}
+  return null;
+}
+
+function saveUser(){
+  if(!currentUser) return;
+  currentUser.xp = xp;
+  currentUser.streak = streak;
+  currentUser.doneTopics = Object.keys(doneSet);
+  currentUser.answeredQuestions = answeredSet;
+  currentUser.savedAt = Date.now();
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(currentUser)); } catch(e){}
+}
+
+function saveName(){
+  var inp = document.getElementById('nsInput');
+  var name = inp ? inp.value.trim() : '';
+  if(!name) return;
+  currentUser = {name: name, xp: 0, streak: 0, doneTopics: []};
+  saveUser();
+  enterApp();
+}
+
+function switchUser(){
+  if(!confirm('Switch user? Your progress is saved.')) return;
+  showNameScreen();
+}
+
+function showNameScreen(){
+  document.getElementById('NAME-SCREEN').style.display = 'flex';
+  document.getElementById('R').style.display = 'none';
+  // Wire up input enable/disable
+  var inp = document.getElementById('nsInput');
+  var btn = document.getElementById('nsBtn');
+  if(inp && btn){
+    inp.value = '';
+    btn.disabled = true;
+    inp.oninput = function(){
+      btn.disabled = inp.value.trim().length < 1;
+    };
+    inp.onkeydown = function(e){
+      if(e.key === 'Enter' && inp.value.trim()) saveName();
+    };
+    setTimeout(function(){ inp.focus(); }, 100);
+  }
+}
+
+function enterApp(){
+  document.getElementById('NAME-SCREEN').style.display = 'none';
+  document.getElementById('R').style.display = 'block';
+  // Load saved progress
+  if(currentUser){
+    xp = currentUser.xp || 0;
+    streak = currentUser.streak || 0;
+    doneSet = {};
+    answeredSet = currentUser.answeredQuestions || {};
+    if(currentUser.doneTopics){
+      currentUser.doneTopics.forEach(function(id){ doneSet[id] = true; });
+    }
+  }
+  // Update UI
+  var xpEl = document.getElementById('xpVal');
+  var fillEl = document.getElementById('xpFill');
+  var strEl = document.getElementById('strVal');
+  if(xpEl) xpEl.textContent = xp;
+  if(fillEl) fillEl.style.width = Math.round(xp/500*100) + '%';
+  if(strEl) strEl.textContent = streak;
+  // Show greeting bar
+  updateGreetingBar();
+  // Set avatar to user initials
+  var av = document.getElementById('avatarBadge');
+  if(av && currentUser && currentUser.name){
+    av.textContent = currentUser.name.charAt(0).toUpperCase();
+    av.title = currentUser.name + ' — tap to switch user';
+  }
+  renderHome();
+}
+
+function updateGreetingBar(){
+  var bar = document.getElementById('greetBar');
+  if(!bar || !currentUser) return;
+  bar.innerHTML =
+    '<span class="ns-user">👋 Hi, ' + esc(currentUser.name) + '!</span>' +
+    '<button class="ns-switch" onclick="switchUser()">Switch user</button>';
+}
+
+// Init on load
+(function(){
+  var saved = loadUser();
+  if(saved && saved.name){
+    currentUser = saved;
+    // Short delay so DOM is ready
+    setTimeout(enterApp, 10);
+  } else {
+    setTimeout(showNameScreen, 10);
+  }
+})();
+
 
 // ── Mute ──────────────────────────────────────────────────────
 var muted=false;
@@ -618,11 +823,12 @@ function spkOK(a,eg){if(muted)return;var t='Excellent! That is correct. '+a+'.';
 function spkW1(){if(muted)return;var p=['Not quite, try again! You have got this!','Hmm, not this one. Give it another go!','Close! Think again, I know you can do it!'];speakT(p[Math.floor(Math.random()*p.length)]);}
 function spkW2(a,eg){if(muted)return;var t='Good try! The answer is '+a+'.';if(eg)t+=' Remember, '+eg+'.';t+=' Keep going!';speakT(t);}
 function spkMM(mm){if(muted)return;var tx='Mind map for '+mm.c+'. ';for(var i=0;i<mm.b.length;i++)tx+=mm.b[i].l+': '+mm.b[i].i.join('. ')+'. ';speakT(tx);}
-function spkR(rules,tip){if(muted)return;var tx='';for(var i=0;i<rules.length;i++)tx+='Rule '+rules[i].n+'. '+rules[i].t+'. '+rules[i].d+'. ';tx+='Tip: '+tip;speakT(tx);}
+function spkR(rules,tip){if(muted)return;var tx='';for(var i=0;i<rules.length;i++){var d=rules[i].d.replace(/\|/g,'. ');tx+='Rule '+rules[i].n+'. '+rules[i].t+'. '+d+'. ';}tx+='Tip: '+tip;speakT(tx);}
 
 // ── State ──────────────────────────────────────────────────────
 var xp=0,streak=0,doneSet={};
 var cTerm=1,cTopic=null,cMode='fc',fcIdx=0,attempts=0,revealed=false,selectedWrong=[],choiceCache={};
+var answeredSet={}; // tracks individual answered questions: 'topicId_qIdx':true
 
 var COLS=[
   {bg:'#1A1032',ic:'#7C3AED',lt:'#2D2A4A'},
@@ -650,7 +856,7 @@ SUBJECTS.english={
 {type:'mc',q:'What is a proper noun?',a:'A specific name that always starts with a CAPITAL letter',eg:'Cape Town, Jamie, Monday',w:['A general name for ordinary things','A word that describes a noun','A group name for animals']},
 {type:'mc',q:'What is an abstract noun?',a:'Something you cannot see or touch — a feeling, idea or quality',eg:'love, freedom, happiness, courage',w:['A name for a specific place or person','A word that tells how an action happens','A name for a group of animals']},
 {type:'mc',q:'What is a collective noun?',a:'One word that names a GROUP of things',eg:'a flock of birds, a pride of lions',w:['A word showing something belongs to someone','Something you cannot see or touch','A specific name starting with a capital']},
-{type:'fill',q:'Write down the TWO NOUNS in this sentence.',pass:'The squirrel examined the strange creature.',blanks:['squirrel','creature'],opts:['squirrel','creature','examined','strange'],eg:'Nouns are naming words — persons, places or things'},
+{type:'fill',q:'Select the TWO NOUNS in this sentence.',pass:'The squirrel examined the strange creature.',blanks:['squirrel','creature'],opts:['squirrel','creature','examined','strange'],eg:'Nouns are naming words — persons, places or things'},
 {type:'fix',q:"Rewrite this sentence — add the apostrophe in the correct place.",pass:"The girls bags were left in the classroom.",a:"The girls' bags were left in the classroom.",hint:"More than one girl — apostrophe goes AFTER the s",eg:"girls' bags = many girls own the bags"},
 ,
 {type:'tf',q:'A proper noun always starts with a capital letter.',a:'true',explanation:'Proper nouns are specific names like Cape Town, Jamie and Monday. They always need a capital letter.'},
@@ -661,8 +867,12 @@ SUBJECTS.english={
 {l:'Proper',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Names a SPECIFIC person or place','Always capital letter','Cape Town, Jamie, January']},
 {l:'Abstract',bg:'#1A0A1A',bd:'#A855F7',tc:'#D8B4FE',i:['Cannot see or touch it','A feeling or idea','love, courage, freedom']},
 {l:'Collective',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['One word for a GROUP','flock, herd, pride, pack']},
-{l:'Possessive',bg:'#1A0A0A',bd:'#EF4444',tc:'#FCA5A5',i:["ONE owner: girl's bag","MANY owners: girls' bags",'Always needs an apostrophe']},
-]},rules:[{n:'1',c:'#7C3AED',t:'Can you see or touch it?',d:'No — might be ABSTRACT. Yes — common, proper or collective.'},{n:'2',c:'#10B981',t:'Is it a specific name?',d:'Names one particular person, place or event — PROPER noun — always a capital letter.'},{n:'3',c:'#A855F7',t:'Possession trick',d:"ONE owner — apostrophe before the s (dog's). MANY owners — apostrophe after the s (dogs')."}],
+{l:'Possessive',bg:'#1A0A0A',bd:'#EF4444',tc:'#FCA5A5',i:["ONE owner → apostrophe BEFORE the s","Example: the girl's bag (one girl owns it)","MANY owners → apostrophe AFTER the s","Example: the girls' bags (many girls own them)","Ask: how many owners? That decides the position"]},
+]},rules:[
+{n:"1",c:"#7C3AED",t:"Can you see or touch it?",d:"Use this test to decide noun type.",eg:[{lbl:"CONCRETE",txt:"dog, city, table — you can see and touch these. They are common nouns."},{lbl:"ABSTRACT",txt:"love, freedom, courage — you cannot see or touch these. They are abstract nouns."}]},
+{n:"2",c:"#10B981",t:"Is it a specific name?",d:"Proper nouns name one particular person, place, day or month. Always a capital letter.",eg:[{lbl:"PROPER NOUN",txt:"Cape Town, Jamie, Monday — specific names, always a capital letter."},{lbl:"COMMON NOUN",txt:"city, boy, day — general names, no capital needed."}]},
+{n:"3",c:"#A855F7",t:"Possession — who owns it?",d:"The number of OWNERS decides where the apostrophe goes.",eg:[{lbl:"ONE OWNER",txt:"The dog's bone — one dog owns it. Write: dog + apostrophe + s."},{lbl:"MANY OWNERS",txt:"The dogs' bones — many dogs own them. Write: dogs + s + apostrophe."},{lbl:"QUICK TEST",txt:"Ask: HOW MANY owners? One = apostrophe before s. Many = apostrophe after s."}]}
+],
 tip:{t:'If you can put THE or A in front and it still makes sense — it is a NOUN.',c:'#1A1032',b:'#7C3AED',tc:'#A78BFA'}},
 
 {id:'pronouns',sec:'Grammar',icon:'🔄',ttl:'Pronouns',sub:'Personal, possessive and reflexive pronouns',fc:[
@@ -681,7 +891,11 @@ tip:{t:'If you can put THE or A in front and it still makes sense — it is a NO
 {l:'Object',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['me, you, him, her, it, us, them','The one RECEIVING the action']},
 {l:'Possessive',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['mine, yours, his, hers, ours, theirs','Shows BELONGING — no apostrophe']},
 {l:'Reflexive',bg:'#1A0A1A',bd:'#A855F7',tc:'#D8B4FE',i:['myself, yourself, himself, herself','Refers back to the subject']},
-]},rules:[{n:'1',c:'#2563EB',t:'I versus me test',d:'Remove the other person. Me and Sam went = Me went — wrong. Use Sam and I went.'},{n:'2',c:'#10B981',t:'Reflexive check',d:'Can you add by in front? He did it by himself — so himself is reflexive.'},{n:'3',c:'#FB923C',t:'Possessive — no apostrophe',d:"Its (belonging) has NO apostrophe. It's = it is — that is a contraction."}],
+]},rules:[
+{n:"1",c:"#2563EB",t:"I versus me — the remove test",d:"Remove the other person. If it still sounds right, your pronoun is correct.",eg:[{lbl:"WRONG",txt:"Me and Jamie went — remove Jamie — Me went. Sounds wrong! Use I."},{lbl:"RIGHT",txt:"Jamie and I went — remove Jamie — I went. Sounds correct!"},{lbl:"RULE",txt:"Always put the other person first: Jamie and I, not I and Jamie."}]},
+{n:"2",c:"#10B981",t:"Reflexive pronouns — the by test",d:"Add the word by in front. If it still makes sense, it is a reflexive pronoun.",eg:[{lbl:"TEST",txt:"He did it himself → He did it by himself. Makes sense = reflexive pronoun."},{lbl:"LIST",txt:"myself, yourself, himself, herself, itself, ourselves, themselves"}]},
+{n:"3",c:"#FB923C",t:"its vs it's — the expand test",d:"Try expanding the word. It is = apostrophe. Belonging = no apostrophe.",eg:[{lbl:"IT'S = IT IS",txt:"Say: it is raining. Makes sense? Write it's with apostrophe."},{lbl:"ITS = BELONGING",txt:"The dog wagged its tail. Say: the dog wagged it is tail. Wrong! No apostrophe."}]}
+],
 tip:{t:'Point at yourself — I, me, myself. Point at a boy — he, him, himself. Point at a girl — she, her, herself.',c:'#0A1F1A',b:'#10B981',tc:'#6EE7B7'}},
 
 {id:'verbs',sec:'Grammar',icon:'⏱️',ttl:'Verbs and tenses',sub:'Present, past, future and irregular verbs',fc:[
@@ -700,7 +914,11 @@ tip:{t:'Point at yourself — I, me, myself. Point at a boy — he, him, himself
 {l:'Simple past',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['Already finished — add -ed','Irregular: go-went, eat-ate, see-saw']},
 {l:'Simple future',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:['Will happen later — WILL + verb','Never add -ed after will']},
 {l:'Present progressive',bg:'#1A0A1A',bd:'#A855F7',tc:'#D8B4FE',i:['Happening right NOW','is / am / are + verb-ing']},
-]},rules:[{n:'1',c:'#10B981',t:'Yesterday test',d:'Put Yesterday before the sentence. Does it still make sense? Then it is past tense.'},{n:'2',c:'#FB923C',t:'Irregular verbs — memorise',d:'go-went, buy-bought, see-saw, run-ran, write-wrote, eat-ate, take-took'},{n:'3',c:'#2563EB',t:'Progressive formula',d:'is/am/are + verb + ing. She is running. Never say She is run.'}],
+]},rules:[
+{n:"1",c:"#10B981",t:"The yesterday test — past tense?",d:"Put Yesterday at the start. If it still makes sense, the verb is in past tense.",eg:[{lbl:"PAST TENSE",txt:"Yesterday, she walked to school. Walked fits with yesterday. Correct!"},{lbl:"WRONG",txt:"Yesterday, she walk to school. Walk does not fit. Must be walked."}]},
+{n:"2",c:"#FB923C",t:"Irregular verbs — must memorise",d:"These verbs do NOT follow the -ed rule. Learn them by heart.",eg:[{lbl:"GROUP 1",txt:"go → went, eat → ate, see → saw, run → ran, write → wrote"},{lbl:"GROUP 2",txt:"buy → bought, take → took, give → gave, come → came, think → thought"},{lbl:"TIP",txt:"If adding -ed sounds wrong, it is probably irregular. Check your list."}]},
+{n:"3",c:"#2563EB",t:"Progressive tense formula",d:"Shows something happening RIGHT NOW. Always: is/am/are + verb + ing.",eg:[{lbl:"FORMULA",txt:"is / am / are  +  verb  +  ing"},{lbl:"EXAMPLES",txt:"She is running. I am eating. They are playing."},{lbl:"NEVER",txt:"She is run OR She running — both wrong. Always need is/am/are first."}]}
+],
 tip:{t:'Highlight all verbs GREEN. Every sentence must have at least one verb — no green means something is missing!',c:'#0A1628',b:'#2563EB',tc:'#93C5FD'}},
 
 {id:'concord',sec:'Grammar',icon:'⚡',ttl:'Subject-verb agreement',sub:'Making subjects and verbs match in number',fc:[
@@ -719,12 +937,16 @@ tip:{t:'Highlight all verbs GREEN. Every sentence must have at least one verb �
 {l:'Plural needs plural verb',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['More than one','The dogs BARK. They ARE happy.','are, have, were, do, run']},
 {l:'Always SINGULAR',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['everyone, nobody, someone, each','either, neither, everything, anyone']},
 {l:'AND versus OR',bg:'#1A0A1A',bd:'#A855F7',tc:'#D8B4FE',i:['AND = plural verb','OR/NOR = match nearest subject','Tom and Sam ARE here','Tom or Sam IS here']},
-]},rules:[{n:'1',c:'#2563EB',t:'He or they test',d:'Replace the subject with he or they. Match the verb to whichever fits.'},{n:'2',c:'#FB923C',t:'Everyone and nobody are singular',d:'Everyone IS ready — never Everyone ARE ready.'},{n:'3',c:'#10B981',t:'AND=plural, OR=match nearest',d:'Tom and Sam ARE here. Tom or Sam IS here — match nearest subject.'}],
+]},rules:[
+{n:"1",c:"#2563EB",t:"The he or they test",d:"Replace the subject with he (singular) or they (plural), then pick the matching verb.",eg:[{lbl:"SINGULAR",txt:"The dog is here → He is here. Use: is, was, has, runs."},{lbl:"PLURAL",txt:"The dogs are here → They are here. Use: are, were, have, run."},{lbl:"TRICKY",txt:"The team is ready → replace with They → use is. Team = one unit."}]},
+{n:"2",c:"#FB923C",t:"Everyone and nobody are always singular",d:"These words FEEL like many people but are always grammatically singular.",eg:[{lbl:"ALWAYS USE",txt:"Everyone IS ready. Nobody KNOWS. Each child HAS a pen. Either option IS fine."},{lbl:"NEVER USE",txt:"Everyone ARE ready — wrong. Nobody KNOW — wrong. Each child HAVE — wrong."},{lbl:"THE LIST",txt:"everyone, nobody, someone, anyone, each, either, neither, everything"}]},
+{n:"3",c:"#10B981",t:"AND vs OR — different rules",d:"AND creates a plural. OR or NOR: match the verb to the NEAREST subject.",eg:[{lbl:"AND = PLURAL",txt:"Tom and Sam ARE here. Two people joined by and = plural verb."},{lbl:"OR = NEAREST",txt:"Tom or the dogs ARE here. Nearest = dogs (plural) = use are."},{lbl:"OR = NEAREST",txt:"The dogs or Tom IS here. Nearest = Tom (singular) = use is."}]}
+],
 tip:{t:'Underline the subject. Circle the verb. Do they match? Five seconds. Stops most concord mistakes.',c:'#1C1005',b:'#FB923C',tc:'#FED7AA'}},
 
 {id:'adjadv',sec:'Grammar',icon:'✨',ttl:'Adjectives and adverbs',sub:'Describing words and degrees of comparison',fc:[
 {type:'mc',q:'What does an adjective do?',a:'It describes or gives more information about a noun',eg:'tall boy, red apple, three dogs, happy child',w:['It describes a verb — telling how, when or where','It replaces a noun so it is not repeated','It joins two clauses or sentences together']},
-{type:'fill',q:'Write down the ADVERB from this sentence.',pass:'Flamingos walk slowly in the water.',blanks:['slowly'],opts:['slowly','Flamingos','walk','water'],eg:'Adverbs tell us HOW an action is done — slowly describes how they walk'},
+{type:'fill',q:'Select the ADVERB from this sentence.',pass:'Flamingos walk slowly in the water.',blanks:['slowly'],opts:['slowly','Flamingos','walk','water'],eg:'Adverbs tell us HOW an action is done — slowly describes how they walk'},
 {type:'fix',q:'Correct the adjective form in this sentence.',pass:'The male flamingos are big than the females.',a:'The male flamingos are bigger than the females.',hint:'Comparing TWO things — add -er to form the comparative. big becomes bigger.',eg:'big → bigger (two things) / biggest (three or more things)'},
 {type:'mc',q:'How do you form a superlative adjective?',a:'Add -est or use most to compare three or more things',eg:'tall becomes tallest — beautiful becomes most beautiful',w:['Add -er or use more to compare three things','Add -ly to the end of the adjective','Put will before the adjective']},
 {type:'mc',q:'She sings beautiful or beautifully — which is correct?',a:'Beautifully — it describes how she sings, so use the adverb form with -ly',eg:'She sings beautifully. NOT She sings beautiful.',w:['Beautiful — adjectives always follow the verb directly','Both are correct — they mean the same thing','Beautiful — singing is treated as a noun here']},
@@ -737,7 +959,11 @@ tip:{t:'Underline the subject. Circle the verb. Do they match? Five seconds. Sto
 {l:'Adjectives describe nouns',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:['Colour, size, feeling, number','tall, red, happy, three']},
 {l:'Degrees of comparison',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['Positive: tall, good, big','Comparative (2): taller','Superlative (3+): tallest']},
 {l:'Adverbs describe verbs',bg:'#1A0A1A',bd:'#A855F7',tc:'#D8B4FE',i:['How, when, where, how much','quickly, yesterday, here','Most end in -ly']},
-]},rules:[{n:'1',c:'#2563EB',t:'Adjective test',d:'Does the word describe a NOUN? That is an adjective. Highlight it pink.'},{n:'2',c:'#A855F7',t:'Adverb test',d:'Does the word describe a VERB? That is an adverb. Usually ends in -ly. Highlight it orange.'},{n:'3',c:'#FB923C',t:'Comparison rule',d:'Short words: add -er/-est. Long words: use more/most. Never say more taller — that is wrong.'}],
+]},rules:[
+{n:"1",c:"#2563EB",t:"Adjective test — what kind?",d:"Ask what kind of [noun]? If a word answers that question, it is an adjective.",eg:[{lbl:"TEST",txt:"What kind of boy? Tall boy. Tall describes the noun boy = adjective."},{lbl:"COLOURS",txt:"red apple, blue sky, golden hair — all describe nouns = adjectives."},{lbl:"TIP",txt:"Highlight adjectives in PINK on your work to spot them quickly."}]},
+{n:"2",c:"#A855F7",t:"Adverb test — how, when, where?",d:"Ask how?, when? or where? about the verb. That word is the adverb.",eg:[{lbl:"HOW?",txt:"She ran HOW? Quickly. Quickly describes the verb ran = adverb."},{lbl:"WHEN?",txt:"He left WHEN? Yesterday. Yesterday describes the verb left = adverb."},{lbl:"TIP",txt:"Most adverbs end in -ly. Highlight adverbs in ORANGE on your work."}]},
+{n:"3",c:"#FB923C",t:"Comparison — never double up",d:"Short words use -er and -est. Long words use more and most. Never use both.",eg:[{lbl:"SHORT WORDS",txt:"tall → taller (2 things) → tallest (3 or more things)"},{lbl:"LONG WORDS",txt:"beautiful → more beautiful (2) → most beautiful (3 or more)"},{lbl:"NEVER",txt:"more taller — wrong. most tallest — wrong. Doubling up is always wrong."}]}
+],
 tip:{t:"Upgrade challenge. Take 'The dog ran.' Add pink adjectives and orange adverbs. How vivid can you make it?",c:'#1A0A1A',b:'#A855F7',tc:'#D8B4FE'}},
 
 {id:'punct',sec:'Grammar',icon:'📌',ttl:'Punctuation',sub:'Full stops, commas, apostrophes, colons, semi-colons',fc:[
@@ -755,7 +981,11 @@ tip:{t:"Upgrade challenge. Take 'The dog ran.' Add pink adjectives and orange ad
 {l:'End of sentence',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:['Full stop ends a statement','Question mark ends a question','Exclamation mark shows strong feeling']},
 {l:'Inside sentence',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Comma — list or pause','Semi-colon — joins two related sentences','Colon — introduces a list']},
 {l:'Apostrophe',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:["Possession: boy's hat — one owner","Plural possession: boys' hats","Contraction: don't = do not"]},
-]},rules:[{n:'1',c:'#2563EB',t:'Apostrophe test',d:"Can you expand it? don't = do not = contraction. Does it show belonging? = possession."},{n:'2',c:'#10B981',t:"its versus it's",d:"its = belonging (no apostrophe). it's = it is (contraction). Say 'it is' in the sentence — if it fits, use the apostrophe."},{n:'3',c:'#FB923C',t:'Colon versus semi-colon',d:'Colon = here comes a list. Semi-colon = these two sentences are closely linked.'}],
+]},rules:[
+{n:"1",c:"#2563EB",t:"Apostrophe — contraction or possession?",d:"Try expanding the word. If it expands into two words it is a contraction. If it shows belonging it is possession.",eg:[{lbl:"CONTRACTION",txt:"don't = do not. can't = cannot. it's = it is. Expands into two words."},{lbl:"POSSESSION",txt:"The boy's hat = the hat belongs to the boy. Shows who owns it."},{lbl:"TRICK",txt:"Say it is in place of it's. If it fits, write it's with the apostrophe."}]},
+{n:"2",c:"#10B981",t:"Commas in lists",d:"Put a comma after every item except the last. The last item uses and.",eg:[{lbl:"CORRECT",txt:"I like cats, dogs, and fish. Comma after each item except the last."},{lbl:"WRONG",txt:"I like cats dogs and fish. No commas makes it hard to read."},{lbl:"RULE",txt:"If you can say pause between items, put a comma there."}]},
+{n:"3",c:"#FB923C",t:"Colon vs semi-colon — different jobs",d:"A colon introduces something. A semi-colon joins two closely linked sentences.",eg:[{lbl:"COLON ( : )",txt:"I need three things: a pen, a ruler, and paper. Introduces a list."},{lbl:"SEMI-COLON ( ; )",txt:"I love reading; books are my escape. Joins two related sentences."},{lbl:"TEST",txt:"Colon = here is what follows. Semi-colon = these two ideas are connected."}]}
+],
 tip:{t:"Read the sentence out loud. Wrong apostrophes and missing question marks are easy to catch when you listen.",c:'#1A0A0A',b:'#EF4444',tc:'#FCA5A5'}},
 
 {id:'fig1',sec:'Figurative language',icon:'🪄',ttl:'Simile, metaphor, personification',sub:'The three most common figures of speech',fc:[
@@ -773,7 +1003,11 @@ tip:{t:"Read the sentence out loud. Wrong apostrophes and missing question marks
 {l:'Simile',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Uses LIKE or AS to compare','fast AS lightning / ran LIKE the wind']},
 {l:'Metaphor',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:['Says something IS something else','NO like or as — Life IS a journey']},
 {l:'Personification',bg:'#1A0A1A',bd:'#A855F7',tc:'#D8B4FE',i:['Human qualities to non-humans','The wind WHISPERED / sun SMILED']},
-]},rules:[{n:'1',c:'#10B981',t:'Simile spotter',d:'Scan for like or as in a comparison — that is your simile.'},{n:'2',c:'#2563EB',t:'Metaphor check',d:'Two unlike things compared directly without like or as — metaphor. The word is or was often signals it.'},{n:'3',c:'#A855F7',t:'Personification check',d:'Is a non-human thing doing something only humans can do? Whispering, smiling, crying? That is personification.'}],
+]},rules:[
+{n:"1",c:"#10B981",t:"Spotting a simile",d:"Scan for the words LIKE or AS used in a comparison. That is your simile signal.",eg:[{lbl:"LIKE",txt:"She ran like the wind. Like compares her running to the wind."},{lbl:"AS...AS",txt:"He is as brave as a lion. As...as compares his bravery to a lion."},{lbl:"NOT A SIMILE",txt:"I feel like eating. Like here means want to, not a comparison. Context matters!"}]},
+{n:"2",c:"#2563EB",t:"Identifying a metaphor",d:"One thing IS directly said to BE something else. No like or as.",eg:[{lbl:"IS / WAS",txt:"Life is a journey. Life is directly called a journey. No like or as."},{lbl:"WAS",txt:"The classroom was a zoo. Classroom is directly called a zoo."},{lbl:"TEST",txt:"Could you add like and still make sense? Yes = it was a metaphor. Life is LIKE a journey."}]},
+{n:"3",c:"#A855F7",t:"Identifying personification",d:"A non-human thing does something ONLY humans can do. Look for human verbs given to objects.",eg:[{lbl:"EXAMPLE",txt:"The wind whispered. Only humans whisper. Wind is given a human action."},{lbl:"MORE EXAMPLES",txt:"The sun smiled. Fear gripped him. The old car coughed."},{lbl:"TEST",txt:"Ask: can this thing actually do this in real life? No? Then it is personification."}]}
+],
 tip:{t:"Draw it! Take any simile and sketch the literal image. Her smile was sunshine — draw a face with rays. The picture makes it stick.",c:'#0A1A1A',b:'#06B6D4',tc:'#67E8F9'}},
 
 {id:'idioms',sec:'Figurative language',icon:'💬',ttl:'Idioms, proverbs, alliteration',sub:'Expressions whose meaning is not literal',fc:[
@@ -781,7 +1015,7 @@ tip:{t:"Draw it! Take any simile and sketch the literal image. Her smile was sun
 {type:'id',q:'Paragraph 5 uses alliteration. Write down THREE words that illustrate the alliteration.',pass:'The dog was furious and charged at the animals, snarling, scowling and snapping his jaws!',highlights:[{word:'snarling',type:'alliteration'},{word:'scowling',type:'alliteration'},{word:'snapping',type:'alliteration'}],a:'snarling, scowling, snapping',hint:'Alliteration = same starting sound repeated. Look for words starting with the same letter.',eg:'snarling, scowling, snapping — all start with the S sound'},
 {type:'mc',q:"What does the idiom under the weather mean?",a:'Feeling sick or unwell',eg:'She stayed home because she was feeling under the weather.',w:['Standing outside in the rain','Feeling very excited and energetic','Being confused about the weather forecast']},
 {type:'mc',q:'What is a proverb?',a:'A short well-known saying that gives life advice or a moral truth',eg:"Don't judge a book by its cover means don't judge by appearances",w:['A phrase whose real meaning differs from the words','The repetition of the same starting sound','A comparison using like or as']},
-{type:'id',q:'Write down the IDIOM in this sentence and explain its meaning.',pass:'Despite losing the match, the team decided to face the music and speak to their coach.',a:'face the music — to accept the consequences of your actions',hint:'Which phrase sounds impossible if taken literally? That is the idiom.',eg:'Face the music does not mean turning toward sound — it means accepting consequences'},
+{type:'id',q:'Select the IDIOM in this sentence and explain its meaning.',pass:'Despite losing the match, the team decided to face the music and speak to their coach.',a:'face the music — to accept the consequences of your actions',hint:'Which phrase sounds impossible if taken literally? That is the idiom.',eg:'Face the music does not mean turning toward sound — it means accepting consequences'},
 {type:'mc',q:'What is alliteration?',a:'The repetition of the same starting sound in a series of words',eg:'Peter Piper picked a peck of pickled peppers — the P sound is repeated',w:['Words that rhyme at the end of lines','The repetition of vowel sounds in the middle','A phrase that cannot be taken at face value']},
 ,
 {type:'tf',q:'Break a leg literally means you should injure yourself.',a:'false',explanation:'Break a leg is an idiom. Its real meaning is good luck. Idioms cannot be taken literally because their meaning is completely different from the actual words.'},
@@ -791,7 +1025,11 @@ tip:{t:"Draw it! Take any simile and sketch the literal image. Her smile was sun
 {l:'Common idioms',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['Raining cats and dogs = very heavy rain','Under the weather = feeling ill','Piece of cake = very easy','Break a leg = good luck']},
 {l:'Proverbs',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:["Don't judge a book by its cover","Actions speak louder than words","Every cloud has a silver lining","Practice makes perfect"]},
 {l:'Alliteration',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:['Same starting SOUND repeated','snarling, scowling, snapping — S','Peter Piper picked... — P']},
-]},rules:[{n:'1',c:'#FB923C',t:'Idiom test',d:'Read it literally. Does it sound impossible or very strange? Then it is probably an idiom.'},{n:'2',c:'#10B981',t:'Proverb versus idiom',d:'Proverbs give advice as a complete sentence. Idioms are everyday phrases.'},{n:'3',c:'#2563EB',t:'Alliteration',d:'Say the words aloud. Do several start with the same sound? That is alliteration.'}],
+]},rules:[
+{n:"1",c:"#FB923C",t:"Testing if something is an idiom",d:"Read the phrase literally. If it makes no physical sense, it is probably an idiom.",eg:[{lbl:"TEST 1",txt:"Raining cats and dogs — cats falling from the sky? Impossible. Means: very heavy rain."},{lbl:"TEST 2",txt:"Break a leg — breaking a leg is painful! Means: good luck before a performance."},{lbl:"CLUE",txt:"If casual speech uses a phrase that makes no physical sense, it is an idiom."}]},
+{n:"2",c:"#10B981",t:"Proverb vs idiom — what is the difference?",d:"Proverbs are complete wise sentences. Idioms are everyday phrases.",eg:[{lbl:"PROVERB",txt:"Actions speak louder than words. A complete sentence giving life advice."},{lbl:"IDIOM",txt:"Under the weather. A short phrase used in conversation, not a full sentence."},{lbl:"RULE",txt:"Full sentence with a life lesson = proverb. Short phrase in speech = idiom."}]},
+{n:"3",c:"#2563EB",t:"Finding alliteration",d:"Say the words aloud and listen for the same starting SOUND repeated across several words.",eg:[{lbl:"EXAMPLE 1",txt:"Peter Piper picked a peck of pickled peppers. The P sound repeats = alliteration."},{lbl:"EXAMPLE 2",txt:"snarling, scowling and snapping. All start with the S sound = alliteration."},{lbl:"NOTE",txt:"It is the starting SOUND that matters, not just the letter. City and silk both start with the S sound."}]}
+],
 tip:{t:"Draw the literal meaning of an idiom. Raining cats and dogs — draw actual cats and dogs falling from clouds. The silly picture makes the meaning unforgettable.",c:'#1C1005',b:'#EAB308',tc:'#FDE68A'}},
 
 {id:'comp',sec:'Reading',icon:'👁️',ttl:'Comprehension strategies',sub:'Literal, inferential, vocabulary and opinion questions',fc:[
@@ -809,7 +1047,11 @@ tip:{t:"Draw the literal meaning of an idiom. Raining cats and dogs — draw act
 {l:'Question types',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:['Literal — find it in the text','Inferential — read between the lines','Vocabulary — meaning in context','Opinion — your view plus evidence']},
 {l:'Reading strategies',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Skim = quick general read','Scan = look for specific detail','Predict = use title and pictures']},
 {l:'Answering tips',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['One mark = one clear point','Write in full sentences always','Quote the text then explain it']},
-]},rules:[{n:'1',c:'#2563EB',t:'One mark = one point',d:'Every mark equals one clear point. Write full sentences. Never leave a question blank.'},{n:'2',c:'#10B981',t:'Inference frame',d:'The text says blank — this suggests blank. Always back up with evidence from the text.'},{n:'3',c:'#FB923C',t:'Unknown word strategy',d:'Read the sentence without the word. What would make sense? Use the surrounding words.'}],
+]},rules:[
+{n:"1",c:"#2563EB",t:"One mark = one clear point",d:"Every mark equals one clear, complete point. Write in full sentences. Never leave a question blank.",eg:[{lbl:"2 MARKS",txt:"Worth 2 marks? Write TWO separate points, each in its own sentence."},{lbl:"NEVER",txt:"Do not write half a sentence. Do not list words. Use full sentences always."},{lbl:"BLANK",txt:"If unsure, attempt anyway. A guess might earn a mark. Nothing earns nothing."}]},
+{n:"2",c:"#10B981",t:"The inference frame",d:"Use this exact frame for inferential questions. It gives evidence AND interpretation.",eg:[{lbl:"FRAME",txt:"The text says [quote]. This tells me that [your inference]."},{lbl:"EXAMPLE",txt:"The text says the boy was shaking. This tells me that he was very frightened."},{lbl:"WHY IT WORKS",txt:"You give the evidence and the meaning. Both parts earn marks."}]},
+{n:"3",c:"#FB923C",t:"Working out unknown words from context",d:"Read the sentence WITHOUT the unknown word. What word would make sense in that gap?",eg:[{lbl:"EXAMPLE",txt:"The ravenous lion ate everything. Remove ravenous. The ___ lion ate everything. Very hungry fits = ravenous means extremely hungry."},{lbl:"CLUES",txt:"Look at surrounding words, the topic, and whether the feeling is positive or negative."},{lbl:"NEVER",txt:"Do not guess randomly. Always use the context around the word."}]}
+],
 tip:{t:'Before reading: look at the title and any pictures — predict what the passage is about. This gets your brain ready.',c:'#0A1628',b:'#2563EB',tc:'#93C5FD'}},
 
 {id:'poetry',sec:'Reading',icon:'🪶',ttl:'Poetry',sub:'Rhyme, rhythm, stanza, tone and poetic devices',fc:[
@@ -827,7 +1069,11 @@ tip:{t:'Before reading: look at the title and any pictures — predict what the 
 {l:'Structure',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:['Stanza = group of lines','Rhyme scheme = AABB, ABAB etc','Rhythm = the beat — clap it out!']},
 {l:'Devices in poems',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Simile, metaphor, personification','Alliteration: same starting sound']},
 {l:'Tone and mood',bg:'#1A0A1A',bd:'#A855F7',tc:'#D8B4FE',i:['Tone = how the POET feels','Mood = how the poem makes YOU feel','Look at word choices for clues']},
-]},rules:[{n:'1',c:'#2563EB',t:'Label the rhyme scheme',d:'Write A beside the first end word. Same rhyme gets A again. New rhyme gets labelled B.'},{n:'2',c:'#10B981',t:'Clap the rhythm',d:'Clap every syllable as you read aloud. The stressed beats are louder — feel the pattern.'},{n:'3',c:'#A855F7',t:'Tone answer frame',d:'The tone is blank because the poet uses words like blank which suggest blank.'}],
+]},rules:[
+{n:"1",c:"#2563EB",t:"Labelling the rhyme scheme",d:"Write a letter next to each end word. Same rhyme = same letter. New sound = next letter.",eg:[{lbl:"EXAMPLE",txt:"mat = A / chat rhymes with mat = A / bed = B / head rhymes with bed = B. Scheme = AABB."},{lbl:"ABAB",txt:"Line 1 rhymes with line 3 (A). Line 2 rhymes with line 4 (B). Alternating pattern."}]},
+{n:"2",c:"#10B981",t:"Feeling the rhythm",d:"Clap every syllable as you read aloud. The STRESSED louder syllables give you the beat.",eg:[{lbl:"CLAP IT",txt:"The CAT sat ON the MAT. Clap each syllable. Stressed ones are louder = the rhythm."},{lbl:"WHY",txt:"Rhythm is the heartbeat of a poem. Once you feel it, describe it: regular, fast, slow, broken."}]},
+{n:"3",c:"#A855F7",t:"The tone answer frame",d:"Use this exact sentence structure for every tone question in the exam.",eg:[{lbl:"FRAME",txt:"The tone of this poem is [tone word] because the poet uses words like [words] which suggest [meaning]."},{lbl:"EXAMPLE",txt:"The tone is fearful because the poet uses words like shadows, cold and hollow which suggest danger and dread."},{lbl:"TONE WORDS",txt:"joyful, sad, angry, peaceful, fearful, hopeful, bitter, nostalgic, mysterious, celebratory"}]}
+],
 tip:{t:"Draw the mood. After reading a poem, imagine a colour or weather that matches the feeling. Sketch it. Helps you explain tone in the exam.",c:'#1A0A1A',b:'#A855F7',tc:'#D8B4FE'}},
 
 {id:'desc',sec:'Writing',icon:'🎨',ttl:'Descriptive writing',sub:'Senses, figurative language and strong word choices',fc:[
@@ -845,7 +1091,11 @@ tip:{t:"Draw the mood. After reading a poem, imagine a colour or weather that ma
 {l:'The five senses',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:['See, Hear, Smell, Touch, Taste','Use all five to paint a vivid picture']},
 {l:'Strong language',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['Powerful verbs: lumbered, dashed, crept','Precise adjectives: enormous, ancient, jagged','Avoid: nice, good, bad, big, small']},
 {l:'Structure',bg:'#1A0A1A',bd:'#A855F7',tc:'#D8B4FE',i:['Topic sentence — what you describe','Details — senses and figurative','Closing sentence — impression or feeling']},
-]},rules:[{n:'1',c:'#2563EB',t:'Mind map before you write',d:'Five branches = five senses. Fill each branch. Only THEN start writing.'},{n:'2',c:'#FB923C',t:"Show don't tell rule",d:'Cross out any sentence that just names a feeling. Replace it with what that feeling looks like.'},{n:'3',c:'#A855F7',t:'Upgrade your verbs',d:'Circle every weak verb like went, said, walked. Replace each with something stronger.'}],
+]},rules:[
+{n:"1",c:"#2563EB",t:"Mind map BEFORE you write",d:"Spend two minutes planning before you write a single sentence. Quality will double.",eg:[{lbl:"HOW TO",txt:"Draw your subject in the centre. Draw 5 branches = 5 senses. Fill each branch with words and phrases."},{lbl:"EXAMPLE",txt:"Topic: A storm. See: dark clouds. Hear: thunder. Feel: cold wind. Smell: wet earth."},{lbl:"THEN",txt:"Only AFTER all 5 branches are full, start writing. Never write without a plan."}]},
+{n:"2",c:"#FB923C",t:"Show not tell — make us feel it",d:"Describe the PHYSICAL SIGNS of the feeling instead of naming the feeling.",eg:[{lbl:"TELL (weak)",txt:"Jamie was very excited. You just name the feeling. No picture formed."},{lbl:"SHOW (strong)",txt:"Jamie had a hammering heart. His feet bounced off the ground. He could not stop smiling."},{lbl:"RULE",txt:"If you can replace your sentence with one emotion word, you are telling not showing. Rewrite it."}]},
+{n:"3",c:"#A855F7",t:"Upgrade your verbs",d:"Circle every weak vague verb. Replace each one with a more precise powerful verb.",eg:[{lbl:"SAID →",txt:"whispered / shouted / muttered / announced / declared / exclaimed"},{lbl:"WALKED →",txt:"trudged / marched / crept / stumbled / strode / tiptoed"},{lbl:"RULE",txt:"A powerful verb does the work of a verb AND an adverb. She trudged is better than she walked slowly."}]}
+],
 tip:{t:"Read your description aloud. Close your eyes. Can you picture it? Could someone draw it from your words alone? If not — add more sensory detail.",c:'#0A1F1A',b:'#10B981',tc:'#6EE7B7'}},
 
 {id:'narr',sec:'Writing',icon:'📓',ttl:'Narrative writing',sub:'Story structure, characters, dialogue and paragraphing',fc:[
@@ -863,7 +1113,11 @@ tip:{t:"Read your description aloud. Close your eyes. Can you picture it? Could 
 {l:'Story structure',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:['Introduction → Build-up → Conflict','Resolution → Conclusion']},
 {l:'Characters',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Give them a goal and a fear','Show feelings — never just name them']},
 {l:'Technical',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['Past tense throughout','Direct speech with correct punctuation','New paragraph: new time, place or speaker']},
-]},rules:[{n:'1',c:'#2563EB',t:'Plan with a story map',d:'Draw five boxes before you start. Sketch one scene in each box. Stops you getting stuck.'},{n:'2',c:'#10B981',t:'Direct speech formula',d:'Open marks. Write the words. Add comma or ? or !. Close marks. Then the reporting verb.'},{n:'3',c:'#FB923C',t:'Tense check',d:'Can you put Yesterday before each sentence? If yes — past tense correct. Fix any present tense slips.'}],
+]},rules:[
+{n:"1",c:"#2563EB",t:"Plan with a five-box story map",d:"Before writing, sketch one scene in each of five boxes. Gives direction and stops you getting stuck.",eg:[{lbl:"BOX 1",txt:"Introduction — who is the character? Where? What is the mood?"},{lbl:"BOX 2",txt:"Build-up — something starts to happen. Tension begins."},{lbl:"BOX 3",txt:"Conflict — the main problem arrives. The worst moment."},{lbl:"BOX 4",txt:"Resolution — the character solves or survives the problem."},{lbl:"BOX 5",txt:"Conclusion — the ending and what the character thinks or feels now."}]},
+{n:"2",c:"#10B981",t:"Direct speech — five steps every time",d:"Follow these five steps every single time you punctuate direct speech.",eg:[{lbl:"STEP 1",txt:"Open the speech marks: \""},{lbl:"STEP 2",txt:"Write the exact spoken words: \"I am going home"},{lbl:"STEP 3",txt:"Add comma or ? or !: \"I am going home,"},{lbl:"STEP 4",txt:"Close speech marks: \"I am going home,\""},{lbl:"STEP 5",txt:"Write the reporting verb OUTSIDE: \"I am going home,\" she said."}]},
+{n:"3",c:"#FB923C",t:"Past tense check — the yesterday test",d:"Every story sentence should be in the past tense. Yesterday catches tense slips.",eg:[{lbl:"TEST",txt:"Put Yesterday before each sentence. Does it still make sense?"},{lbl:"CORRECT",txt:"Yesterday, she walked to school. Walked is past tense."},{lbl:"SLIP",txt:"Yesterday, she walks to school. Walks is present. Change to walked."}]}
+],
 tip:{t:"WHO wants WHAT but WHAT goes wrong? That is your entire story. Jamie wants to win the race but breaks his leg.",c:'#1C1005',b:'#FB923C',tc:'#FED7AA'}},
 ],2:[
 {id:'speech2',sec:'Grammar',icon:'💭',ttl:'Direct and reported speech',sub:'Converting between direct and reported speech',fc:[
@@ -881,7 +1135,11 @@ tip:{t:"WHO wants WHAT but WHAT goes wrong? That is your entire story. Jamie wan
 {l:'Direct speech',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Exact words inside speech marks','"I love school," she said.','Comma or ? or ! before closing mark']},
 {l:'Reported speech',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['No speech marks','Add THAT. Change pronoun. Shift tense.','now → then. will → would']},
 {l:'Tense changes',bg:'#1A0A1A',bd:'#A855F7',tc:'#D8B4FE',i:['am/is → was, are → were','will → would, can → could','have/has → had']},
-]},rules:[{n:'1',c:'#10B981',t:'Tense shift rule',d:'Present → past. Future → would. I am → he was. I will → he would. Always go one step back.'},{n:'2',c:'#FB923C',t:'Pronoun shift rule',d:'I → he/she. We → they. My → his/her. Think about who said it.'},{n:'3',c:'#A855F7',t:'Five step checklist',d:'1: remove marks. 2: add that. 3: change pronoun. 4: shift tense. 5: change time words.'}],
+]},rules:[
+{n:"1",c:"#10B981",t:"Tense shift — go one step back",d:"Every verb shifts one step back in time when converting to reported speech.",eg:[{lbl:"PRESENT → PAST",txt:"am/is → was | are → were | have/has → had"},{lbl:"FUTURE → PAST FUTURE",txt:"will → would | can → could | may → might"},{lbl:"EXAMPLE",txt:"I am hungry. → She said that she WAS hungry. Am becomes was."}]},
+{n:"2",c:"#FB923C",t:"Pronoun shift — who said it?",d:"Change the pronoun based on WHO spoke and WHO is now being spoken about.",eg:[{lbl:"FIRST PERSON",txt:"I → he or she | me → him or her | my → his or her | we → they"},{lbl:"EXAMPLE",txt:"I will come to my party. → She said she would come to HER party."},{lbl:"TIP",txt:"The person who said I is now being spoken about as he or she."}]},
+{n:"3",c:"#A855F7",t:"Five-step conversion checklist",d:"Run through all five steps every time you convert between direct and reported speech.",eg:[{lbl:"STEP 1",txt:"Remove the speech marks, or add them when converting back."},{lbl:"STEP 2",txt:"Add the word that after the reporting verb: She said THAT..."},{lbl:"STEP 3",txt:"Change the pronoun: I → he or she | we → they | my → his or her."},{lbl:"STEP 4",txt:"Shift the tense one step back: is → was | will → would."},{lbl:"STEP 5",txt:"Change time words: now → then | today → that day | here → there."}]}
+],
 tip:{t:"Cover the speech marks. Read what is left. Change every I to he/she and every present verb to past. That is eighty percent of the job done.",c:'#1A1032',b:'#7C3AED',tc:'#A78BFA'}},
 
 {id:'wordbuild',sec:'Grammar',icon:'🧩',ttl:'Prefixes, roots and suffixes',sub:'Breaking words apart to understand their meaning',fc:[
@@ -899,7 +1157,11 @@ tip:{t:"Cover the speech marks. Read what is left. Change every I to he/she and 
 {l:'Common prefixes',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:['un- = not (unhappy, unkind)','re- = again (replay, rewrite)','mis- = wrongly (mistake)','pre- = before (preview)','dis- = opposite (disagree)']},
 {l:'Common suffixes',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['-ful = full of (hopeful)','-less = without (hopeless)','-ness = state of (happiness)','-ly = in a way (quickly)']},
 {l:'Exam strategy',bg:'#1A0A1A',bd:'#A855F7',tc:'#D8B4FE',i:['Peel off prefix first','Then peel off suffix','What does the root mean?','Build up the full meaning']},
-]},rules:[{n:'1',c:'#2563EB',t:'Peel the word apart',d:'Like Lego. Pull off the prefix. Pull off the suffix. The root is what remains — core meaning.'},{n:'2',c:'#FB923C',t:'Spelling when adding -ly',d:'Word ends in -le: drop e, add y (simple → simply). Ends in -y: change to i, add -ly (happy → happily).'},{n:'3',c:'#A855F7',t:'Suffixes change word class',d:'Happy (adjective) + -ness = happiness (noun). Quick (adjective) + -ly = quickly (adverb).'}],
+]},rules:[
+{n:"1",c:"#2563EB",t:"Peel the word apart like building blocks",d:"Separate the prefix (front), root (middle) and suffix (end). The root carries the core meaning.",eg:[{lbl:"EXAMPLE",txt:"unpredictable → un + predict + able"},{lbl:"MEANING",txt:"un = not | predict = foresee | able = can be done"},{lbl:"RESULT",txt:"unpredictable = cannot be predicted. Peel from the outside in."}]},
+{n:"2",c:"#FB923C",t:"Spelling rules when adding -ly",d:"The -ly suffix turns adjectives into adverbs but has two spelling rules to remember.",eg:[{lbl:"RULE 1",txt:"Ends in -le → drop e and add -y: simple → simply | humble → humbly"},{lbl:"RULE 2",txt:"Ends in -y → change y to i and add -ly: happy → happily | easy → easily"},{lbl:"REGULAR",txt:"Most words just add -ly: quick → quickly | soft → softly | loud → loudly"}]},
+{n:"3",c:"#A855F7",t:"Suffixes change the word class",d:"Adding a suffix can turn a word from one part of speech into another.",eg:[{lbl:"ADJECTIVE → NOUN",txt:"happy + -ness = happiness | kind + -ness = kindness | sad + -ness = sadness"},{lbl:"ADJECTIVE → ADVERB",txt:"quick + -ly = quickly | soft + -ly = softly | brave + -ly = bravely"},{lbl:"VERB → NOUN",txt:"teach + -er = teacher | play + -er = player | build + -er = builder"}]}
+],
 tip:{t:"Word tree. Draw a trunk with the root word. Branches left = prefixes. Branches right = suffixes. Leaves = the full new words.",c:'#0A1F1A',b:'#10B981',tc:'#6EE7B7'}},
 
 {id:'sents',sec:'Grammar',icon:'⛓️',ttl:'Sentence types',sub:'Simple, compound and complex sentences',fc:[
@@ -917,12 +1179,16 @@ tip:{t:"Word tree. Draw a trunk with the root word. Branches left = prefixes. Br
 {l:'Simple',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['One subject + one verb','The dog barked. She laughed.']},
 {l:'Compound',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['Two main clauses + FANBOYS','The dog barked and the cat ran.']},
 {l:'Complex',bg:'#1A0A1A',bd:'#A855F7',tc:'#D8B4FE',i:['Main + subordinate clause','She stayed because it rained.','Subordinate clause CANNOT stand alone']},
-]},rules:[{n:'1',c:'#10B981',t:'Stand-alone test',d:'Cover one half. Can it stand alone? Both can → compound. One cannot → complex.'},{n:'2',c:'#FB923C',t:'FANBOYS for compound',d:'For, And, Nor, But, Or, Yet, So. Spell FANBOYS to remember all coordinating conjunctions.'},{n:'3',c:'#A855F7',t:'Build up from simple',d:'Add FANBOYS = compound. Add because or although = complex.'}],
+]},rules:[
+{n:"1",c:"#10B981",t:"The stand-alone test — which sentence type?",d:"Cover one half of the sentence. Can it stand alone? This tells you the sentence type.",eg:[{lbl:"COMPOUND",txt:"The dog barked AND the cat ran away. Both halves stand alone = compound sentence."},{lbl:"COMPLEX",txt:"She stayed inside BECAUSE it was raining. Because it was raining cannot stand alone = complex."},{lbl:"SIMPLE",txt:"The dog barked. One subject, one verb, complete on its own = simple sentence."}]},
+{n:"2",c:"#FB923C",t:"FANBOYS — coordinating conjunctions",d:"FANBOYS is a memory trick for all seven coordinating conjunctions.",eg:[{lbl:"FANBOYS",txt:"F = For | A = And | N = Nor | B = But | O = Or | Y = Yet | S = So"},{lbl:"EXAMPLE",txt:"I was tired BUT I finished the work. But is in FANBOYS = compound sentence."},{lbl:"TIP",txt:"If the joining word is in FANBOYS and both halves stand alone = compound sentence."}]},
+{n:"3",c:"#A855F7",t:"Build sentences step by step",d:"Start simple. Add FANBOYS to make it compound. Add because or although to make it complex.",eg:[{lbl:"SIMPLE",txt:"The dog barked. One subject, one verb."},{lbl:"COMPOUND",txt:"The dog barked AND the cat ran away. Add FANBOYS = compound."},{lbl:"COMPLEX",txt:"The cat ran away BECAUSE the dog barked. Add subordinating conjunction = complex."}]}
+],
 tip:{t:"Sentence tiles. Write each clause and the conjunction on separate pieces of paper. Move them around to form all three types.",c:'#0A1628',b:'#2563EB',tc:'#93C5FD'}},
 
 {id:'synant',sec:'Vocabulary',icon:'↔️',ttl:'Synonyms and antonyms',sub:'Words with similar and opposite meanings',fc:[
 {type:'mc',q:'What is a synonym?',a:'A word with a similar meaning to another word',eg:'happy = joyful = cheerful = delighted = elated',w:['A word with the opposite meaning','A word that sounds the same but has a different meaning','A word formed by adding a prefix or suffix']},
-{type:'fill',q:'Write down the SYNONYM for the word found in paragraph 1.',pass:'In the jungle, a dog was sleeping comfortably until a squirrel discovered him.',blanks:['found'],opts:['found','sleeping','comfortably','jungle'],eg:'Discovered means found. Look for the word that means the same as found.'},
+{type:'fill',q:'Select the SYNONYM for the word found in paragraph 1.',pass:'In the jungle, a dog was sleeping comfortably until a squirrel discovered him.',blanks:['found'],opts:['found','sleeping','comfortably','jungle'],eg:'Discovered means found. Look for the word that means the same as found.'},
 {type:'mc',q:'What is an antonym?',a:'A word with the opposite meaning to another word',eg:'happy and sad, fast and slow, increase and decrease',w:['A word with a similar meaning','A word that sounds the same but is spelt differently','A word formed by adding -ly to an adjective']},
 {type:'fix',q:'Replace the underlined word with a more PRECISE synonym.',pass:'The dog made a nice sound as it ran through the grass.',a:'The dog made a joyful sound as it bounded through the grass.',hint:'Nice is vague. Replace with a specific, powerful word. Replace ran with a stronger verb.',eg:'nice → joyful / cheerful. ran → bounded / dashed / sprinted'},
 {type:'fill',q:'Give an ANTONYM for the word growing.',pass:'The population of flamingos is growing every year.',blanks:['shrinking'],opts:['shrinking','increasing','improving','expanding'],eg:'Growing means getting bigger. The opposite = getting smaller = SHRINKING'},
@@ -935,7 +1201,11 @@ tip:{t:"Sentence tiles. Write each clause and the conjunction on separate pieces
 {l:'Synonyms',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Same or similar meaning','happy = joyful = cheerful','Avoids word repetition in writing']},
 {l:'Antonyms',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:['Opposite meaning','hot ↔ cold, growing ↔ shrinking','Many made with un-, dis-, im- prefix']},
 {l:'Power words',bg:'#1A0A1A',bd:'#A855F7',tc:'#D8B4FE',i:['said → whispered, shouted, declared','walked → marched, trudged, crept','bad → dreadful, awful, terrible']},
-]},rules:[{n:'1',c:'#10B981',t:'Upgrade your writing',d:'Circle every said, walked, nice, big, bad. Replace each with a more precise synonym.'},{n:'2',c:'#2563EB',t:'Antonym prefixes',d:'un- makes unhappy. dis- makes dishonest. im- or in- makes impatient.'},{n:'3',c:'#A855F7',t:'Context matters',d:'Skinny and slender both mean thin but skinny sounds negative. Choose the right synonym.'}],
+]},rules:[
+{n:"1",c:"#10B981",t:"Upgrade your writing with synonyms",d:"Circle every common repeated word. Replace each one with a more precise synonym.",eg:[{lbl:"SAID →",txt:"whispered, shouted, muttered, declared, announced, exclaimed"},{lbl:"WALKED →",txt:"trudged, marched, crept, strode, stumbled, tiptoed"},{lbl:"NICE →",txt:"wonderful, delightful, breathtaking, charming, magnificent"}]},
+{n:"2",c:"#2563EB",t:"Antonyms using prefixes",d:"Many antonyms are made by adding a prefix that reverses the meaning.",eg:[{lbl:"UN-",txt:"happy → unhappy | kind → unkind | fair → unfair | lucky → unlucky"},{lbl:"DIS-",txt:"honest → dishonest | agree → disagree | like → dislike | appear → disappear"},{lbl:"IM- / IN-",txt:"patient → impatient | possible → impossible | complete → incomplete"}]},
+{n:"3",c:"#A855F7",t:"Context decides the synonym",d:"Two synonyms can have similar meanings but very different feelings. Choose carefully.",eg:[{lbl:"THIN",txt:"Slender sounds elegant and positive. Skinny sounds negative. Same meaning, different feeling."},{lbl:"CONFIDENT",txt:"Assured sounds calm. Arrogant sounds unpleasant. Choose the one that fits the tone."},{lbl:"RULE",txt:"What is the tone of your sentence? Choose the synonym that matches that tone."}]}
+],
 tip:{t:"Synonym slam. One person shouts a common word. The other shouts a better synonym as fast as possible. Two minutes builds automatic recall under exam pressure.",c:'#1C1005',b:'#EAB308',tc:'#FDE68A'}},
 
 {id:'visual',sec:'Reading',icon:'🖼️',ttl:'Visual literacy',sub:'Reading images, cartoons, advertisements and diagrams',fc:[
@@ -953,7 +1223,11 @@ tip:{t:"Synonym slam. One person shouts a common word. The other shouts a better
 {l:'Cartoons and comics',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:['Speech bubble = what they say','Thought bubble = what they think','Panels read left to right']},
 {l:'Advertisements',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['Target audience, message, technique','Slogan: short and catchy','Emotional appeal is a common technique']},
 {l:'Graphs and diagrams',bg:'#1A0A1A',bd:'#A855F7',tc:'#D8B4FE',i:['Read title and labels first','Trace data with your finger','Use actual numbers in your answer']},
-]},rules:[{n:'1',c:'#2563EB',t:'See then say rule',d:'Describe what you SEE first. I can see blank which suggests blank. Earns more marks than jumping to meaning.'},{n:'2',c:'#FB923C',t:'Opinion question format',d:'Yes or No + ONE clear reason linked to the text. Always use evidence from the visual.'},{n:'3',c:'#A855F7',t:'Contraction test',d:"Find the apostrophe. Expand the word. We're = We are. They're = They are. It's = It is."}],
+]},rules:[
+{n:"1",c:"#2563EB",t:"See then say — describe before you interpret",d:"Always describe what you physically SEE before explaining what it MEANS.",eg:[{lbl:"FRAME",txt:"I can see [what is in the image] which suggests [what it means]."},{lbl:"EXAMPLE",txt:"I can see a large red stop sign which suggests the message is urgent and demands immediate attention."},{lbl:"WRONG",txt:"The sign means stop. You jumped to meaning without describing what you see first."}]},
+{n:"2",c:"#FB923C",t:"Three questions for any advertisement",d:"Ask these three questions in order for every advertisement or visual text question.",eg:[{lbl:"Q1: AUDIENCE",txt:"Who is this aimed at? Age, gender, interests, lifestyle — be specific."},{lbl:"Q2: MESSAGE",txt:"What is being sold, promoted, or communicated? What is the main idea?"},{lbl:"Q3: TECHNIQUE",txt:"How do they persuade you? Emotional appeal, repetition, celebrity, colour, slogan?"}]},
+{n:"3",c:"#A855F7",t:"Using numbers from graphs",d:"Always use actual numbers when answering graph questions. Vague answers lose marks.",eg:[{lbl:"WEAK",txt:"The value increased a lot. How much? Which year? Not specific enough."},{lbl:"STRONG",txt:"The value increased by 35% between 2020 and 2022, from 40 to 75."},{lbl:"RULE",txt:"Every answer about a graph must contain at least one number from the graph."}]}
+],
 tip:{t:"Make your own four-panel comic strip of a short story. Add speech bubbles and thought bubbles. This teaches visual communication from the inside.",c:'#0A1A1A',b:'#06B6D4',tc:'#67E8F9'}},
 
 {id:'summ',sec:'Reading',icon:'✅',ttl:'Summary writing',sub:'Identifying main points and writing in your own words',fc:[
@@ -971,25 +1245,33 @@ tip:{t:"Make your own four-panel comic strip of a short story. Add speech bubble
 {l:'What to INCLUDE',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Main ideas only','Core facts and key points','One point per paragraph of original']},
 {l:'What to LEAVE OUT',bg:'#1A0A0A',bd:'#EF4444',tc:'#FCA5A5',i:['Examples and descriptions','Direct quotes','Repeated information','Personal opinions']},
 {l:'Five step process',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['1. Read whole text carefully','2. Underline main point per paragraph','3. Write notes in own words','4. PUT THE ORIGINAL AWAY','5. Write from notes only']},
-]},rules:[{n:'1',c:'#10B981',t:'Main idea per paragraph',d:'Every paragraph has ONE main idea. Find it. That becomes your one summary point.'},{n:'2',c:'#EF4444',t:'Put the original away',d:'The most important rule. If you can see it you will copy instead of summarise.'},{n:'3',c:'#FB923C',t:'Own words rule',d:'If your sentence sounds like the original — rewrite it completely differently.'}],
+]},rules:[
+{n:"1",c:"#10B981",t:"One main idea per paragraph",d:"Every paragraph has exactly ONE main idea. Find it. That becomes your summary point.",eg:[{lbl:"HOW TO",txt:"Read the paragraph. Ask: if I had to say what this is about in one sentence, what would I say?"},{lbl:"EXAMPLE",txt:"Paragraph about flamingos getting pink from food → summary point: Flamingos get their pink colour from carotene in their food."},{lbl:"NOT",txt:"Do not copy examples or descriptions. Only capture the main fact."}]},
+{n:"2",c:"#EF4444",t:"The most important rule — put it away",d:"Once you have made notes, turn the original text face down before you write.",eg:[{lbl:"WHY",txt:"If you can still see the original, you will copy phrases. That is NOT summarising."},{lbl:"PROCESS",txt:"Read → make notes in your own words → PUT ORIGINAL AWAY → write from notes only."},{lbl:"TEST",txt:"If your summary sounds exactly like the original, rewrite it completely from scratch."}]},
+{n:"3",c:"#FB923C",t:"Traffic light method — highlight before you write",d:"Colour-code the original before writing. Makes selecting main ideas quick and accurate.",eg:[{lbl:"GREEN = KEEP",txt:"Main ideas and core facts. These go into your summary."},{lbl:"ORANGE = MAYBE",txt:"Supporting details. Include only if you need more words."},{lbl:"RED = CUT",txt:"Examples, descriptions, repetition, opinions. Leave all of these out."}]}
+],
 tip:{t:"Traffic light method. Highlight main ideas green, supporting details orange and minor details red. Use only the green highlights when writing your summary.",c:'#0A1628',b:'#2563EB',tc:'#93C5FD'}},
 
 {id:'trans',sec:'Writing',icon:'✉️',ttl:'Transactional writing',sub:'Letters, emails and notices — format earns marks',fc:[
-{type:'mc',q:'What are the six parts of a formal letter?',a:"Sender's address, the date, the recipient's address, the salutation, the body and the sign-off",eg:'Use Yours sincerely when you know their name. Use Yours faithfully for Dear Sir/Madam.',w:['Title, introduction, body, conclusion, signature, date','Heading, subheading, topic sentence, evidence, conclusion, sign-off','To, from, subject, greeting, message, attachment']},
+{type:'mc',q:'What are the six parts of a formal letter?',a:"Sender\'s address, the date, the recipient's address, the salutation, the body and the sign-off",eg:'Use Yours sincerely when you know their name. Use Yours faithfully for Dear Sir/Madam.',w:['Title, introduction, body, conclusion, signature, date','Heading, subheading, topic sentence, evidence, conclusion, sign-off','To, from, subject, greeting, message, attachment']},
 {type:'id',q:'Which sign-off is correct? Explain why.',pass:'Dear Mr Johnson,\nI am writing to request...',a:"Yours sincerely — because you used the person's actual name (Mr Johnson) in the salutation.",hint:'Sincerely = you know their name. Faithfully = Dear Sir or Dear Madam (no name).',eg:'Rule: if you wrote their NAME → Yours sincerely. If you wrote Sir or Madam → Yours faithfully'},
 {type:'fix',q:'This formal letter sentence has a register error. Correct it.',pass:"I'm writing to ask if you guys can send me more info about guide dogs.",a:'I am writing to request further information about guide dogs.',hint:"No contractions in formal letters. No slang. Use formal vocabulary.",eg:"I'm → I am. you guys → you/the organisation. ask → request. info → information"},
 {type:'mc',q:'Yours sincerely or Yours faithfully — when do you use each one?',a:'Sincerely when you used their actual name. Faithfully when you wrote Dear Sir or Dear Madam.',eg:'Dear Sir means Yours faithfully. Dear Mr Smith means Yours sincerely.',w:['Sincerely for informal, faithfully for formal','Sincerely for short letters, faithfully for long ones','Sincerely for female recipients, faithfully for male recipients']},
-{type:'mc',q:'What must every email include?',a:'A subject line, a greeting, short clear paragraphs and a polite sign-off',eg:'Subject: Request for information about the school trip.',w:["Sender's address, recipient's address, date, postscript",'Headline, introduction, body, caption, byline','Opening statement, evidence, counter-argument, conclusion']},
+{type:'mc',q:'What must every email include?',a:'A subject line, a greeting, short clear paragraphs and a polite sign-off',eg:'Subject: Request for information about the school trip.',w:["Sender\'s address, recipient's address, date, postscript",'Headline, introduction, body, caption, byline','Opening statement, evidence, counter-argument, conclusion']},
 {type:'mc',q:'Why are format marks the easiest marks to get in transactional writing?',a:'Because they require no creative thinking — just write the address, date, salutation and sign-off correctly',eg:'Always write the template structure first, even under time pressure.',w:['Because the examiner only checks format and ignores content','Because you can copy the format from the question paper','Because format marks come at the end where examiners are generous']},
 ,
 {type:'tf',q:'Yours sincerely is used when you do not know the name of the person you are writing to.',a:'false',explanation:'Yours sincerely is used when you do know the person\'s name. Dear Mr Smith means Yours sincerely. When you do not know the name, Dear Sir means Yours faithfully.'},
 {type:'tf',q:'Format marks in transactional writing are easy to get because they require no creative thinking.',a:'true',explanation:'Format marks just need you to write the address, date, salutation and sign-off correctly. These are free marks that cost zero creativity. Always write the template first.'},
 {type:'tf',q:'Contractions like I am not and do not are acceptable in a formal letter.',a:'true',explanation:'Full words are required in formal letters. Write I am not the contracted form. No contractions, no slang and no exclamation marks in the body of a formal letter.'}
 ],mm:{c:'Transactional Writing',cc:'#10B981',b:[
-{l:'Formal letter',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:["Sender's address top right","Date, recipient's address","Dear Mr/Ms or Dear Sir/Madam","Body paragraphs","Yours sincerely / Yours faithfully"]},
+{l:'Formal letter',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:["Sender\'s address top right","Date, recipient's address","Dear Mr/Ms or Dear Sir/Madam","Body paragraphs","Yours sincerely / Yours faithfully"]},
 {l:'Informal letter',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:["Your address top right","Dear [first name]","Friendly conversational tone","Love from or Yours truly"]},
 {l:'Email and notice',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['Email: subject line essential','Notice: bold heading, date, purpose','Bullet points for key info']},
-]},rules:[{n:'1',c:'#2563EB',t:'Format marks are free marks',d:'Write address, date, salutation and sign-off even under time pressure. Easy marks.'},{n:'2',c:'#10B981',t:'Sincerely versus faithfully',d:'Sincerely = you know their NAME (Dear Mr Smith). Faithfully = no name (Dear Sir).'},{n:'3',c:'#FB923C',t:'Formal register rules',d:'No contractions. No slang. No exclamation marks. Use full formal words.'}],
+]},rules:[
+{n:"1",c:"#2563EB",t:"Format marks are always free marks",d:"Write the structure first, even under time pressure. Zero creative thinking required.",eg:[{lbl:"FORMAL LETTER",txt:"Your address (top right) → Date → Recipient address (left) → Dear [Name] → Body → Yours sincerely or faithfully → Signature"},{lbl:"EMAIL",txt:"Subject: [clear subject line] → Dear [Name] → Body paragraphs → Kind regards → Your name"},{lbl:"NOTICE",txt:"NOTICE (heading) → Date → To: [audience] → Purpose → Key information → Contact details"}]},
+{n:"2",c:"#10B981",t:"Sincerely vs faithfully — one clear rule",d:"The sign-off depends entirely on whether you used the person's actual NAME in the salutation.",eg:[{lbl:"KNOW THEIR NAME",txt:"Dear Mr Smith → Yours sincerely. You used their actual name."},{lbl:"DO NOT KNOW NAME",txt:"Dear Sir or Dear Madam → Yours faithfully. You used a title, not a name."},{lbl:"MEMORY TRICK",txt:"SincerelY — You know their name. Both words end with a Y sound."}]},
+{n:"3",c:"#FB923C",t:"Formal register — what to avoid",d:"Formal writing has strict language rules. Breaking them costs marks.",eg:[{lbl:"NO CONTRACTIONS",txt:"I am not I'm. Do not not don't. Cannot not can't. Will not not won't."},{lbl:"NO SLANG",txt:"you guys → you or the organisation. info → information. gonna → going to."},{lbl:"NO EXCLAMATION MARKS",txt:"Never use ! in the body of a formal letter. It sounds unprofessional and emotional."}]}
+],
 tip:{t:"Make a template card for each text type. Memorise it. In the exam write the template first then fill in the content.",c:'#0A1F1A',b:'#10B981',tc:'#6EE7B7'}},
 
 {id:'expo',sec:'Writing',icon:'📄',ttl:'Expository writing',sub:'Writing to inform — factual, structured and objective',fc:[
@@ -1007,7 +1289,11 @@ tip:{t:"Make a template card for each text type. Memorise it. In the exam write 
 {l:'Structure',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:['Introduction → body paragraphs → conclusion','One main idea per body paragraph']},
 {l:'Language features',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Present tense, third person','Factual and objective tone','No contractions or slang']},
 {l:'Common mistakes',bg:'#1A0A0A',bd:'#EF4444',tc:'#FCA5A5',i:['Personal opinions — I think','Emotional or narrative elements','Mixing tenses, no topic sentences']},
-]},rules:[{n:'1',c:'#2563EB',t:'One idea per paragraph',d:'Each body paragraph covers exactly one main idea. Two different things? Split them.'},{n:'2',c:'#10B981',t:'Topic sentence first',d:'Write the topic sentence of each paragraph before anything else.'},{n:'3',c:'#EF4444',t:'Remove opinion sentences',d:'Cross out every I think, I believe, In my opinion. Replace with factual statements.'}],
+]},rules:[
+{n:"1",c:"#2563EB",t:"One idea per paragraph — the pillar rule",d:"Each body paragraph supports ONE main idea like a pillar. Two ideas in one paragraph = weak structure.",eg:[{lbl:"CORRECT",txt:"Para 1: where flamingos live. Para 2: what they eat. Para 3: how they communicate. Each paragraph has ONE topic."},{lbl:"WRONG",txt:"Para 1: where they live AND what they eat AND how they communicate. Three ideas in one paragraph = wrong."}]},
+{n:"2",c:"#10B981",t:"Write the topic sentence FIRST",d:"Before writing the body of each paragraph, write the topic sentence. It anchors you and stops you drifting.",eg:[{lbl:"PROCESS",txt:"1. Write topic sentence. 2. Ask: does everything I write support this sentence? 3. If no, cut it."},{lbl:"EXAMPLE",txt:"Topic sentence: Flamingos communicate through a variety of sounds. Every sentence in this paragraph must be about flamingo communication."},{lbl:"TEST",txt:"Read only your topic sentences. Do they together tell the full story of your piece?"}]},
+{n:"3",c:"#EF4444",t:"Remove all personal opinion",d:"Expository writing must be completely factual and objective.",eg:[{lbl:"WRONG",txt:"I think flamingos are fascinating. Personal opinion — remove it."},{lbl:"CORRECT",txt:"Flamingos are widely regarded as one of the most remarkable birds in the world."},{lbl:"ALSO REMOVE",txt:"amazing, wonderful, incredible — emotional adjectives, not facts. Replace with evidence."}]}
+],
 tip:{t:"Sandwich check. Read only the introduction and the conclusion. Do they match? If not, one has gone off topic — fix it before you hand in.",c:'#1C1005',b:'#FB923C',tc:'#FED7AA'}},
 
 // ── 3 NEW TOPICS (DBE gap analysis) ────────────────────────────
@@ -1027,7 +1313,11 @@ tip:{t:"Sandwich check. Read only the introduction and the conclusion. Do they m
 {l:'Direction',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['to, from, towards, away from','up, down, through, across','into, out of, along']},
 {l:'Time',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['at (exact time: at 3pm)','on (day: on Monday)','in (month/year: in January)']},
 {l:'Fixed phrases',bg:'#1A0A1A',bd:'#A855F7',tc:'#D8B4FE',i:['in search OF','afraid OF','good AT','interested IN','next TO']},
-]},rules:[{n:'1',c:'#2563EB',t:'AT / IN / ON for time',d:'AT = exact time (at 3pm). ON = a specific day (on Monday). IN = month, year, season (in January).'},{n:'2',c:'#10B981',t:'AT / IN / ON for place',d:'AT = a point (at school). IN = enclosed space (in the room). ON = a surface (on the table).'},{n:'3',c:'#A855F7',t:'Fixed phrase prepositions',d:'Some prepositions are fixed: in search of, afraid of, good at, interested in. Memorise them.'}],
+]},rules:[
+{n:"1",c:"#2563EB",t:"AT / IN / ON for time",d:"Each preposition covers a different size of time period. Smaller and more precise = smaller preposition.",eg:[{lbl:"AT",txt:"Exact time: at 3pm, at noon, at midnight, at the end of the month."},{lbl:"ON",txt:"Specific day or date: on Monday, on 14 May, on my birthday, on Christmas Day."},{lbl:"IN",txt:"Longer periods: in January, in 2026, in winter, in the morning, in the future."}]},
+{n:"2",c:"#10B981",t:"AT / IN / ON for place",d:"These same three prepositions work differently for locations. Think about the type of place.",eg:[{lbl:"AT",txt:"A specific point or destination: at school, at work, at home, at the corner."},{lbl:"IN",txt:"Inside an enclosed space: in the room, in the car, in Cape Town, in South Africa."},{lbl:"ON",txt:"On a surface or transport: on the table, on the floor, on the bus, on the street."}]},
+{n:"3",c:"#A855F7",t:"Fixed prepositional phrases — memorise these",d:"Some prepositions combine with specific words to form fixed phrases. The preposition cannot be swapped.",eg:[{lbl:"OF",txt:"in search of, afraid of, fond of, capable of, full of, made of"},{lbl:"IN",txt:"interested in, good in, succeed in, believe in, result in"},{lbl:"AT",txt:"good at, angry at, surprised at, arrive at, look at"}]}
+],
 tip:{t:"Preposition trick — if you can imagine it physically (on, under, behind, through) it is showing position or direction. Read the sentence aloud — the wrong preposition sounds strange.",c:'#1A0A1A',b:'#A855F7',tc:'#D8B4FE'}},
 
 {id:'spelling',sec:'Grammar',icon:'🔤',ttl:'Spelling and punctuation correction',sub:'Correcting errors — just like in the exam',fc:[
@@ -1045,7 +1335,11 @@ tip:{t:"Preposition trick — if you can imagine it physically (on, under, behin
 {l:'Common spelling errors',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:['beautiful (not beautifull)','library (not libary)','elegant (not elegent)','beginning (not begining)','necessary (not neccesary)']},
 {l:'Common punctuation errors',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:["Wrong apostrophe in plurals (dogs' is possessive, dogs is just plural)",'Missing question mark','Missing capital letters for proper nouns','its vs it\'s — belonging vs contraction']},
 {l:'Common word confusions',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['there (place) / their (belonging) / they\'re (they are)','to (direction) / too (very) / two (number)','principal (person) / principle (rule)','affect (verb) / effect (noun)']},
-]},rules:[{n:'1',c:'#2563EB',t:'Four-step correction check',d:'Step 1: capitals (names, places, days). Step 2: apostrophes (contraction or possession). Step 3: spelling (sound it out, check suffixes). Step 4: end punctuation (. ? !).'},{n:'2',c:'#10B981',t:'Plural vs possessive apostrophe',d:"Dogs = just plural (no apostrophe). Dog's = one dog owns something. Dogs' = many dogs own something."},{n:'3',c:'#FB923C',t:'Confusable words',d:"there/their/they're. to/too/two. your/you're. its/it's. Expand contractions to check — you're = you are."}],
+]},rules:[
+{n:"1",c:"#2563EB",t:"Four-step error correction check",d:"Use these four steps in order every time you check a sentence for errors.",eg:[{lbl:"STEP 1: CAPITALS",txt:"Check every proper noun: names, places, days, months. All need a capital letter."},{lbl:"STEP 2: APOSTROPHES",txt:"Every apostrophe must be a contraction (don't) or possession (the dog's bone). No other use."},{lbl:"STEP 3: SPELLING",txt:"Sound the word out. Check common trouble spots: beautiful, library, necessary, definitely."},{lbl:"STEP 4: END MARK",txt:"Every sentence ends with . or ? or ! — make sure it is the right one."}]},
+{n:"2",c:"#10B981",t:"Plural vs possessive — apostrophe position",d:"Most plurals have NO apostrophe. Only add one if something BELONGS to the noun.",eg:[{lbl:"PLURAL (no apostrophe)",txt:"The dogs ran away. More than one dog, no possession, no apostrophe."},{lbl:"POSSESSION (apostrophe before s)",txt:"The dog's bone. The bone belongs to one dog."},{lbl:"PLURAL POSSESSION (apostrophe after s)",txt:"The dogs' bones. The bones belong to many dogs."}]},
+{n:"3",c:"#FB923C",t:"Confusable words — there / their / they're",d:"These three words sound identical but have completely different meanings.",eg:[{lbl:"THERE = PLACE",txt:"The book is over THERE. Think: HERE and THERE both have HERE in them."},{lbl:"THEIR = BELONGING",txt:"It is THEIR bag. Think: THEIR has HEIR in it — someone who inherits = belongs to."},{lbl:"THEY'RE = THEY ARE",txt:"THEY'RE going home. Expand it: They are going home. If it fits, use they're."}]}
+],
 tip:{t:"Read the sentence backwards word by word. This breaks the flow and forces you to look at each word individually. Spelling errors are much easier to spot this way.",c:'#1A0A0A',b:'#EF4444',tc:'#FCA5A5'}},
 
 {id:'newspaper',sec:'Writing',icon:'📰',ttl:'Newspaper article format',sub:'Headline, byline, intro and body — exam writing format',fc:[
@@ -1063,7 +1357,11 @@ tip:{t:"Read the sentence backwards word by word. This breaks the flow and force
 {l:'Format (in order)',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:['1. Newspaper name (top)','2. Headline — short and punchy, CAPITALS','3. Byline — By [reporter name]','4. Introduction — the 5 Ws in 1-2 sentences','5. Body paragraphs — details and quotes']},
 {l:'The 5 Ws',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['WHO — who was involved?','WHAT — what happened?','WHEN — when did it happen?','WHERE — where did it happen?','WHY/HOW — why or how did it happen?']},
 {l:'Language features',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['Past tense throughout','Third person (he/she/they)','Short punchy sentences','Include one eyewitness quote','Factual and objective — no opinions']},
-]},rules:[{n:'1',c:'#2563EB',t:'Headline rules',d:'Short (5 words maximum). Present tense. Capital letters. Punchy — tell the story in one line.'},{n:'2',c:'#10B981',t:'Introduction must have 5 Ws',d:'Pack Who, What, When, Where and Why/How into the opening 1-2 sentences. The most important information comes first.'},{n:'3',c:'#FB923C',t:'Format marks are easy marks',d:'Write the newspaper name, headline and byline even under time pressure. These format marks cost zero creativity.'}],
+]},rules:[
+{n:"1",c:"#2563EB",t:"Headline rules — short, punchy, present tense",d:"Headlines have strict conventions that make them stand out and grab attention.",eg:[{lbl:"PRESENT TENSE",txt:"Dog Bites Learner — not Dog Bit Learner. Present tense creates urgency."},{lbl:"SHORT",txt:"Aim for 5 to 8 words maximum. Every word must earn its place."},{lbl:"PUNCHY",txt:"Leave out the, a, an, and is/are where possible: Dog Bites Learner not A Dog Has Bitten a Learner."}]},
+{n:"2",c:"#10B981",t:"Introduction paragraph — pack in the 5 Ws",d:"The first paragraph must answer all five Ws in one or two sentences.",eg:[{lbl:"THE 5 Ws",txt:"WHO + WHAT + WHEN + WHERE + WHY/HOW"},{lbl:"EXAMPLE",txt:"A Grade 6 learner named Jamie (WHO) was bitten by a dog (WHAT) on Monday morning (WHEN) outside Pine Street School (WHERE) when the dog escaped from a nearby yard (HOW)."},{lbl:"TIP",txt:"Read your first paragraph. Can you find all five answers? If not, add the missing one."}]},
+{n:"3",c:"#FB923C",t:"Format marks are the easiest marks",d:"Write the newspaper structure first — even under time pressure.",eg:[{lbl:"FORMAT",txt:"1. Newspaper name | 2. HEADLINE IN CAPITALS | 3. By [Reporter Name] | 4. Introduction (5 Ws) | 5. Body paragraphs"},{lbl:"TIP",txt:"Even if you run out of time, write the format structure first. Those marks cost zero creativity."}]}
+],
 tip:{t:"Mind map first. Put the event in the centre. Five branches = 5 Ws. Fill each branch. Then write your introduction sentence using all five branches at once.",c:'#0A1A1A',b:'#06B6D4',tc:'#67E8F9'}},
 ]}};
 // Set T to active subject terms (all existing code uses T unchanged)
@@ -1128,7 +1426,15 @@ function renderHome(){
 
 // ── Open topic ─────────────────────────────────────────────────
 function openT(id){
-  cTopic=findT(id);cMode='fc';fcIdx=0;attempts=0;revealed=false;selectedWrong=[];
+  cTopic=findT(id);cMode='fc';attempts=0;revealed=false;selectedWrong=[];
+  fillSelected=null;fillSelections=[];
+  // Start at first unanswered question
+  fcIdx=0;
+  for(var i=0;i<cTopic.fc.length;i++){
+    if(!answeredSet[id+'_'+i]){fcIdx=i;break;}
+    // If all answered, stay at last question
+    if(i===cTopic.fc.length-1) fcIdx=i;
+  }
   document.getElementById('HV').style.display='none';
   document.getElementById('TV').style.display='block';
   renderTopic();
@@ -1165,6 +1471,7 @@ function renderTopic(){
       '</div>'+
     '</div>'+
     '<div class="tv-scroll"><div class="study-area">'+body+'</div></div>';
+  setTimeout(applyGlowIfPending, 50);
 }
 
 // ── Flashcard renderer (dispatches by type) ────────────────────
@@ -1182,9 +1489,6 @@ function renderFC(t,tc){
   else if(card.type==='fix') body=renderFix(card);
   else if(card.type==='id') body=renderID(card);
   else if(card.type==='tf') body=renderTF(card);
-  else if(card.type==='fill') body=renderFill(card,t.id);
-  else if(card.type==='fix') body=renderFix(card);
-  else if(card.type==='id') body=renderID(card);
 
   var rev='';
   if(revealed){
@@ -1212,7 +1516,8 @@ function renderFC(t,tc){
   var qBadgeMap={mc:'mc',fill:'fill',fix:'fix',id:'id',tf:'tf'};
   var qLabelMap={mc:'Multiple choice',fill:'Fill in the blank',fix:'Correct the sentence',id:'Identify and explain',tf:'True or false'};
   var qBadge=qBadgeMap[card.type]||'mc',qLabel=qLabelMap[card.type]||'';
-  var passHTML=card.pass?'<div class="passage">'+(card.highlights?applyHighlights(card.pass,card.highlights):esc(card.pass))+'</div>':'';
+  // For fill questions, passage is rendered inside fill-sent - don't show it twice
+  var passHTML=(card.pass&&card.type!=='fill')?'<div class="passage">'+(card.highlights?applyHighlights(card.pass,card.highlights):esc(card.pass))+'</div>':'';
   var ccHTML=card.tokens?renderCCSent(card.tokens):'';
   return hdr+
     '<div class="q-box">'+
@@ -1277,6 +1582,7 @@ function pickMC(c){
   if(already)return;
   var card=cTopic.fc[fcIdx];
   if(c===card.a){
+    revealed=true;
     awardXP(10);
     spkOK(card.a,card.eg);
   }else{
@@ -1289,37 +1595,6 @@ function pickMC(c){
 // ── Fill-in-blank rendering ────────────────────────────────────
 var fillSelected=null;
 var fillSelections=[];
-function renderFill(card,tid){
-  var isMulti=card.blanks&&card.blanks.length>1;
-  var blankIdx=0;
-  var sent=(card.pass||card.q).replace(/_+/g,function(){
-    var val=fillSelections[blankIdx]||'';
-    var cls='blank';
-    if(revealed) cls+=(card.blanks.indexOf(fillSelections[blankIdx])!==-1?' ok':' ko');
-    blankIdx++;
-    return '<span class="'+cls+'">'+(val?esc(val):'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')+'</span>';
-  });
-  window._fillOpts=card.opts?shuffle(card.opts.slice()):[];
-  var opts='<div class="bopts">';
-  for(var i=0;i<window._fillOpts.length;i++){
-    var o=window._fillOpts[i],cls='bopt',dis='';
-    var isSel=fillSelections.indexOf(o)!==-1;
-    var isAns=card.blanks.indexOf(o)!==-1;
-    if(revealed){
-      if(isAns)cls+=' ok';else if(isSel)cls+=' ko';else cls+=' dim';
-      dis=' disabled';
-    }else if(isSel)cls+=' sel';
-    opts+='<button class="'+cls+'"'+dis+' onclick="pickFillIdx('+i+')">'+esc(o)+'</button>';
-  }
-  opts+='</div>';
-  var allOk=revealed&&card.blanks.every(function(b){return fillSelections.indexOf(b)!==-1;});
-  var rev=revealed?'<div class="reveal '+(allOk?'ok':'ko')+'">'+
-    '<div class="rv-ttl">'+(allOk?'Correct! +10 XP':(card.blanks.length>1?'The answers are:':'The answer is:'))+' </div>'+
-    '<div class="rv-ans">'+card.blanks.map(esc).join(' and ')+'</div>'+
-    (card.eg?'<div class="rv-eg">'+esc(card.eg)+'</div>':'')+'</div>':'';
-  var prompt=isMulti&&!revealed?'<div style="font-size:12px;color:#A78BFA;margin:6px 0">Select all '+card.blanks.length+' correct answers (order does not matter)</div>':'';
-  return '<div class="fill-sent">'+sent+'</div>'+prompt+opts+rev;
-}
 function pickFillIdx(i){
   if(revealed)return;
   var card=cTopic.fc[fcIdx],o=window._fillOpts[i];
@@ -1340,16 +1615,6 @@ function pickFillIdx(i){
 function pickFill(o){pickFillIdx(window._fillOpts?window._fillOpts.indexOf(o):0);}
 
 // ── Fix/correct rendering ──────────────────────────────────────
-function renderFix(card){
-  return '<div class="err-box">'+
-    '<div class="err-lbl">Sentence to correct</div>'+
-    '<div class="err-txt">'+esc(card.pass)+'</div>'+
-  '</div>'+
-  '<textarea class="type-in" id="typeIn" placeholder="Type the corrected sentence here..." rows="3"></textarea>'+
-  '<button class="chk-btn" id="chkBtn" onclick="checkFix()">Check my answer</button>'+
-  (revealed?renderFixReveal(card):'');
-}
-
 function renderFixReveal(card){
   var inp=document.getElementById('typeIn');
   var userAns=inp?inp.value.trim():'';
@@ -1361,40 +1626,6 @@ function renderFixReveal(card){
   '</div>';
 }
 
-function checkFix(){
-  if(revealed)return;
-  var card=cTopic.fc[fcIdx];
-  var inp=document.getElementById('typeIn');
-  if(!inp||!inp.value.trim())return;
-  var userAns=inp.value.trim();
-  var correct=userAns.toLowerCase()===card.a.toLowerCase();
-  if(correct){
-    inp.className='type-in ok';
-    doneSet[cTopic.id]=true;
-    xp=Math.min(xp+10,500);streak++;
-    document.getElementById('xpVal').textContent=xp;
-    document.getElementById('xpFill').style.width=Math.round(xp/500*100)+'%';
-    document.getElementById('strVal').textContent=streak;
-    spkOK(card.a,card.eg);
-  }else{
-    inp.className='type-in ko';
-    spkW2(card.a,card.eg);
-  }
-  revealed=true;
-  var chk=document.getElementById('chkBtn');
-  if(chk)chk.disabled=true;
-  // Append reveal below
-  var rev=document.createElement('div');
-  rev.innerHTML=renderFixReveal(card);
-  chk.parentNode.insertBefore(rev.firstChild,chk.nextSibling);
-}
-
-// ── Identify rendering ─────────────────────────────────────────
-function renderID(card){
-  return '<textarea class="type-in" id="typeIn" placeholder="Type your answer here..." rows="3"></textarea>'+
-  '<button class="chk-btn" id="chkBtn" onclick="checkID()">Check my answer</button>'+
-  (revealed?renderIDReveal(card):'');
-}
 
 function renderIDReveal(card){
   return '<div class="reveal ko">'+
@@ -1404,24 +1635,6 @@ function renderIDReveal(card){
   '</div>';
 }
 
-function checkID(){
-  if(revealed)return;
-  var card=cTopic.fc[fcIdx];
-  var inp=document.getElementById('typeIn');
-  if(!inp||!inp.value.trim())return;
-  revealed=true;
-  doneSet[cTopic.id]=true;
-  showConfetti();
-  spkW2(card.a,card.eg);
-  var chk=document.getElementById('chkBtn');
-  if(chk)chk.disabled=true;
-  var rev=document.createElement('div');
-  rev.innerHTML=renderIDReveal(card);
-  chk.parentNode.insertBefore(rev.firstChild,chk.nextSibling);
-}
-
-// ── Fill in blank ──────────────────────────────────────────────
-var fillSelected=null;
 function renderFill(card,tid){
   var sent=(card.pass||card.q).replace(/_+/g,'<span class="blank" id="bslot0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
   var opts='<div class="bopts">';
@@ -1450,10 +1663,7 @@ function pickFill(o){
   fillSelected=o;revealed=true;
   var correct=(o===card.blanks[0]);
   if(correct){
-    doneSet[cTopic.id]=true;xp=Math.min(xp+10,500);streak++;
-    document.getElementById('xpVal').textContent=xp;
-    document.getElementById('xpFill').style.width=Math.round(xp/500*100)+'%';
-    document.getElementById('strVal').textContent=streak;
+    awardXP(10);
     spkOK(card.blanks[0],card.eg);
   }else spkW2(card.blanks[0],card.eg);
   renderTopic();
@@ -1473,10 +1683,10 @@ function checkFix(){
   var card=cTopic.fc[fcIdx],inp=document.getElementById('typeIn');
   if(!inp||!inp.value.trim())return;
   var correct=inp.value.trim().toLowerCase()===card.a.toLowerCase();
+  revealed=true;
   if(correct){inp.className='type-in ok';awardXP(10);
     spkOK(card.a,card.eg);
   }else{inp.className='type-in ko';spkW2(card.a,card.eg);}
-  revealed=true;
   var chk=document.getElementById('chkBtn');if(chk)chk.disabled=true;
   var rev=document.createElement('div');
   rev.innerHTML='<div class="reveal '+(correct?'ok':'ko')+'"><div class="rv-ttl">'+(correct?'Correct! +10 XP':'Correct version:')+'</div><div class="rv-ans">'+esc(card.a)+'</div>'+(card.eg?'<div class="rv-eg">'+esc(card.eg)+'</div>':'')+'</div>';
@@ -1494,7 +1704,8 @@ function checkID(){
   if(revealed)return;
   var card=cTopic.fc[fcIdx],inp=document.getElementById('typeIn');
   if(!inp||!inp.value.trim())return;
-  revealed=true;doneSet[cTopic.id]=true;
+  revealed=true;markAnswered(cTopic.id,fcIdx);
+  saveUser();
   spkW2(card.a,card.eg);
   var chk=document.getElementById('chkBtn');if(chk)chk.disabled=true;
   var rev=document.createElement('div');
@@ -1556,10 +1767,24 @@ function renderRules(t){
   var rh='';
   for(var i=0;i<t.rules.length;i++){
     var r=t.rules[i];
+    // Build example rows if r.eg is an array of {lbl,txt} objects
+    var egHTML='';
+    if(r.eg&&r.eg.length){
+      egHTML='<div class="rule-eg">';
+      for(var j=0;j<r.eg.length;j++){
+        var row=r.eg[j];
+        egHTML+='<div class="rule-eg-row">'+
+          '<span class="rule-eg-lbl" style="background:'+r.c+'22;color:'+r.c+'">'+esc(row.lbl)+'</span>'+
+          '<span class="rule-eg-txt">'+esc(row.txt)+'</span>'+
+          '</div>';
+      }
+      egHTML+='</div>';
+    }
     rh+='<div class="rule-card">'+
       '<div class="rnm" style="background:'+r.c+'">'+r.n+'</div>'+
-      '<div><div class="rt" style="color:'+r.c+'">'+esc(r.t)+'</div>'+
-      '<div class="rd">'+esc(r.d)+'</div></div></div>';
+      '<div style="flex:1"><div class="rt" style="color:'+r.c+'">'+esc(r.t)+'</div>'+
+      '<div class="rd">'+esc(r.d)+'</div>'+egHTML+
+      '</div></div>';
   }
   return rh+
     '<div class="tip-card" style="background:'+t.tip.c+';border-left-color:'+t.tip.b+'">'+
