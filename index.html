@@ -385,10 +385,39 @@ html,body{background:#0F0F1A;min-height:100vh}
   border:1px solid #312E5A;border-radius:8px;background:none;
   font-family:'Lexend',sans-serif;-webkit-appearance:none;}
 
+
+/* ── Subject selector ─────────────────────────────────────── */
+#SUBJ-SCREEN{position:fixed;inset:0;background:#0F0F1A;z-index:900;overflow-y:auto;padding:24px 16px}
+.subj-header{text-align:center;margin-bottom:28px}
+.subj-header h1{font-size:22px;font-weight:700;color:#fff;margin-bottom:6px}
+.subj-header p{font-size:14px;color:#6B7280}
+.subj-grid{display:flex;flex-direction:column;gap:14px;max-width:400px;margin:0 auto}
+.subj-card{
+  border-radius:18px;padding:20px;border:2px solid;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:16px;
+}
+.subj-card:hover{transform:translateY(-2px);filter:brightness(1.15)}
+.subj-icon{font-size:36px;flex-shrink:0;width:56px;height:56px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center}
+.subj-info h2{font-size:17px;font-weight:700;color:#fff;margin-bottom:3px}
+.subj-info p{font-size:13px;line-height:1.5}
+.subj-info .subj-progress{font-size:11px;margin-top:5px;font-weight:600;letter-spacing:.04em}
+.subj-back{display:flex;align-items:center;gap:8px;cursor:pointer;color:#A78BFA;
+  font-size:14px;font-weight:600;margin-bottom:20px;max-width:400px;margin-left:auto;margin-right:auto}
+
 </style>
 </head>
 <body>
 <div id="confetti-stage"></div>
+<!-- Subject selector screen -->
+<div id="SUBJ-SCREEN" style="display:none">
+  <div class="subj-header">
+    <div style="font-size:40px;margin-bottom:8px">📖</div>
+    <h1>Kies jou vak / Choose your subject</h1>
+    <p>Grade 6 — CAPS aligned</p>
+  </div>
+  <div class="subj-grid" id="subjGrid"><!-- rendered by JS --></div>
+</div>
 
 <!-- Name setup screen -->
 <div id="NAME-SCREEN" style="display:none">
@@ -404,7 +433,8 @@ html,body{background:#0F0F1A;min-height:100vh}
 <div id="HV">
   <div class="home-bg">
     <div class="top-bar">
-      <div class="avatar" id="avatarBadge" onclick="switchUser()" style="cursor:pointer;title:'Switch user'">G6</div>
+      <div class="avatar" id="avatarBadge" onclick="switchUser()" style="cursor:pointer" title="Switch user">G6</div>
+      <button onclick="showSubjectScreen()" id="subjectLabel" style="background:#1A1032;border:1.5px solid #7C3AED;border-radius:8px;color:#A78BFA;font-family:'Lexend',sans-serif;font-size:11px;font-weight:600;padding:5px 9px;cursor:pointer;-webkit-appearance:none;margin-left:6px">📚 English</button>
       <div class="xp-wrap">
         <div class="xp-lbl">LEVEL 3 — <span id="xpVal">0</span> / 500 XP</div>
         <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
@@ -414,12 +444,12 @@ html,body{background:#0F0F1A;min-height:100vh}
     </div>
     <div class="hero">
       <div class="hero-hi">READY TO STUDY?</div>
-      <div class="hero-ttl">English<br><span>Home Language</span></div>
+      <div class="hero-ttl" id="heroTitle">English<br><span>Home Language</span></div>
     </div>
   </div>
   <div class="term-row">
-    <button class="term-btn on" id="tb1" onclick="swTab(1)">Term 1</button>
-    <button class="term-btn off" id="tb2" onclick="swTab(2)">Term 2</button>
+    <button class="term-btn on" id="tb1" onclick="swTab(1)" data-en="Term 1" data-af="Termyn 1">Term 1</button>
+    <button class="term-btn off" id="tb2" onclick="swTab(2)" data-en="Term 2" data-af="Termyn 2">Term 2</button>
   </div>
   <div class="prog-box">
     <svg width="60" height="60" viewBox="0 0 60 60" style="transform:rotate(-90deg);flex-shrink:0">
@@ -546,8 +576,8 @@ function applyGlowIfPending(){
       var banner=document.createElement('div');
       banner.style.cssText='background:linear-gradient(135deg,#052E16,#065F46);border:2px solid #10B981;border-radius:14px;padding:16px;text-align:center;animation:slideUp .4s ease;margin-top:8px';
       banner.innerHTML='<div style="font-size:28px;margin-bottom:6px">🎉</div>'+
-        '<div style="font-size:16px;font-weight:700;color:#34D399;margin-bottom:4px">Topic complete!</div>'+
-        '<div style="font-size:13px;color:#6EE7B7">You answered every question in this topic.<br>Head back to tick it off!</div>';
+        '<div style="font-size:16px;font-weight:700;color:#34D399;margin-bottom:4px">'+L('Topic complete!','Onderwerp voltooi!')+'</div>'+
+        '<div style="font-size:13px;color:#6EE7B7">'+L('You answered every question in this topic.<br>Head back to tick it off!','Jy het elke vraag in hierdie onderwerp beantwoord.<br>Gaan terug om dit af te merk!')+'</div>';
       sa.appendChild(banner);
     }
   }
@@ -686,6 +716,7 @@ function enterApp(){
     av.textContent = currentUser.name.charAt(0).toUpperCase();
     av.title = currentUser.name + ' — tap to switch user';
   }
+  updateSubjectUI();
   renderHome();
 }
 
@@ -709,6 +740,124 @@ function updateGreetingBar(){
   }
 })();
 
+
+
+// ── Subject selector ──────────────────────────────────────────
+
+function showSubjectScreen(){
+  // Render subject cards
+  var subjects = Object.values(SUBJECTS);
+  var grid = document.getElementById('subjGrid');
+  if(!grid) return;
+  var html = '';
+  subjects.forEach(function(s){
+    var totalTopics = (s.terms[1]||[]).length + (s.terms[2]||[]).length;
+    var doneTopic = 0;
+    (s.terms[1]||[]).concat(s.terms[2]||[]).forEach(function(t){
+      if(doneSet[t.id]) doneTopic++;
+    });
+    var pct = totalTopics ? Math.round(doneTopic/totalTopics*100) : 0;
+    html += '<div class="subj-card" style="background:'+s.bg+';border-color:'+s.color+'" onclick="selectSubject(\''+s.id+'\')">'+
+      '<div class="subj-icon" style="background:'+s.color+'22">'+s.icon+'</div>'+
+      '<div class="subj-info">'+
+        '<h2>'+esc(s.name)+'</h2>'+
+        '<p style="color:'+s.color+'">'+esc(s.subtitle)+'</p>'+
+        '<div class="subj-progress" style="color:#6B7280">'+doneTopic+' / '+totalTopics+' topics done · '+pct+'%</div>'+
+      '</div>'+
+    '</div>';
+  });
+  grid.innerHTML = html;
+  document.getElementById('SUBJ-SCREEN').style.display = 'block';
+  document.getElementById('R').style.display = 'none';
+}
+
+function selectSubject(id){
+  if(!SUBJECTS[id]) return;
+  cSubject = id;
+  T = SUBJECTS[id].terms;
+  cTerm = 1;
+  cTopic = null;
+  cMode = 'fc';
+  fcIdx = 0; attempts = 0; revealed = false;
+  selectedWrong = []; fillSelected = null; fillSelections = []; choiceCache = {};
+  document.getElementById('SUBJ-SCREEN').style.display = 'none';
+  document.getElementById('R').style.display = 'block';
+  updateSubjectUI();
+  renderHome();
+}
+
+function updateSubjectUI(){
+  var s = SUBJECTS[cSubject];
+  if(!s) return;
+  var isAf = cSubject === 'afrikaans';
+  // Update top bar subject button
+  var subLbl = document.getElementById('subjectLabel');
+  if(subLbl) subLbl.textContent = s.icon + ' ' + s.name;
+  // Update hero title
+  var heroTitle = document.getElementById('heroTitle');
+  if(heroTitle) heroTitle.innerHTML = s.name + '<br><span>' + s.subtitle + '</span>';
+  // Update term tab labels
+  var tb1 = document.getElementById('tb1');
+  var tb2 = document.getElementById('tb2');
+  if(tb1) tb1.textContent = isAf ? 'Termyn 1' : 'Term 1';
+  if(tb2) tb2.textContent = isAf ? 'Termyn 2' : 'Term 2';
+  // Update TTS voice for Afrikaans
+  if(isAf){
+    TTS_VOICE = {languageCode:'af-ZA',name:'af-ZA-Standard-A',ssmlGender:'FEMALE'};
+  } else {
+    TTS_VOICE = {languageCode:'en-GB',name:'en-GB-Wavenet-C',ssmlGender:'FEMALE'};
+  }
+  // Clear TTS cache when switching language
+  ttsCache = {};
+}
+
+
+
+// ── Language-aware text ────────────────────────────────────────
+// Returns text in the current subject language
+function L(en, af){
+  return (cSubject === 'afrikaans') ? af : en;
+}
+
+// Localised spoken feedback phrases
+function spkOK(a,eg){
+  if(muted)return;
+  var t=L('Excellent! That is correct. ','Uitstekend! Dit is korrek. ')+a+'.';
+  if(eg)t+=L(' For example, ',' Byvoorbeeld, ')+eg+'.';
+  speakT(t);
+}
+function spkW1(){
+  if(muted)return;
+  var p=L(
+    ['Not quite, try again! You have got this!','Hmm, not this one. Give it another go!','Close! Think again, I know you can do it!'],
+    ['Nie heeltemal nie, probeer weer! Jy kan dit!','Hmm, nie hierdie een nie. Probeer nog een keer!','Amper! Dink weer, ek weet jy kan dit doen!']
+  );
+  speakT(p[Math.floor(Math.random()*p.length)]);
+}
+function spkW2(a,eg){
+  if(muted)return;
+  var t=L('Good try! The answer is ','Goeie poging! Die antwoord is ')+a+'.';
+  if(eg)t+=L(' Remember, ',' Onthou, ')+eg+'.';
+  t+=L(' Keep going!',' Gaan voort!');
+  speakT(t);
+}
+function spkMM(mm){
+  if(muted)return;
+  var tx=L('Mind map for ','Breinkaart vir ')+mm.c+'. ';
+  for(var i=0;i<mm.b.length;i++)tx+=mm.b[i].l+': '+mm.b[i].i.join('. ')+'. ';
+  speakT(tx);
+}
+function spkR(rules,tip){
+  if(muted)return;
+  var tx='';
+  var ruleWord=L('Rule ','Reël ');
+  for(var i=0;i<rules.length;i++){
+    var d=rules[i].d.replace(/\|/g,'. ');
+    tx+=ruleWord+rules[i].n+'. '+rules[i].t+'. '+d+'. ';
+  }
+  tx+=L('Tip: ','Wenk: ')+tip;
+  speakT(tx);
+}
 
 // ── Mute ──────────────────────────────────────────────────────
 var muted=false;
@@ -819,11 +968,6 @@ if(synth.onvoiceschanged!==undefined)synth.onvoiceschanged=loadFB;
 loadFB();setTimeout(loadFB,500);setTimeout(loadFB,1500);
 function browserSpeak(text){if(muted||!text)return;if(synth.speaking)synth.cancel();var u=new SpeechSynthesisUtterance(text);if(fbVoice)u.voice=fbVoice;u.rate=0.88;u.pitch=1.08;u.volume=1;synth.speak(u);}
 
-function spkOK(a,eg){if(muted)return;var t='Excellent! That is correct. '+a+'.';if(eg)t+=' For example, '+eg+'.';speakT(t);}
-function spkW1(){if(muted)return;var p=['Not quite, try again! You have got this!','Hmm, not this one. Give it another go!','Close! Think again, I know you can do it!'];speakT(p[Math.floor(Math.random()*p.length)]);}
-function spkW2(a,eg){if(muted)return;var t='Good try! The answer is '+a+'.';if(eg)t+=' Remember, '+eg+'.';t+=' Keep going!';speakT(t);}
-function spkMM(mm){if(muted)return;var tx='Mind map for '+mm.c+'. ';for(var i=0;i<mm.b.length;i++)tx+=mm.b[i].l+': '+mm.b[i].i.join('. ')+'. ';speakT(tx);}
-function spkR(rules,tip){if(muted)return;var tx='';for(var i=0;i<rules.length;i++){var d=rules[i].d.replace(/\|/g,'. ');tx+='Rule '+rules[i].n+'. '+rules[i].t+'. '+d+'. ';}tx+='Tip: '+tip;speakT(tx);}
 
 // ── State ──────────────────────────────────────────────────────
 var xp=0,streak=0,doneSet={};
@@ -849,7 +993,7 @@ var SUBJECTS={};
 // Register English (current subject)
 SUBJECTS.english={
   id:'english',name:'English',subtitle:'Home Language',
-  icon:'📚',color:'#7C3AED',grade:6,
+  icon:'📚',color:'#7C3AED',bg:'#1A1032',grade:6,
   terms:{1:[
 {id:'nouns',sec:'Grammar',icon:'🅰️',ttl:'Nouns',sub:'Common, proper, abstract, collective, possessive',fc:[
 {type:'mc',q:'What is a common noun?',a:'A general name for any person, place or thing',eg:'dog, city, table, teacher',w:['A specific name that starts with a capital letter','A word that shows an action or state','A word that joins two sentences']},
@@ -1365,6 +1509,380 @@ tip:{t:"Read the sentence backwards word by word. This breaks the flow and force
 tip:{t:"Mind map first. Put the event in the centre. Five branches = 5 Ws. Fill each branch. Then write your introduction sentence using all five branches at once.",c:'#0A1A1A',b:'#06B6D4',tc:'#67E8F9'}},
 ]}};
 // Set T to active subject terms (all existing code uses T unchanged)
+// ── Afrikaans EAT (Eerste Addisionele Taal) ────────────────────
+SUBJECTS.afrikaans={
+  id:'afrikaans',name:'Afrikaans',subtitle:'Eerste Addisionele Taal',
+  icon:'🦁',color:'#F97316',bg:'#1A0D05',grade:6,
+  terms:{1:[
+
+{id:'af_selfstandige',sec:'Taalstrukture',icon:'🔤',ttl:'Selfstandige Naamwoorde',sub:'Soortname, eiename, versamelname, abstrakte naamwoorde',fc:[
+{type:'mc',q:'Wat is \'n soortnaam?',a:'\'n Algemene naam vir enige persoon, plek of ding',eg:'hond, stad, tafel, boom',w:['\'n Spesifieke naam wat altyd met \'n hoofletter begin','\'n Naam vir \'n groep dinge','\'n Naam vir iets wat jy nie kan sien nie']},
+{type:'mc',q:'Wat is \'n eienaam?',a:'\'n Spesifieke naam wat altyd met \'n HOOFLETTER begin',eg:'Kaapstad, Zanele, Maandag, Suid-Afrika',w:['\'n Algemene naam vir gewone dinge','\'n Woord wat \'n werkwoord beskryf','\'n Naam vir \'n gevoel of idee']},
+{type:'mc',q:'Wat is \'n abstrakte naamwoord?',a:'Iets wat jy nie kan sien of aanraak nie — \'n gevoel, idee of eienskap',eg:'liefde, vryheid, geluk, moed',w:['\'n Naam vir \'n spesifieke plek of persoon','\'n Woord wat \'n handeling beskryf','\'n Naam vir \'n groep diere']},
+{type:'mc',q:'Wat is \'n versamelnaam?',a:'Een woord wat \'n GROEP dinge benoem',eg:'\'n trop skape, \'n swerm bye, \'n kudde olifante',w:['\'n Woord wat toon dat iets aan iemand behoort','Iets wat jy nie kan sien of aanraak nie','\'n Spesifieke naam wat met \'n hoofletter begin']},
+{type:'fill',q:'Kies die TWEE SELFSTANDIGE NAAMWOORDE in hierdie sin.',pass:'Die hond het die groot been gevind.',blanks:['hond','been'],opts:['hond','been','groot','gevind'],eg:'Selfstandige naamwoorde is benamingswoorde — persone, plekke of dinge'},
+{type:'tf',q:'\'n Eienaam begin altyd met \'n hoofletter.',a:'true',explanation:'Eiename benoem spesifieke persone, plekke of dae — hulle begin altyd met \'n hoofletter. Voorbeelde: Johannesburg, Zanele, Vryday.'},
+{type:'tf',q:'\'n Abstrakte selfstandige naamwoord is iets wat jy kan aanraak.',a:'false',explanation:'Abstrakte naamwoorde is gevoelens en idees wat jy NIE kan aanraak nie — soos liefde, vrees, vryheid en geluk.'},
+{type:'tf',q:'\'n Versamelnaam beskryf \'n groep as \'n eenheid.',a:'true',explanation:'\'n Versamelnaam gee een woord vir \'n hele groep — \'n trop skape, \'n swerm bye. Die groep word as een ding gesien.'}
+],mm:{c:'Selfstandige Naamwoorde',cc:'#F97316',b:[
+{l:'Soortname',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Algemene name: hond, stad, boom','Geen hoofletter nodig nie','Verwys na enige lid van \'n groep']},
+{l:'Eiename',bg:'#1A0E05',bd:'#F59E0B',tc:'#FDE68A',i:['Spesifieke name: Kaapstad, Petrus','ALTYD met hoofletter','Dae, maande, plekke, persone']},
+{l:'Abstrakte Naamwoorde',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['Kan nie sien of aanraak nie','Gevoelens en idees: liefde, moed','Dikwels eindig op -heid, -ness, -ing']},
+{l:'Versamelname',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Een woord vir \'n groep','Trop skape, swerm bye','Kudde olifante, skool visse']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Die benamingstoets',d:'Vra: Is dit die naam van \'n persoon, plek of ding? As ja — dit is \'n selfstandige naamwoord.',eg:[{lbl:'TOETS',txt:'Hond — is dit \'n naam van iets? Ja. Selfstandige naamwoord.'},{lbl:'TOETS',txt:'Hardloop — is dit \'n naam van iets? Nee — dit is \'n werkwoord.'}]},
+{n:'2',c:'#F59E0B',t:'Eienaam of soortnaam?',d:'Eienaam = spesifieke naam = HOOFLETTER. Soortnaam = algemene naam = kleinletter.',eg:[{lbl:'EIENAAM','txt':'Kaapstad, Zanele, Maandag — spesifiek, hoofletter'},{lbl:'SOORTNAAM','txt':'stad, seun, dag — algemeen, kleinletter'}]},
+{n:'3',c:'#EF4444',t:'Geslagsvorm van naamwoorde',d:'Baie Afrikaanse naamwoorde het manlike en vroulike vorme.',eg:[{lbl:'MANLIK','txt':'seun, broer, oom, haan, bul, ram'},{lbl:'VROULIK','txt':'meisie, suster, tante, hen, koei, ooi'},{lbl:'REEL',txt:'Leer die vroulike vorme — hulle volg nie altyd n reël nie.'}]}
+],tip:{t:'Onderstreep alle selfstandige naamwoorde in \'n sin in BLOU. Dit help jou om die patroon raak te sien en ander woordsoorte beter te verstaan.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_voornaamwoorde',sec:'Taalstrukture',icon:'👤',ttl:'Voornaamwoorde',sub:'Persoonlike, besitlike en aanwysende voornaamwoorde',fc:[
+{type:'mc',q:'Watter voornaamwoord vervang "die seun"?',a:'Hy',eg:'Die seun hardloop. → Hy hardloop.',w:['Sy','Hulle','Dit']},
+{type:'mc',q:'Wat is die besitlike voornaamwoord vir "ek"?',a:'my',eg:'Dit is my boek. My vervang die frase "behorende aan my".',w:['hy','hom','myne']},
+{type:'mc',q:'Watter sin gebruik die aanwysende voornaamwoord korrek?',a:'Hierdie boek is interessant.',eg:'Hierdie wys na iets naby. Daardie wys na iets ver.',w:['Hy boek is interessant.','My boek is interessant.','Hulle boek is interessant.']},
+{type:'fill',q:'Kies die korrekte voornaamwoord om "die meisies" te vervang.',pass:'Die meisies het hard gewerk.',blanks:['Hulle'],opts:['Hy','Sy','Hulle','Dit'],eg:'Meer as een persoon = hulle'},
+{type:'tf',q:'"Hy" word gebruik om na \'n vroulike persoon te verwys.',a:'false',explanation:'"Hy" verwys na \'n manlike persoon. Vir \'n vroulike persoon gebruik ons "sy". Vir \'n groep gebruik ons "hulle".'},
+{type:'tf',q:'"Myne" is \'n selfstandige besitlike voornaamwoord.',a:'true',explanation:'"Myne" staan alleen sonder \'n naamwoord. "Dit is myne" — geen naamwoord nodig nie. Vergelyk met "my boek" waar "my" \'n naamwoord benodig.'},
+{type:'tf',q:'"Hierdie" verwys na iets naby en "daardie" na iets ver.',a:'true',explanation:'Hierdie = naby (hier). Daardie = ver (daar). Dit is aanwysende voornaamwoorde wat die posisie van \'n ding aandui.'}
+],mm:{c:'Voornaamwoorde',cc:'#F97316',b:[
+{l:'Persoonlike Voornaamwoorde',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['ek, jy, hy, sy, ons, julle, hulle','Vervang selfstandige naamwoorde','Enkelvoud vs. meervoud']},
+{l:'Besitlike Voornaamwoorde',bg:'#1A0E05',bd:'#F59E0B',tc:'#FDE68A',i:['my, jou, sy, haar, ons, julle, hul','Wys aan wie iets behoort','my boek, jou pen, sy tas']},
+{l:'Aanwysende Voornaamwoorde',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['hierdie (naby), daardie (ver)','die, hierdie, daardie','Wys die posisie van \'n ding']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Manlik of vroulik?',d:'Kyk na die persoon of dier om die regte voornaamwoord te kies.',eg:[{lbl:'MANLIK','txt':'seun, pa, broer, haan → hy, hom, sy (besitlik)'},{lbl:'VROULIK','txt':'meisie, ma, suster, koei → sy, haar'},{lbl:'GROEP','txt':'Meer as een persoon of ding → hulle'}]},
+{n:'2',c:'#F59E0B',t:'Voornaamwoord-naamwoord ooreenstemming',d:'Die voornaamwoord moet met die naamwoord wat dit vervang ooreenstem.',eg:[{lbl:'REG','txt':'Die seun loop. → Hy loop. (seun = manlik = hy)'},{lbl:'FOUT','txt':'Die seun loop. → Sy loop. ✗ (sy is vroulik, seun is manlik)'}]},
+{n:'3',c:'#EF4444',t:'my vs. myne',d:'"my" kom voor \'n naamwoord. "myne" staan alleen.',eg:[{lbl:'MY','txt':'Dit is my boek. (my + naamwoord)'},{lbl:'MYNE','txt':'Die boek is myne. (staan alleen — geen naamwoord)'},{lbl:'REEL',txt:'jou/joune, sy/syne, haar/hare — dieselfde patroon'}]}
+],tip:{t:'Vervang die naamwoord met die voornaamwoord en lees die sin hardop. As dit reg klink, is jy reg!',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_werkwoorde',sec:'Taalstrukture',icon:'⚡',ttl:'Werkwoorde en Tydsvorme',sub:'Teenwoordige tyd, verlede tyd, toekomende tyd',fc:[
+{type:'mc',q:'Watter sin is in die TEENWOORDIGE TYD?',a:'Die kind speel in die tuin.',eg:'Teenwoordige tyd beskryf iets wat NOU gebeur.',w:['Die kind het in die tuin gespeel.','Die kind sal in die tuin speel.','Die kind het gespeel.']},
+{type:'mc',q:'Hoe vorm jy die VERLEDE TYD in Afrikaans?',a:'Gebruik "het" + die voltooide deelwoord (ge- + werkwoord)',eg:'Hy het geloop. Sy het gegeet. Hulle het gespeel.',w:['Gebruik "sal" + die werkwoord','Gebruik "word" + die werkwoord','Voeg -de aan die werkwoord']},
+{type:'mc',q:'Watter sin is in die TOEKOMENDE TYD?',a:'Ons sal môre rugby speel.',eg:'Toekomende tyd gebruik "sal" + die grondvorm van die werkwoord.',w:['Ons het rugby gespeel.','Ons speel rugby.','Ons het rugby gespeel het.']},
+{type:'fill',q:'Kies die korrekte voltooide deelwoord.',pass:'Die kinders het die koek ___.',blanks:['geëet'],opts:['geëet','eet','sal eet','gegeet'],eg:'Het + geëet = verlede tyd van eet'},
+{type:'fix',q:'Korrigeer die sin — sit dit in die verlede tyd.',pass:'Die meisie loop skool toe.',a:'Die meisie het skool toe geloop.',hint:'Gebruik "het" + ge- + werkwoord',eg:'loop → het geloop'},
+{type:'tf',q:'In Afrikaans gebruik jy "het" om die verlede tyd te vorm.',a:'true',explanation:'Die verlede tyd in Afrikaans gebruik "het" saam met die voltooide deelwoord. Byvoorbeeld: Hy het geloop. Sy het geëet. Hulle het gespeel.'},
+{type:'tf',q:'"Sal" word gebruik om die teenwoordige tyd te vorm.',a:'false',explanation:'"Sal" word gebruik vir die TOEKOMENDE tyd — iets wat nog gaan gebeur. Die teenwoordige tyd gebruik die grondvorm van die werkwoord sonder hulpwerkwoord.'},
+{type:'tf',q:'Die voltooide deelwoord van "loop" is "geloop".',a:'true',explanation:'Meeste Afrikaanse werkwoorde vorm hul voltooide deelwoord deur "ge-" voor die werkwoord te voeg. loop → geloop, werk → gewerk, speel → gespeel.'}
+],mm:{c:'Werkwoorde en Tydsvorme',cc:'#F97316',b:[
+{l:'Teenwoordige Tyd',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Iets gebeur NOU','Grondvorm: ek loop, sy eet','Geen hulpwerkwoord nodig nie']},
+{l:'Verlede Tyd',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Iets het al gebeur','het + ge- + werkwoord','Hy het geloop, sy het gegeet']},
+{l:'Toekomende Tyd',bg:'#1A0E05',bd:'#F59E0B',tc:'#FDE68A',i:['Iets gaan NOG gebeur','sal + grondvorm','Ons sal more speel']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Die gister-toets vir verlede tyd',d:'Sit "gister" voor die sin. As dit reg klink, is die sin in die verlede tyd.',eg:[{lbl:'TOETS','txt':'Gister het sy geloop. Klink reg = verlede tyd.'},{lbl:'FOUT','txt':'Gister sy loop. Klink fout = nie verlede tyd nie.'}]},
+{n:'2',c:'#F59E0B',t:'ge- reël',d:'Voeg ge- voor die meeste werkwoorde om die voltooide deelwoord te vorm.',eg:[{lbl:'REËLMATIG','txt':'loop → geloop, werk → gewerk, speel → gespeel'},{lbl:'BEGIN MET BE-/ER-/VER-','txt':'bestuur → bestuur (geen ge-), verduidelik → verduidelik'},{lbl:'ONREËLMATIG','txt':'eet → geëet, bring → gebring, koop → gekoop'}]},
+{n:'3',c:'#EF4444',t:'Toekomende tyd met sal',d:'"Sal" + die grondvorm van die werkwoord = toekomende tyd.',eg:[{lbl:'FORMULE','txt':'sal + grondvorm (nie ge- nie!)'},{lbl:'REG','txt':'Ek sal more kom. Hy sal werk.'},{lbl:'FOUT','txt':'Ek sal more gekom. ✗ — Moenie ge- gebruik na sal nie.'}]}
+],tip:{t:'Onthou die drie tye: SPEEL (nou) / HET GESPEEL (gister) / SAL SPEEL (more). Gebruik hierdie drie sinne om enige werkwoord te oefen.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_sinsoorte',sec:'Taalstrukture',icon:'❓',ttl:'Sinsoorte',sub:'Stellende, vraende, bevelende en uitroepsinne',fc:[
+{type:'mc',q:'Watter soort sin is: "Sluit asseblief die deur."?',a:'\'n Bevelsin — gee \'n opdrag',eg:'Bevelsinne gee opdragte. Hulle eindig gewoonlik met \'n punt.',w:['\'n Vraagsin — stel \'n vraag','\'n Uitroepsin — druk sterk gevoel uit','\'n Stellingsin — maak \'n bewering']},
+{type:'mc',q:'Watter leesteken gebruik jy aan die einde van \'n vraagsin?',a:'\'n Vraagteken (?)',eg:'Gaan jy more skool toe? Waar is my boek?',w:['\'n Punt (.)','\'n Uitroepteken (!)','\'n Komma (,)']},
+{type:'mc',q:'Watter sin is \'n uitroepsin?',a:'"Watse pragtige dag!"',eg:'Uitroepsinne druk sterk gevoelens uit — opwinding, skok, blydskap.',w:['Hy het ver geloop.','Wanneer begin die wedstryd?','Maak die venster toe.']},
+{type:'tf',q:'\'n Stellingsin eindig altyd met \'n uitroepteken.',a:'false',explanation:'\'n Stellingsin maak \'n bewering en eindig met \'n PUNT. Byvoorbeeld: Die kat sit op die mat. \'n Uitroepteken gebruik jy vir uitroepsinne.'},
+{type:'tf',q:'\'n Bevelsin begin gewoonlik met \'n werkwoord.',a:'true',explanation:'Bevelsinne begin met die grondvorm van die werkwoord — die onderwerp "jy" is weggelaat. Sit! Loop! Luister! — die werkwoord kom eerste.'},
+{type:'tf',q:'Dieselfde sin kan sowel \'n vraag as \'n stelling wees afhangend van die leesteken.',a:'true',explanation:'Dit reën. (stelling) vs. Dit reën? (vraag met verbasing). Die leesteken verander die betekenis en toon van die sin.'}
+],mm:{c:'Sinsoorte',cc:'#F97316',b:[
+{l:'Stellingsin',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['Maak \'n bewering','Eindig met punt (.)','Die hond blaf hard.']},
+{l:'Vraagsin',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Stel \'n vraag','Eindig met vraagteken (?)','Waar is my boek?']},
+{l:'Bevelsin',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Gee \'n opdrag','Eindig met punt of !','Begin met werkwoord']},
+{l:'Uitroepsin',bg:'#1A0E05',bd:'#F59E0B',tc:'#FDE68A',i:['Druk sterk gevoel uit','Eindig met uitroepteken (!)','Watse vreeslike storm!']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Vier sinsoorte — vier leestekens',d:'Elke sinsoort het sy eie leesteken aan die einde.',eg:[{lbl:'STELLING (.)','txt':'Die son skyn. — bewering, eindig met punt.'},{lbl:'VRAAG (?)','txt':'Skyn die son? — vraag, eindig met vraagteken.'},{lbl:'BEVEL (.)','txt':'Kyk na die son. — opdrag, eindig met punt.'},{lbl:'UITROEP (!)','txt':'Watse helder son! — gevoel, eindig met uitroepteken.'}]},
+{n:'2',c:'#F59E0B',t:'Vraagsin — woordorde verander',d:'In Afrikaanse vraagsinne verander die woordorde — die werkwoord kom voor die onderwerp.',eg:[{lbl:'STELLING','txt':'Jy loop skool toe.'},{lbl:'VRAAG','txt':'Loop jy skool toe? — werkwoord (loop) kom voor onderwerp (jy).'},{lbl:'MET VRAAGWOORD','txt':'Wanneer loop jy skool toe? — vraagwoord eerste, dan werkwoord.'}]},
+{n:'3',c:'#EF4444',t:'Vraagwoorde',d:'Onthou die sewe Afrikaanse vraagwoorde.',eg:[{lbl:'WIE','txt':'Wie het dit gedoen? — persoon'},{lbl:'WAT / WAAR / WANNEER','txt':'Wat gebeur? Waar is jy? Wanneer kom jy?'},{lbl:'WAAROM / HOE / HOEVEEL','txt':'Waarom huil jy? Hoe laat is dit? Hoeveel kos dit?'}]}
+],tip:{t:'Lees jou sin hardop en luister na die toon van jou stem. Gaan jou stem op? Dit is \'n vraag. Bly dit plat? Dit is \'n stelling.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_ontkenning',sec:'Taalstrukture',icon:'🚫',ttl:'Ontkenning',sub:'Die nie...nie reël in Afrikaans',fc:[
+{type:'mc',q:'Hoe maak jy \'n sin negatief in Afrikaans?',a:'Gebruik "nie" aan die einde EN "nie" na die werkwoord',eg:'Ek loop. → Ek loop nie. / Ek het geloop. → Ek het nie geloop nie.',w:['Voeg net "nie" aan die einde','Gebruik "nooit" voor die werkwoord','Voeg "on-" voor die werkwoord']},
+{type:'mc',q:'Watter ontkenningsin is KORREK?',a:'Sy drink nie melk nie.',eg:'Afrikaans gebruik dubbele ontkenning: nie...nie',w:['Sy drink nie melk.','Sy nie drink melk.','Nie sy drink melk.']},
+{type:'fix',q:'Korrigeer die ontkenningsin.',pass:'Hy het gewerk nie.',a:'Hy het nie gewerk nie.',hint:'Eerste "nie" kom NET NA die hulpwerkwoord "het"',eg:'het nie gewerk nie = verlede tyd ontkenning'},
+{type:'tf',q:'Afrikaans gebruik dubbele ontkenning met twee "nie".',a:'true',explanation:'Afrikaans gebruik altyd twee "nie" in \'n negatiewe sin — een na die werkwoord of hulpwerkwoord, en een aan die einde. Hierdie is die nie...nie reël.'},
+{type:'tf',q:'"Ek loop nie" is \'n korrekte Afrikaanse ontkenningsin.',a:'false',explanation:'In Afrikaans moet jy TWEE "nie" gebruik. Die korrekte sin is "Ek loop nie SKOOL TOE nie" of "Ek loop nie." is net aanvaarbaar as daar reeds voor dit iets gesê is. Formeel: ek loop nie...nie.'},
+{type:'tf',q:'In die verlede tyd kom die eerste "nie" NA "het".',a:'true',explanation:'Hy het nie geloop nie. Die eerste "nie" kom direk na "het" en voor die voltooide deelwoord. Die tweede "nie" kom aan die einde van die sin.'}
+],mm:{c:'Ontkenning',cc:'#F97316',b:[
+{l:'nie...nie Reël',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['Twee "nie" in elke negatiewe sin','Eerste nie na die werkwoord','Tweede nie aan die einde']},
+{l:'Teenwoordige Tyd',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Ek loop. → Ek loop nie.','Sy eet. → Sy eet nie.','Negatief: werkwoord + nie (einde)']},
+{l:'Verlede Tyd',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Ek het geloop. → Ek het nie geloop nie.','Eerste nie na het','Tweede nie aan die einde']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Die nie...nie formule',d:'Voeg twee "nie" by enige sin om dit negatief te maak.',eg:[{lbl:'FORMULE','txt':'Onderwerp + werkwoord + NIE ... NIE'},{lbl:'TEENWOORDIG','txt':'Hy werk. → Hy werk nie.'},{lbl:'VERLEDE','txt':'Hy het gewerk. → Hy het nie gewerk nie.'}]},
+{n:'2',c:'#F59E0B',t:'Posisie van die eerste nie',d:'Die eerste nie kom ALTYD direk na die werkwoord of na het.',eg:[{lbl:'NA WERKWOORD','txt':'Ek LOOP NIE skool toe nie.'},{lbl:'NA HET','txt':'Ek het NIE geloop nie.'},{lbl:'NA SAL','txt':'Ek sal NIE loop nie.'}]},
+{n:'3',c:'#EF4444',t:'Nooit en nêrens',d:'Nooit en nêrens vervang ook die eerste nie maar behou nog die laaste nie.',eg:[{lbl:'NOOIT','txt':'Hy loop NOOIT skool toe nie.'},{lbl:'NÊRENS','txt':'Sy gaan NÊRENS nie.'},{lbl:'REEL','txt':'Nooit/nêrens + sin + nie aan die einde.'}]}
+],tip:{t:'Dink aan nie...nie as \'n toebroodjie — een sny brood voor, een sny brood agter. Die vulsel (die sin) sit in die middel.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_byvoeglik',sec:'Taalstrukture',icon:'🎨',ttl:'Byvoeglike Naamwoorde',sub:'Vorme, intensiewe vorme, trappe van vergelyking',fc:[
+{type:'mc',q:'Wat doen \'n byvoeglike naamwoord?',a:'Dit beskryf \'n selfstandige naamwoord',eg:'die GROOT hond, die BLOU hemel, \'n GELUKKIGE kind',w:['Dit beskryf \'n werkwoord','Dit vervang \'n selfstandige naamwoord','Dit verbind twee sinne']},
+{type:'mc',q:'Wat is die intensiewe vorm van "mooi"?',a:'baie mooi / pragtig',eg:'Intensiewe vorme versterk die betekenis van die byvoeglike naamwoord.',w:['mooier','mooiste','mooier as']},
+{type:'mc',q:'Watter sin gebruik die OORTREFFENDE TRAP korrek?',a:'Jan is die sterkste seun in die klas.',eg:'Oortreffende trap (sterkste) vergelyk ALLES: die sterkste van almal.',w:['Jan is sterker as Piet.','Jan is sterk.','Jan is baie sterk.']},
+{type:'fill',q:'Kies die korrekte VERGELYKENDE TRAP.',pass:'My tas is ___ as joune.',blanks:['swaarder'],opts:['swaarder','swaarste','swaar','baie swaar'],eg:'Vergelykende trap: -er (vergelyk twee dinge)'},
+{type:'tf',q:'Die vergelykende trap vergelyk twee dinge en gebruik die uitgang -er.',a:'true',explanation:'Sterker, groter, mooier — die vergelykende trap (comparative) vergelyk TWEE dinge. Ek is groter as jy.'},
+{type:'tf',q:'Die oortreffende trap gebruik die uitgang -er.',a:'false',explanation:'Die oortreffende trap (superlative) gebruik die uitgang -STE — die sterkste, die grootste, die mooiste. Dit vergelyk ALLES.'},
+{type:'tf',q:'"Baie groot" is \'n intensiewe vorm van "groot".',a:'true',explanation:'Intensiewe vorme versterk die byvoeglike naamwoord. Baie groot, uiters klein, besonders mooi — hulle maak die beskrywing sterker sonder om te vergelyk.'}
+],mm:{c:'Byvoeglike Naamwoorde',cc:'#F97316',b:[
+{l:'Stelling (Positief)',bg:'#1A0E05',bd:'#F59E0B',tc:'#FDE68A',i:['Beskryf die naamwoord','groot hond, blou hemel','Geen vergelyking nie']},
+{l:'Vergelykende Trap',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['Vergelyk TWEE dinge','Gebruik uitgang -er','groter, sterker, mooier']},
+{l:'Oortreffende Trap',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Vergelyk ALLES / die meeste','Gebruik uitgang -ste','grootste, sterkste, mooiste']},
+{l:'Intensiewe Vorme',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Versterk die beskrywing','baie groot, uiters klein','pragtig (baie mooi)']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Twee dinge of almal?',d:'Vergelykende trap (-er) vir twee dinge. Oortreffende trap (-ste) vir almal.',eg:[{lbl:'TWEE DINGE (-er)','txt':'Jan is groter as Piet. (net twee persone vergelyk)'},{lbl:'ALMAL (-ste)','txt':'Jan is die grootste in die klas. (van almal in die klas)'}]},
+{n:'2',c:'#F59E0B',t:'Spellingsreëls vir vergelyking',d:'Sommige woorde verdubbel die laaste letter voor -er en -ste.',eg:[{lbl:'VERDUBBEL','txt':'groot → groter → grootste (geen verdubbeling)'},{lbl:'VERDUBBEL','txt':'dun → dunner → dundste (n verdubbel voor -er)'}]},
+{n:'3',c:'#EF4444',t:'Onreëlmatige vorme',d:'Sommige byvoeglike naamwoorde het onreëlmatige vorme — leer hulle uit die kop.',eg:[{lbl:'GOED','txt':'goed → beter → beste'},{lbl:'BAIE','txt':'baie → meer → meeste'},{lbl:'SLEG','txt':'sleg → slegter → slegste'}]}
+],tip:{t:'Onthou: -ER vir twee (kies een), -STE vir almal (kies die beste een). Teken twee sirkels vir -er en baie sirkels vir -ste.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_bywoorde',sec:'Taalstrukture',icon:'📍',ttl:'Bywoorde',sub:'Bywoorde van wyse, tyd, plek en graad',fc:[
+{type:'mc',q:'Watter woord is \'n bywoord in: "Sy loop vinnig."?',a:'vinnig — dit beskryf HOE sy loop',eg:'Bywoorde van wyse beskryf HOE die handeling plaasvind.',w:['Sy — dit is die onderwerp','loop — dit is die werkwoord','Die — dit is \'n lidwoord']},
+{type:'mc',q:'Watter soort bywoord is "gister" in: "Hy het gister gekom."?',a:'Bywoord van TYD — dit wys WANNEER',eg:'Gister, more, nou, soms, altyd — bywoorde van tyd',w:['Bywoord van plek — dit wys WAAR','Bywoord van wyse — dit wys HOE','Bywoord van graad — dit wys HOEVEEL']},
+{type:'mc',q:'Watter woord is \'n bywoord van PLEK?',a:'hier',eg:'Hier, daar, nêrens, oral — bywoorde van plek wys WAAR',w:['vinnig','gister','baie']},
+{type:'tf',q:'Bywoorde beskryf slegs werkwoorde.',a:'false',explanation:'Bywoorde beskryf werkwoorde (sy loop vinnig), maar ook ander byvoeglike naamwoorde (baie groot) en selfs ander bywoorde (heel vinnig). Hulle beskryf HOE, WANNEER, WAAR of in WATTER MATE.'},
+{type:'tf',q:'"Altyd" is \'n bywoord van tyd.',a:'true',explanation:'Altyd, nooit, soms, dikwels, gister, more — hierdie woorde wys WANNEER iets gebeur en is dus bywoorde van tyd.'},
+{type:'tf',q:'Die meeste Afrikaanse bywoorde van wyse eindig op -lik of -s.',a:'false',explanation:'In Afrikaans is baie bywoorde van wyse presies dieselfde as die byvoeglike naamwoord. "Sy is vinnig" (byvoeglike naamwoord) en "Sy loop vinnig" (bywoord). Afrikaans voeg nie noodwendig -ly by soos Engels nie.'}
+],mm:{c:'Bywoorde',cc:'#F97316',b:[
+{l:'Bywoorde van Wyse',bg:'#1A0E05',bd:'#F59E0B',tc:'#FDE68A',i:['Beskryf HOE','vinnig, stadig, sagkens','Sy praat sagkens.']},
+{l:'Bywoorde van Tyd',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['Beskryf WANNEER','gister, more, nou, altyd','Hy kom more.']},
+{l:'Bywoorde van Plek',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Beskryf WAAR','hier, daar, oral, nêrens','Sit hier.']},
+{l:'Bywoorde van Graad',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Beskryf HOEVEEL of HOE BAIE','baie, bietjie, heel, te','Sy is baie slim.']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Vier vrae vir vier bywoordsoorte',d:'Vra een van vier vrae om die soort bywoord te bepaal.',eg:[{lbl:'HOE?','txt':'Sy loop HOE? Vinnig. = bywoord van wyse'},{lbl:'WANNEER?','txt':'Hy kom WANNEER? Môre. = bywoord van tyd'},{lbl:'WAAR?','txt':'Sit WAAR? Hier. = bywoord van plek'},{lbl:'HOE BAIE?','txt':'Sy is HOE BAIE slim? Baie. = bywoord van graad'}]},
+{n:'2',c:'#F59E0B',t:'Bywoord vs byvoeglike naamwoord',d:'In Afrikaans lyk baie bywoorde en byvoeglike naamwoorde dieselfde. Kyk na wat hulle beskryf.',eg:[{lbl:'BYVOEGLIKE NAAMWOORD','txt':'Die vinnige leerder. (beskryf die naamwoord leerder)'},{lbl:'BYWOORD','txt':'Die leerder loop vinnig. (beskryf die werkwoord loop)'}]},
+{n:'3',c:'#EF4444',t:'Bywoorde van graad versterk betekenis',d:'Baie, redelik, heeltemal, te, besonders — hierdie bywoorde versterk of versag die beschrywing.',eg:[{lbl:'VERSTERK','txt':'baie groot, uiters slim, besonders mooi'},{lbl:'VERSAG','txt':'redelik groot, effens warm, ietwat verveeld'},{lbl:'TE VER','txt':'te groot, te slim — beteken te veel, negatief'}]}
+],tip:{t:'Vra HOE, WANNEER, WAAR of HOE BAIE na die werkwoord. As een van hierdie vrae die woord uitlig, is dit \'n bywoord.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_voorsetsels',sec:'Taalstrukture',icon:'📌',ttl:'Voorsetsels',sub:'In, op, onder, langs, voor, agter, tussen',fc:[
+{type:'mc',q:'Watter voorsetsel is korrek: "Die kat sit ___ die stoel."?',a:'op',eg:'Op = bo-op iets. Die kat sit op die stoel.',w:['in','tussen','langs']},
+{type:'mc',q:'Watter sin gebruik die voorsetsel korrek?',a:'Hy wag voor die skool.',eg:'Voor = aan die voorkant van. Agter = aan die agterkant van.',w:['Hy wag die skool voor.','Die skool voor hy wag.','Voor hy die skool wag.']},
+{type:'mc',q:'Watter voorsetsel toon dat iets BINNE-IN is?',a:'in',eg:'Die boek is in die tas. In = binne-in iets.',w:['op','voor','langs']},
+{type:'tf',q:'"Langs" beteken aan die kant van iets.',a:'true',explanation:'Langs = aan die sy of kant van iets. Die huis langs die pad. Sy sit langs haar vriendin.'},
+{type:'tf',q:'"Tussen" word gebruik wanneer iets binne een ding is.',a:'false',explanation:'"Tussen" word gebruik wanneer iets in die MIDDEL van twee of meer dinge is. Die hond sit tussen die twee kinders. "In" word gebruik vir binne-in een ding.'},
+{type:'tf',q:'Voorsetsels wys die posisie of verhouding tussen dinge.',a:'true',explanation:'Voorsetsels (prepositions) wys plek, rigting, tyd of verhouding. In, op, onder, voor, agter, langs, tussen — hulle wys WAAR of HOE dinge met mekaar verband hou.'}
+],mm:{c:'Voorsetsels',cc:'#F97316',b:[
+{l:'Plek-voorsetsels',bg:'#1A0E05',bd:'#F59E0B',tc:'#FDE68A',i:['in (binne-in)', 'op (bo-op)', 'onder (aan die onderkant)', 'langs (aan die kant)']},
+{l:'Meer Plek-voorsetsels',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['voor (aan die voorkant)', 'agter (aan die agterkant)', 'tussen (in die middel van twee)','bo (hoër as)']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Gebruik die prentjie-toets',d:'Skets \'n vinnige tekening van die voorwerp en die plek. Dit help jou die regte voorsetsel kies.',eg:[{lbl:'IN','txt':'Die kat is IN die boks. Teken \'n boks met \'n kat binne-in.'},{lbl:'OP','txt':'Die kat is OP die boks. Teken \'n kat bo-op die boks.'}]},
+{n:'2',c:'#F59E0B',t:'Vaste voorsetsels-frases',d:'Sommige werkwoorde gebruik altyd dieselfde voorsetsel — leer hierdie kombinasies.',eg:[{lbl:'WAG VIR','txt':'Ek wag vir my vriend. (nie wag op nie — in Afrikaans)'},{lbl:'PRAAT MET',txt:'Sy praat met haar ma. (nie praat aan nie)'},{lbl:'LUISTER NA',txt:'Luister na die musiek.'}]},
+{n:'3',c:'#EF4444',t:'Tyd-voorsetsels',d:'Voorsetsels word ook vir tyd gebruik.',eg:[{lbl:'OM','txt':'om 8 uur — spesifieke tyd'},{lbl:'OP','txt':'op Maandag — dag van die week'},{lbl:'IN','txt':'in Januarie, in 2026 — maand of jaar'}]}
+],tip:{t:'Maak \'n "voorsetsel-plakkaat" — teken \'n huis en toon IN (binne), OP (op die dak), VOOR, AGTER, LANGS die huis. Hang dit by jou lessenaar.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_leesbegrip',sec:'Leesvaardigheid',icon:'📖',ttl:'Leesbegrip',sub:'Letterlike en afleidingsvrae, woordeskat in konteks',fc:[
+{type:'mc',q:'Wat is \'n letterlike vraag?',a:'\'n Vraag waarvan die antwoord direk in die teks gevind word',eg:'Jy soek die antwoord in die teks sonder om te interpreteer.',w:['\'n Vraag waarvoor jy moet redeneer','\'n Vraag oor die skrywer se bedoeling','\'n Vraag oor die tema van die teks']},
+{type:'mc',q:'Hoe lei jy die betekenis van \'n onbekende woord af uit konteks?',a:'Lees die sin sonder die woord en vra wat in die plek sal pas',eg:'Die rondawel (___) was \'n tradisionele sirkelronde hut. Tradisioneel + sirkelrond + hut gee die betekenis.',w:['Soek altyd eers \'n woordeboek','Slaan die vraag oor','Kyk net na die eerste letter van die woord']},
+{type:'id',q:'Verduidelik die verskil tussen \'n letterlike en \'n afleidingsvraag.',a:'\'n Letterlike vraag se antwoord staan direk in die teks. \'n Afleidingsvraag vereis dat jy die leidrade in die teks gebruik om \'n gevolgtrekking te maak.',hint:'Dink aan "in die teks" vs "tussen die reëls"',eg:'Letterlik: Waar woon die karakter? Afleiding: Hoe voel die karakter? (afgelei uit die beskrywing)'},
+{type:'tf',q:'\'n Afleidingsvraag se antwoord staan altyd direk in die teks.',a:'false',explanation:'\'n Afleidingsvraag vereis dat jy TUSSEN die reëls lees. Die antwoord is nie direk gesê nie — jy moet dit aflei uit leidrade in die teks.'},
+{type:'tf',q:'Konteksleidrade help jou die betekenis van nuwe woorde uitwerk.',a:'true',explanation:'Die woorde en sinne rondom die onbekende woord gee leidrade oor die betekenis. Kyk na die toon, die onderwerp en verwante woorde om die betekenis te bepaal.'},
+{type:'tf',q:'Wanneer jy \'n teks vlugtig lees (skandeer), lees jy elke woord noukeurig.',a:'false',explanation:'Wanneer jy skandeer (skim), lees jy vinnig om die hoofierde te kry — jy lees opskrifte, eerste en laaste sinne. Wanneer jy intensief lees, lees jy elke woord noukeurig.'}
+],mm:{c:'Leesbegrip',cc:'#F97316',b:[
+{l:'Letterlike Vrae',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Antwoord staan IN die teks','Soek, vind en herformuleer','1 punt = 1 duidelike punt']},
+{l:'Afleidingsvrae',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Lees tussen die reëls','Gebruik bewyse uit die teks','Gee jou gevolgtrekking + rede']},
+{l:'Woordeskat in Konteks',bg:'#1A0E05',bd:'#F59E0B',tc:'#FDE68A',i:['Lees die sin sonder die woord','Vra: wat pas in die gaping?','Kyk na die toon: positief/negatief']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Die afleidingsraam',d:'Gebruik hierdie raam vir elke afleidingsvraag.',eg:[{lbl:'RAAM',txt:'Die teks sê [bewys]. Dit laat my aflei dat [jou gevolgtrekking].'},{lbl:'VOORBEELD',txt:'Die teks sê die kind het gebewe. Dit laat my aflei dat hy bang was.'}]},
+{n:'2',c:'#F59E0B',t:'Een punt = een duidelike punt',d:'Elke punt op die vraestel verteenwoordig een duidelike, volledige punt.',eg:[{lbl:'2 PUNTE',txt:'Twee punte = skryf TWEE aparte feite in jou antwoord.'},{lbl:'NOOIT',txt:'Moenie net \'n woord skryf nie. Skryf altyd \'n volsin.'}]},
+{n:'3',c:'#EF4444',t:'Woordeskat — gebruik die teks',d:'Gebruik die konteks rondom die onbekende woord om die betekenis te bepaal.',eg:[{lbl:'STAP 1',txt:'Lees die sin sonder die onbekende woord.'},{lbl:'STAP 2',txt:'Vra: watter woord sou hier sin maak?'},{lbl:'STAP 3',txt:'Bevestig deur die res van die paragraaf te lees.'}]}
+],tip:{t:'Merk jou teks! Onderstreep sleutelwoorde tydens lees. Dit maak dit makliker om antwoorde vinnig te vind tydens die eksamen.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_skryfwerk1',sec:'Skryfvaardigheid',icon:'✍️',ttl:'Skryfwerk — Beskrywend',sub:'Beskrywende opstel, sintuie, beeldende taal',fc:[
+{type:'mc',q:'Watter sintuig MOET jy gebruik in beskrywende skryfwerk?',a:'Al vyf sintuie — sien, hoor, ruik, proe, voel',eg:'\'n Goeie beskrywende opstel aktiveer al die sintuie van die leser.',w:['Slegs sig en gehoor','Slegs sig en gevoel','Net sig en reuk']},
+{type:'mc',q:'Watter sinvorm help om \'n beskrywende opstel LEWEND te maak?',a:'Metafore en vergelykings',eg:'Die son was \'n glinsterende goue koek. (metafoor) / Sy stem was soos donderweer. (vergelyking)',w:['Baie kort sinne','Slegs feite sonder beskrywing','Herhaling van dieselfde woord']},
+{type:'id',q:'Verduidelik die verskil tussen "wys" en "vertel" in beskrywende skryfwerk.',a:'Vertel noem die gevoel direk (sy was bang). Wys beskryf die fisiese tekens van die gevoel (haar hande het gebewe, haar asem het gesnak).',hint:'Stel jou voor jy kyk \'n fliek — wat sien jy? Noem dit.',eg:'"Vertel": Hy was baie bang. "Wys": Sy knieë het geril en sy asem het in skerp stokkies gekom.'},
+{type:'tf',q:'\'n Beskrywende opstel moet al vyf sintuie insluit.',a:'true',explanation:'\'n Goeie beskrywende opstel gebruik al vyf sintuie — wat jy sien, hoor, ruik, proe en voel. Hierdie sintuie maak die beskrywing lewend vir die leser.'},
+{type:'tf',q:'Jy moet altyd \'n breinkaart maak voor jy \'n opstel skryf.',a:'true',explanation:'\'n Breinkaart (mind map) organiseer jou idees voor jy skryf. Dit verhoed dat jy vassteek en help jou om \'n gestruktureerde, vloeiende opstel te skryf.'},
+{type:'tf',q:'Vae woorde soos "mooi" en "goed" maak \'n opstel beter.',a:'false',explanation:'Vae woorde skep geen duidelike beeld nie. Vervang "mooi" met "pragtig", "asemrowend", "verstommend". Vervang "goed" met "uitstekend", "voortreflik", "besonders". Presiese woorde maak jou opstel lewendig.'}
+],mm:{c:'Beskrywende Skryfwerk',cc:'#F97316',b:[
+{l:'Vyf Sintuie',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['Sien: kleur, vorm, grootte','Hoor: klanke, geluide','Ruik: geure, stank','Proe: smaak','Voel: tekstuur, temperatuur']},
+{l:'Beeldende Taal',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Vergelyking: soos/as','Metafoor: iets IS iets anders','Personifikasie: ding het mensilike eienskappe']},
+{l:'Wys Nie Vertel Nie',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Vertel: sy was bang','Wys: haar hande het gebewe','Beskryf fisiese tekens van gevoelens']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Breinkaart voor jy skryf',d:'Teken eers \'n breinkaart met vyf takke — een vir elke sintuig.',eg:[{lbl:'MIDDEL',txt:'Skryf jou onderwerp in die middel.'},{lbl:'VYF TAKKE',txt:'Sien, Hoor, Ruik, Proe, Voel — een tak vir elk.'},{lbl:'DAARNA',txt:'Skryf eers nadat al vyf takke gevul is.'}]},
+{n:'2',c:'#F59E0B',t:'Wys nie vertel nie',d:'Vervang elke sin wat \'n gevoel noem met fisiese beskrywings.',eg:[{lbl:'VERTEL (SWAK)',txt:'Sy was baie opgewonde.'},{lbl:'WYS (STERK)',txt:'Haar hart het soos \'n trom geslaan en sy kon nie stilsit nie.'},{lbl:'REEL',txt:'As jy die woord met een emosie-woord kan vervang, is jy aan die "vertel". Herskryf dit.'}]},
+{n:'3',c:'#EF4444',t:'Woorde opgradeer',d:'Vervang vae woorde met presiese, kragtige woorde.',eg:[{lbl:'GESÊ →',txt:'gefluister, geroep, gemompel, uitgebars, uitgeskree'},{lbl:'GELOOP →',txt:'gestap, getrippel, gestamp, geglip, gehardloop'},{lbl:'MOOI →',txt:'pragtig, asemrowend, verblindend, verstommend'}]}
+],tip:{t:'Lees jou opstel hardop as jy klaar is. As iets nie naturally klink nie of as jy twee keer dieselfde woord gebruik, herskryf daardie deel.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_lirieke',sec:'Luister en Praat',icon:'🎵',ttl:'Poësie en Gedigte',sub:'Rym, ritme, beeldspraak in Afrikaanse gedigte',fc:[
+{type:'mc',q:'Wat is \'n rympatroon?',a:'Die patroon van klank-ooreenkomste aan die einde van versreëls',eg:'ABAB = eerste reël rym met derde, tweede rym met vierde.',w:['Die tempo waarteen \'n gedig gelees word','Die aantal lettergrepe in \'n versreël','Die tema van \'n gedig']},
+{type:'mc',q:'Watter figuurlike taalvorm word hier gebruik: "Die wind het gesug."?',a:'Personifikasie — die wind kry \'n menslike handeling',eg:'Personifikasie gee menslike eienskappe aan nie-menslike dinge.',w:['Vergelyking — soos/as word gebruik','Metafoor — twee dinge word direk vergelyk','Alliterasie — herhaling van klanke']},
+{type:'id',q:'Hoe bepaal jy die stemming (mood) van \'n gedig?',a:'Kyk na die woorde wat die digter kies, die beelde wat gebruik word en die ritme. Positiewe woorde skep \'n blymoedige stemming; donker beelde skep \'n droewige stemming.',hint:'Vra jouself: hoe laat hierdie gedig my voel?',eg:'Woorde soos "skaduwees", "koudte", "verlies" → droewige stemming'},
+{type:'tf',q:'Alliterasie is die herhaling van dieselfde beginklank in opeenvolgende woorde.',a:'true',explanation:'Alliterasie herhaal dieselfde beginklank — Pieter Potgieter pluk perskes. Die P-klank herhaal. Dit gee ritme en klem aan die taal.'},
+{type:'tf',q:'\'n Gedig se stemming en \'n gedig se toon beteken dieselfde ding.',a:'false',explanation:'Toon is die DIGTER se houding teenoor die onderwerp. Stemming is hoe die LESER voel tydens lees. Hulle is verwant maar verskillend.'},
+{type:'tf',q:'Rym is noodsaaklik — sonder rym is dit nie \'n gedig nie.',a:'false',explanation:'Nie alle gedigte rym nie. Vrye verse (free verse) het geen rym of vaste ritme nie maar is steeds gedigte. Die kenmerk van \'n gedig is die gebruik van taal op \'n artistieke manier.'}
+],mm:{c:'Poësie',cc:'#F97316',b:[
+{l:'Rym en Ritme',bg:'#1A0E05',bd:'#F59E0B',tc:'#FDE68A',i:['Rymskema: AABB, ABAB','Ritme: die polsslag van die gedig','Klap lettergrepe om ritme te voel']},
+{l:'Beeldspraak',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['Vergelyking: soos/as','Metafoor: iets IS iets anders','Personifikasie: menslike eienskap aan \'n ding']},
+{l:'Stemming en Toon',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Toon: digter se houding','Stemming: leser se gevoel','Kyk na die woorde vir leidrade']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Die rymskema merk',d:'Skryf \'n letter langs elke eindwoord. Dieselfde klank = dieselfde letter.',eg:[{lbl:'VOORBEELD',txt:'reën = A / bly = B / treën = A / bly = B → ABAB'},{lbl:'AABB',txt:'eerste reël rym met tweede (A), derde met vierde (B)'}]},
+{n:'2',c:'#F59E0B',t:'Stemmingsraam',d:'Gebruik hierdie raam vir stemming-vrae in die eksamen.',eg:[{lbl:'RAAM',txt:'Die stemming van die gedig is [stemming] omdat die digter woorde gebruik soos [woorde] wat [betekenis] suggereer.'},{lbl:'VOORBEELD',txt:'Die stemming is treurig omdat die digter woorde gebruik soos "donker" en "koudte" wat verlies suggereer.'}]},
+{n:'3',c:'#EF4444',t:'Figuurlike taalvraag beantwoord',d:'Identifiseer, noem en verduidelik.',eg:[{lbl:'IDENTIFISEER',txt:'Wys die woorde wat die figuurlike taal bevat.'},{lbl:'BENOEM',txt:'Sê watter tipe dit is: vergelyking, metafoor, personifikasie.'},{lbl:'VERDUIDELIK',txt:'Verduidelik WAT dit beteken en WAT dit aan die gedig doen.'}]}
+],tip:{t:'Lees die gedig drie keer: eerste keer vir plesier, tweede keer vir struktuur, derde keer vir betekenis. Elke lees openbaar iets nuwes.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_transaksioneel1',sec:'Skryfvaardigheid',icon:'✉️',ttl:'Transaksionele Tekste',sub:'Briefskrywing, e-posse, kennisgewings',fc:[
+{type:'mc',q:'Watter groet gebruik jy as jy die persoon se naam KEN?',a:'"Hoogagtend" of "Die uwe"',eg:'Beste Mnr. Smith → Hoogagtend. (naam bekend)',w:['"Geagte"','"Dag"','"Groete"']},
+{type:'mc',q:'Watter groet gebruik jy as jy die naam NIE ken nie?',a:'"U dienswillige"',eg:'Geagte Meneer/Mevrou → U dienswillige. (naam onbekend)',w:['"Hoogagtend"','"Die uwe"','"Baie dankie"']},
+{type:'mc',q:'Watter is ALTYD \'n verpligte formaat-element vir \'n formele brief?',a:'Die adres, datum, aanspreek-vorm en slotvorm',eg:'Formaat-punte is gratis punte — skryf die struktuur eerste.',w:['Slegs die datum','Slegs die aanspreek-vorm','Slegs die handtekening']},
+{type:'tf',q:'"Hoogagtend" word gebruik wanneer jy die naam van die ontvanger KEN.',a:'true',explanation:'"Hoogagtend" gaan saam met "Beste Mnr. Smith" — jy ken die naam. "U dienswillige" gaan saam met "Geagte Meneer" — jy ken die naam nie.'},
+{type:'tf',q:'Jy mag uitroeptekens in die liggaam van \'n formele brief gebruik.',a:'false',explanation:'Formele briewe vereis \'n formele register — geen uitroeptekens, geen samentrekkings, geen spreektaal. Die toon moet professioneel en saklik wees.'},
+{type:'tf',q:'Die adres van die skrywer staan regs bo-aan die formele brief.',a:'true',explanation:'In \'n formele brief staan jou eie adres regs bo-aan, dan die datum daaronder, dan die ontvanger se adres links. Dit is die korrekte Suid-Afrikaanse briefformaat.'}
+],mm:{c:'Transaksionele Tekste',cc:'#F97316',b:[
+{l:'Formele Brief Formaat',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Jou adres (regs bo)','Datum','Ontvanger se adres (links)','Aanspreek: Beste Mnr./Mev.','Liggaam','Hoogagtend + Naam']},
+{l:'Sincerely vs Faithfully',bg:'#1A0E05',bd:'#F59E0B',tc:'#FDE68A',i:['Naam BEKEND → Hoogagtend','Naam ONBEKEND → U dienswillige','Onthou: HoogagtenD — jy ken Die naam']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Formaat-punte is gratis punte',d:'Skryf eerste die struktuur neer — dit kos geen kreatiwiteit nie.',eg:[{lbl:'VOLGORDE',txt:'Adres → Datum → Ontvanger adres → Aanspreek → Liggaam → Slotvorm → Handtekening'},{lbl:'TIP',txt:'Skryf selfs die formaat neer as jy tyd kort loop. Die punte is gewaarborgd.'}]},
+{n:'2',c:'#F59E0B',t:'Formele register — wat om te vermy',d:'Formele skryfwerk het streng reëls.',eg:[{lbl:'GEEN SAMENTREKKINGS',txt:'moet nie → moet nie (nie moenie nie). ek is → ek is (nie ek\'s nie)'},{lbl:'GEEN SPREEKTAAL',txt:'kêrel, tjommie, lekker — hierdie woorde hoort nie in \'n formele brief nie'},{lbl:'GEEN UITROEPTEKENS',txt:'! hoort nie in die liggaam van \'n formele brief nie'}]},
+{n:'3',c:'#EF4444',t:'Verskillende transaksionele tekste',d:'Elke transaksionele teks het sy eie formaat — ken elke een.',eg:[{lbl:'BRIEF',txt:'Adres, datum, aanspreek, liggaam, slotvorm'},{lbl:'E-POS',txt:'Onderwerp: [duidelik], Beste [naam], Liggaam, Groete'},{lbl:'KENNISGEWING',txt:'KENNISGEWING (heading), datum, Aan: [gehoor], Doel, Besonderhede, Kontakbesonderhede'}]}
+],tip:{t:'Skryf die formaat-struktuur eerste, dan die inhoud. Jy kry ALTYD punte vir die korrekte formaat ongeag die inhoud.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+],2:[
+
+{id:'af_tydsvorme2',sec:'Taalstrukture',icon:'⏱️',ttl:'Tydsvorme — Herhaling en Uitbreiding',sub:'Teenwoordig, verlede, toekomend, voltooid verledde tyd',fc:[
+{type:'mc',q:'Watter sin gebruik die VOLTOOIDE VERLEDE TYD (had done)?',a:'"Teen die tyd dat ek gekom het, had hulle al geëet."',eg:'Voltooide verlede tyd = had + voltooide deelwoord — iets wat gebeur het VOOR \'n ander verlede handeling.',w:['Hulle eet tans.','Hulle sal eet.','Hulle eet gister.']},
+{type:'mc',q:'Watter is \'n voorbeeld van die TEENWOORDIG DEURLOPENDE tyd?',a:'"Sy is tans besig om te lees."',eg:'Teenwoordig deurlopend = is besig om te + grondvorm — handeling wat NOU BESIG IS om te gebeur.',w:['Sy het gelees.','Sy sal lees.','Sy lees.']},
+{type:'fill',q:'Kies die korrekte tydsvorm vir hierdie sin.',pass:'Teen die tyd dat ons gearriveer het, het die trein al ___.',blanks:['vertrek'],opts:['vertrek','sal vertrek','vertrek het','vertrekke'],eg:'Verlede tyd: het + vertrek (vertrek is \'n onveranderlike werkwoord)'},
+{type:'tf',q:'Onreëlmatige werkwoorde in Afrikaans moet gememoriseer word.',a:'true',explanation:'Net soos in Engels het Afrikaans onreëlmatige werkwoorde wat nie die normale ge- reël volg nie. Byvoorbeeld: bring → gebring, koop → gekoop, maak → gemaak, eet → geëet.'},
+{type:'tf',q:'"Is besig om te" kan gebruik word vir die verlede deurlopende tyd.',a:'false',explanation:'"Is besig om te" is TEENWOORDIG deurlopend (happening now). Vir verlede deurlopend gebruik ons "was besig om te". Sy IS besig om te lees (nou) vs. Sy WAS besig om te lees (toe).'},
+{type:'tf',q:'"Sal" + grondvorm vorm die toekomende tyd in Afrikaans.',a:'true',explanation:'Die toekomende tyd gebruik "sal" + die grondvorm van die werkwoord sonder ge-. Ek sal MORE loop. Hulle sal VOLGENDE WEEK speel. Moenie ge- na sal gebruik nie.'}
+],mm:{c:'Tydsvorme',cc:'#F97316',b:[
+{l:'Teenwoordige Tyd',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['Gebeur NOU','Ek loop, sy eet, ons speel','Geen hulpwerkwoord']},
+{l:'Verlede Tyd',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Het + ge- + werkwoord','Hy het geloop, sy het geëet','Onreëlmatig: bring → gebring']},
+{l:'Toekomende Tyd',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Sal + grondvorm (geen ge-)','Ons sal more speel','Hy sal werk']},
+{l:'Deurlopende Tyd',bg:'#1A0E05',bd:'#F59E0B',tc:'#FDE68A',i:['Is/was besig om te + grondvorm','Sy is besig om te eet (nou)','Hy was besig om te werk (toe)']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Drie sleutelvrae vir tydsbepaling',d:'Vra drie vrae om die korrekte tyd te bepal.',eg:[{lbl:'GEBEUR DIT NOU?',txt:'Ja → teenwoordige tyd: ek loop'},{lbl:'HET DIT AL GEBEUR?',txt:'Ja → verlede tyd: ek het geloop'},{lbl:'GAAN DIT NOG GEBEUR?',txt:'Ja → toekomende tyd: ek sal loop'}]},
+{n:'2',c:'#F59E0B',t:'ge- reël uitsonderings',d:'Werkwoorde wat begin met be-, er-, ge-, her-, ont-, ver- kry GEEN ge- nie.',eg:[{lbl:'UITSONDERINGS',txt:'bestuur → bestuur (nie gebestuur), verduidelik → verduidelik'},{lbl:'GEWONE REËL',txt:'loop → geloop, werk → gewerk, speel → gespeel'}]},
+{n:'3',c:'#EF4444',t:'Deurlopende tyd formule',d:'"is/was besig om te" + grondvorm = deurlopende tyd.',eg:[{lbl:'NOU',txt:'Sy is besig om te eet. (nou, onvoltooid)'},{lbl:'TOE',txt:'Hy was besig om te werk toe ek gekom het.'}]}
+],tip:{t:'Gebruik drie sleutelwoorde: "Nou" (teenwoordig), "Gister" (verlede), "Môre" (toekomstig). Plaas hulle voor die sin en kyk hoe die tyd verander.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_stompi',sec:'Taalstrukture',icon:'🔗',ttl:'STOMPI — Voegwoorde',sub:'Koordinerende voegwoorde in Afrikaans',fc:[
+{type:'mc',q:'Wat staan STOMPI vir?',a:'So, Tog, Of, Maar, Plek, Indien/Insgelyks — koordinerende voegwoorde',eg:'STOMPI is \'n geheuehulp vir Afrikaanse koordinerende voegwoorde.',w:['\'n Soort sin in Afrikaans','\'n Afrikaanse leesteken','Werkwoorde wat hulpwerkwoorde benodig']},
+{type:'mc',q:'Watter voegwoord verbind twee gelyke hoofrsinne?',a:'maar',eg:'Ek wil gaan, maar ek is moeg. — twee hoofrsinne gelyk verbind.',w:['omdat','sodat','al']},
+{type:'fill',q:'Kies die korrekte voegwoord.',pass:'Hy wou speel ___ dit was te warm.',blanks:['maar'],opts:['maar','sodat','want','om'],eg:'maar verbind twee teenstrygende idees'},
+{type:'tf',q:'Voegwoorde verbind sinne, sinsdele of woorde.',a:'true',explanation:'Voegwoorde (conjunctions) is verbindingswoorde. Hulle verbind woorde (brood en botter), sinsdele (stadig maar seker) of sinne (hy loop, maar sy ry).'},
+{type:'tf',q:'STOMPI is die Afrikaanse ekwivalent van die Engelse FANBOYS.',a:'true',explanation:'Soos FANBOYS in Engels, is STOMPI \'n geheuehulp vir Afrikaanse koordinerende voegwoorde: So, Tog, Of, Maar, Plek (= want), Indien/Insgelyks.'},
+{type:'tf',q:'"Omdat" is \'n koordinerende voegwoord.',a:'false',explanation:'"Omdat" is \'n ONDERSKIKKENDE voegwoord — dit lei \'n bysin in. "Ek is moeg OMDAT ek gewerk het." Die bysin kan nie alleen staan nie. Koordinerende voegwoorde (STOMPI) verbind gelyke sinne.'}
+],mm:{c:'STOMPI Voegwoorde',cc:'#F97316',b:[
+{l:'STOMPI',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['S = So (therefore)','T = Tog (yet/still)','O = Of (or)','M = Maar (but)','P = Plek van want (for)','I = Indien/Insgelyks (if/likewise)']},
+{l:'Gebruik',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Verbind twee gelyke sinne','Beide helftes kan alleen staan','Geen komma voor STOMPI (gewoonlik)']}
+]},rules:[
+{n:'1',c:'#F97316',t:'STOMPI-toets',d:'As beide helftes van die sin alleen kan staan, is dit \'n koordinerende voegwoord.',eg:[{lbl:'KOORDINEREND',txt:'Ek is moeg, MAAR ek werk. Beide helftes staan alleen = koordinerend.'},{lbl:'ONDERSKIKKEND',txt:'Ek is moeg OMDAT ek gewerk het. "Omdat ek gewerk het" kan nie alleen staan nie = onderskikkend.'}]},
+{n:'2',c:'#F59E0B',t:'Onderskikkende voegwoorde (nie-STOMPI)',d:'Hierdie voegwoorde lei sinne in wat nie alleen kan staan nie.',eg:[{lbl:'LYS',txt:'omdat, sodat, al, hoewel, nadat, voordat, tensy, as, wanneer'},{lbl:'GEBRUIK',txt:'Ek wag TOTDAT hy kom. "Totdat hy kom" kan nie alleen staan nie.'}]},
+{n:'3',c:'#EF4444',t:'Voegwoord-woordorde verander',d:'Sommige onderskikkende voegwoorde stuur die werkwoord na die einde van die bysin.',eg:[{lbl:'VOOR DIE BYSIN',txt:'Ek weet dat hy more KOM. (kom na die einde)'},{lbl:'NORMAAL',txt:'Hy kom more. (normalewoordorde)'}]}
+],tip:{t:'STOMPI: Sit, Tog, Of, Maar, Plek (want), Indien. Leer hierdie ses woorde buite die kop — hulle sal in elke toets verskyn.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_vraagsinne',sec:'Taalstrukture',icon:'❓',ttl:'Vraagsinne en Woordorde',sub:'Vraagwoorde, inversie, indirekte vrae',fc:[
+{type:'mc',q:'Hoe vorm jy \'n vraag sonder \'n vraagwoord in Afrikaans?',a:'Wissel die volgorde van onderwerp en werkwoord om (inversie)',eg:'Jy loop. → Loop jy? Die werkwoord kom voor die onderwerp.',w:['Voeg "nie" aan die einde','Verander die punt na \'n vraagteken','Voeg "wat" voor in']},
+{type:'mc',q:'Watter sin is \'n KORREKTE vraagsin?',a:'"Wanneer vertrek die trein?"',eg:'Vraagwoord + werkwoord + onderwerp = korrekte vraagsinvolgorde.',w:['Wanneer die trein vertrek?','Die trein wanneer vertrek?','Vertrek die trein wanneer?']},
+{type:'fix',q:'Herskryf as \'n korrekte vraagsin.',pass:'Jy het gister geslaap.',a:'Het jy gister geslaap?',hint:'Stel "het" voor die onderwerp "jy"',eg:'In die verlede tyd: Het + onderwerp + voltooide deelwoord?'},
+{type:'tf',q:'In \'n Afrikaanse vraagsin kom die werkwoord voor die onderwerp.',a:'true',explanation:'Inversie (woordorde-omruiling) is \'n kenmerk van Afrikaanse vraagsinne. Loop jy? Het jy? Sal jy? — die werkwoord of hulpwerkwoord kom eerste.'},
+{type:'tf',q:'"Hoekom" en "waarom" beteken dieselfde ding in Afrikaans.',a:'true',explanation:'"Hoekom" en "waarom" is sinonieme in Afrikaans — albei vra na die rede. Waarom is meer formeel; hoekom is meer alledaags. Albei is korrek in die eksamen.'},
+{type:'tf',q:'\'n Direkte vraag en \'n indirekte vraag het dieselfde woordorde.',a:'false',explanation:'Direkte vraag: Loop jy? (inversie) Indirekte vraag: Ek wonder of jy loop. (normale woordorde, geen inversie, geen vraagteken). Indirekte vrae is ingebed in stellings.'}
+],mm:{c:'Vraagsinne',cc:'#F97316',b:[
+{l:'Met Vraagwoorde',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Wie, wat, waar, wanneer','Waarom/hoekom, hoe, hoeveel','Vraagwoord + werkwoord + onderwerp']},
+{l:'Sonder Vraagwoorde (Inversie)',bg:'#1A0E05',bd:'#F59E0B',tc:'#FDE68A',i:['Werkwoord kom voor onderwerp','Jy loop → Loop jy?','Het jy? Sal jy? Is jy?']},
+{l:'Indirekte Vrae',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['Ingebed in \'n stelling','Geen inversie, geen vraagteken','Ek wonder of jy kom.']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Inversie — twee stappe',d:'Twee stappe om \'n vraagsin te maak sonder vraagwoord.',eg:[{lbl:'STAP 1',txt:'Identifiseer die werkwoord of hulpwerkwoord in die stelling.'},{lbl:'STAP 2',txt:'Sit die werkwoord voor die onderwerp. Verander die punt na ?'}]},
+{n:'2',c:'#F59E0B',t:'Vraagwoorde volgorde',d:'Met \'n vraagwoord: vraagwoord + werkwoord + onderwerp + res.',eg:[{lbl:'FORMULE',txt:'WANNEER + VERTREK + DIE TREIN? = Wanneer vertrek die trein?'},{lbl:'FOUT',txt:'Wanneer die trein vertrek? ✗ — werkwoord moet voor onderwerp kom.'}]},
+{n:'3',c:'#EF4444',t:'Indirekte vrae',d:'Indirekte vrae gebruik normale woordorde en eindig met punt.',eg:[{lbl:'DIREKTE VRAAG',txt:'Wanneer vertrek die trein? (inversie, vraagteken)'},{lbl:'INDIREKTE VRAAG',txt:'Ek wil weet wanneer die trein vertrek. (normale volgorde, punt)'}]}
+],tip:{t:'Onthou: Direkte vraag = werkwoord EERSTE. Indirekte vraag = normale volgorde. Dit is \'n gereelde eksamenvraag!',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_hulpwerkwoorde',sec:'Taalstrukture',icon:'⚙️',ttl:'Hulp- en Koppelwerkwoorde',sub:'Kan, moet, mag, wil, is, was, word, het',fc:[
+{type:'mc',q:'Watter sin gebruik \'n HULPWERKWOORD?',a:'"Ek moet more work."',eg:'Hulpwerkwoorde help die hoofwerkwoord. Moet + werk = hulp + hoofwerkwoord.',w:['Ek werk hard.','Sy is siek.','Ons eet pap.']},
+{type:'mc',q:'Wat is die funksie van \'n koppelwerkwoord?',a:'Dit verbind die onderwerp met \'n beskrywing of voornaamwoord',eg:'Sy IS moeg. Hy WAS hier. Die dag WORD koud. — is/was/word = koppelwerkwoorde',w:['Dit beskryf HOE die handeling plaasvind','Dit vervang die selfstandige naamwoord','Dit wys die verlede tyd aan']},
+{type:'mc',q:'Watter hulpwerkwoord druk TOESTEMMING uit?',a:'mag',eg:'Jy mag gaan. = Jy het toestemming.',w:['moet','kan','wil']},
+{type:'tf',q:'"Kan" druk vermoë of moontlikheid uit.',a:'true',explanation:'"Kan" wys dat iemand iets in staat is om te doen of dat iets moontlik is. Ek KAN swem. (vermoë) / Dit KAN reën. (moontlikheid)'},
+{type:'tf',q:'"Is" is \'n koppelwerkwoord en nie \'n hulpwerkwoord nie.',a:'true',explanation:'"Is" verbind die onderwerp met \'n beskrywing — Sy IS slim. Dit is \'n koppelwerkwoord (linking verb). Hulpwerkwoorde (modal verbs) soos kan, moet, mag help die hoofwerkwoord.'},
+{type:'tf',q:'Hulpwerkwoorde kan alleen as hoofwerkwoord in \'n sin optree.',a:'false',explanation:'Hulpwerkwoorde benodig altyd \'n hoofwerkwoord om hulle te vervolg. Ek moet... (moet wat?). Hulle staan nie alleen as hoofwerkwoord nie — hulle help die hoofwerkwoord.'}
+],mm:{c:'Hulp- en Koppelwerkwoorde',cc:'#F97316',b:[
+{l:'Hulpwerkwoorde',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Kan = vermoë/moontlikheid','Moet = verpligting','Mag = toestemming','Wil = begeerte/wens']},
+{l:'Koppelwerkwoorde',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Is = huidige staat','Was = verlede staat','Word = verandering','Lyk = skyn te wees']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Hulpwerkwoord + hoofwerkwoord',d:'Hulpwerkwoorde werk altyd saam met \'n hoofwerkwoord. Die hoofwerkwoord volg altyd.',eg:[{lbl:'FORMULE',txt:'Onderwerp + hulpwerkwoord + hoofwerkwoord (+ res)'},{lbl:'VOORBEELD',txt:'Ek MOET WERK. Sy KAN SWEM. Ons WIL GAAN.'}]},
+{n:'2',c:'#F59E0B',t:'Koppelwerkwoord — geen handeling',d:'Koppelwerkwoorde beskryf \'n staat, nie \'n handeling nie.',eg:[{lbl:'KOPPELWERKWOORD',txt:'Sy IS moeg. (staat, geen handeling) — moeg beskryf die onderwerp'},{lbl:'HOOFWERKWOORD',txt:'Sy SLAAP hard. (handeling) — slaap is wat sy doen'}]},
+{n:'3',c:'#EF4444',t:'Modale hulpwerkwoorde',d:'Verskillende hulpwerkwoorde druk verskillende betekenisse uit.',eg:[{lbl:'KAN',txt:'vermoë: Ek kan swem. / moontlikheid: Dit kan reën.'},{lbl:'MOET',txt:'verpligting: Jy moet kom. / noodsaaklikheid: Dit moet gebeur.'},{lbl:'MAG',txt:'toestemming: Jy mag gaan. / moontlikheid (formeel): Hy mag reg wees.'}]}
+],tip:{t:'Onthou die vier groot hulpwerkwoorde: KAN (able), MOET (must), MAG (may), WIL (want). Leer ook: is, was, word, het — koppelwerkwoorde verbind, hulpwerkwoorde help.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_sinonieme',sec:'Woordeskat',icon:'↔️',ttl:'Sinonieme en Antonieme',sub:'Woorde met dieselfde en teenoorgestelde betekenis',fc:[
+{type:'mc',q:'Wat is sinonieme?',a:'Woorde met dieselfde of soortgelyke betekenis',eg:'vinnig = gou = rats — al drie het soortgelyke betekenis',w:['Woorde met teenoorgestelde betekenis','Woorde wat klink dieselfde maar verskillend gespel word','Woorde wat dieselfde klink maar verskillend beteken']},
+{type:'mc',q:'Wat is die antoniem van "moedig"?',a:'bang',eg:'Antonieme is woorde met teenoorgestelde betekenis.',w:['dapper','sterk','vreeslos']},
+{type:'fill',q:'Kies die sinoniem van "vinnig" in hierdie sin.',pass:'Die atleet het baie ___ gehardloop.',blanks:['gou'],opts:['gou','stadig','lui','swaartil'],eg:'vinnig = gou = rats'},
+{type:'tf',q:'Sinonieme is altyd volkome uitruilbaar in elke sin.',a:'false',explanation:'Sinonieme het soortgelyke maar nie identieke betekenisse nie. "Groot" en "omvangryk" is sinonieme maar "\'n groot kind" klink anders as "\'n omvangryke kind". Konteks bepaal watter sinoniem pas.'},
+{type:'tf',q:'Die antoniem van "lig" is "swaar".',a:'true',explanation:'"Lig" en "swaar" is antonieme (opposites). Die aanhangsels on-, on-, wan- en mis- kan ook antonieme skep: gelukkig → ongelukkig, eerlik → oneerlik.'},
+{type:'tf',q:'Aanhangsel "on-" kan gebruik word om antonieme te skep.',a:'true',explanation:'Die aanhangsel "on-" keer die betekenis om — gelukkig → ongelukkig, eerlik → oneerlik, moontlik → onmoontlik. Leer hierdie patroon om antonieme te bou.'}
+],mm:{c:'Sinonieme en Antonieme',cc:'#F97316',b:[
+{l:'Sinonieme',bg:'#1A0E05',bd:'#F59E0B',tc:'#FDE68A',i:['Dieselfde/soortgelyke betekenis','vinnig = gou = rats','Gebruik om herhaling te vermy']},
+{l:'Antonieme',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['Teenoorgestelde betekenis','groot ≠ klein, lig ≠ swaar','on- = teenoorgestelde: gelukkig → ongelukkig']},
+{l:'Homonieme',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Klink dieselfde, verskillende betekenis','bank (sitplek) vs bank (finansieel)','Konteks bepaal die betekenis']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Sinonieme opgradeer jou skryfwerk',d:'Vervang herhaalde of vae woorde met presiese sinonieme.',eg:[{lbl:'GESÊ →',txt:'gefluister, geroep, gemompel, verklaar, aangekondig'},{lbl:'GELOOP →',txt:'gestap, gestorm, geslenter, getrippel'},{lbl:'MOOI →',txt:'pragtig, heerllik, asemrowend, beeldskoon'}]},
+{n:'2',c:'#F59E0B',t:'Antonieme-aanhangsels',d:'Leer die aanhangsels wat teenoorgesteldes skep.',eg:[{lbl:'ON-',txt:'gelukkig → ongelukkig, moontlik → onmoontlik'},{lbl:'WAN-',txt:'gedrag → wangedrag, orde → wanorde'},{lbl:'MIS-',txt:'verstaan → misverstaan, lei → mislei'}]},
+{n:'3',c:'#EF4444',t:'Homonieme — konteks is sleutel',d:'Homonieme klink dieselfde maar beteken iets anders. Kyk na die sin om die betekenis te bepaal.',eg:[{lbl:'BANK',txt:'Sit op die bank. (sitplek) vs. Gaan na die bank. (finansiële instelling)'},{lbl:'BOS',txt:'Loop deur die bos. (woud) vs. Sy is bos van hom. (lief)'}]}
+],tip:{t:'Hou \'n persoonlike sinoniem-woordeboek. Skryf elke nuwe woord neer met 2-3 sinonieme. Dit vergroot jou woordeskat vinnig.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_direkte_rede',sec:'Taalstrukture',icon:'💬',ttl:'Direkte en Indirekte Rede',sub:'Aanhalingstekens, tydsverskuiwing, pronominale verskuiwing',fc:[
+{type:'mc',q:'Watter sin gebruik DIREKTE REDE korrek?',a:'"Ek gaan more," het sy gesê.',eg:'Direkte rede: aanhalingstekens, komma voor sluitingsaanhalingsteken, rapporteringswerkwoord buite.',w:['Sy het gesê sy gaan more.','Sy het gesê "gaan more".','Sy gesê "ek gaan more"']},
+{type:'mc',q:'Wanneer jy direkte rede in indirekte rede omsit, wat verander?',a:'Die tydsvorm, voornaamwoord en tydsverwysingswoorde verander',eg:'I am going → She said she was going. (am → was, I → she)',w:['Slegs die leestekens verander','Niks verander nie','Slegs die voornaamwoord verander']},
+{type:'fix',q:'Sit om na indirekte rede.',pass:'"Ek is moeg," het hy gesê.',a:'Hy het gesê dat hy moeg was.',hint:'Verander "Ek" → "hy", "is" → "was", verwyder aanhalingstekens',eg:'Verskuif die tyd een stap terug: is → was'},
+{type:'tf',q:'In indirekte rede verwyder jy die aanhalingstekens.',a:'true',explanation:'Indirekte rede rapporteer wat iemand gesê het sonder om die presiese woorde aan te haal. Die aanhalingstekens word verwyder en die woord "dat" word dikwels ingevoeg.'},
+{type:'tf',q:'"Nou" word "toe" in indirekte rede.',a:'true',explanation:'Tydsverwysingswoorde verskuif in indirekte rede: nou → toe, vandag → daardie dag, môre → die volgende dag, hier → daar.'},
+{type:'tf',q:'Die tydsvorm bly dieselfde in direkte en indirekte rede.',a:'false',explanation:'Tydsvorme verskuif een stap terug in indirekte rede. Is/am/are → was/were. Sal → sou. Het gesê + teenwoordige tyd → verlede tyd in die bysin.'}
+],mm:{c:'Direkte vs Indirekte Rede',cc:'#F97316',b:[
+{l:'Direkte Rede',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Presiese woorde aangehaal','Aanhalingstekens gebruik','Komma voor sluitingsaanhaling']},
+{l:'Indirekte Rede',bg:'#1A0E05',bd:'#F59E0B',tc:'#FDE68A',i:['Rapporteer wat gesê is','Geen aanhalingstekens','Tyd-, pronominale en tyds-verwysing verskuif']},
+{l:'Verskuiwings',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['Ek → hy/sy','Is → was, sal → sou','Nou → toe, hier → daar']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Vyf-stap omskakelingslys',d:'Gebruik hierdie vyf stappe elke keer as jy tussen direkte en indirekte rede omskakel.',eg:[{lbl:'STAP 1',txt:'Verwyder aanhalingstekens (of voeg by).'},{lbl:'STAP 2',txt:'Voeg "dat" na die rapporteringswerkwoord in.'},{lbl:'STAP 3',txt:'Verander die voornaamwoord: ek → hy/sy.'},{lbl:'STAP 4',txt:'Verskuif die tydsvorm een stap terug.'},{lbl:'STAP 5',txt:'Verander tydsverwysingswoorde: nou → toe.'}]},
+{n:'2',c:'#F59E0B',t:'Tydsverskuiwing tabel',d:'Leer hierdie tydsverskuiwings buite die kop.',eg:[{lbl:'IS/AM/ARE → WAS',txt:'"Ek is moeg." → Hy het gesê hy was moeg.'},{lbl:'SAL → SOU',txt:'"Ek sal kom." → Sy het gesê sy sou kom.'},{lbl:'HET GEDOEN → HAD GEDOEN',txt:'"Ek het geëet." → Hy het gesê hy het al geëet.'}]},
+{n:'3',c:'#EF4444',t:'Tydsverwysingswoorde',d:'Hierdie woorde verander wanneer jy na indirekte rede omskakel.',eg:[{lbl:'TYD',txt:'nou → toe, vandag → daardie dag, more → die volgende dag'},{lbl:'PLEK',txt:'hier → daar, hierdie → daardie'}]}
+],tip:{t:'Leer die vyf stappe soos \'n formule. Pas hulle een vir een toe — moenie probeer om alles gelyk te doen nie.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_meervoude',sec:'Taalstrukture',icon:'🔢',ttl:'Meervoude',sub:'Reëls vir meervoudvorming in Afrikaans',fc:[
+{type:'mc',q:'Hoe vorm jy die meervoud van "boek"?',a:'boeke',eg:'Meeste Afrikaanse naamwoorde kry -e in die meervoud: boek → boeke',w:['boeks','boeke\'s','boeken']},
+{type:'mc',q:'Watter woord gebruik die KORREKTE meervoud?',a:'perde',eg:'perd → perde. Woorde wat op -d eindig kry gewoonlik -e.',w:['perds','perde\'s','perden']},
+{type:'mc',q:'Watter meervoud is KORREK vir "dag"?',a:'dae',eg:'dag → dae. Die -g verander na -e in die meervoud (soms met klankverandering)',w:['dags','dage','daë']},
+{type:'fill',q:'Kies die korrekte meervoud.',pass:'Die boer het verskeie ___ in sy kraal.',blanks:['beeste'],opts:['beeste','beests','bees\'s','beesten'],eg:'bees → beeste (klink soos \'n aparte reël — leer dit uit)'},
+{type:'tf',q:'Die meeste Afrikaanse selfstandige naamwoorde kry -e in die meervoud.',a:'true',explanation:'Die algemene meervoudsreel in Afrikaans is om -e by te voeg: boom → bome, stoel → stoele, hond → honde. Sommige kry -s en ander is onreëlmatig.'},
+{type:'tf',q:'"Kind" se meervoud is "kinds".',a:'false',explanation:'Die meervoud van "kind" is "kinders" — dit is \'n onreëlmatige meervoud. Ander onreëlmatige meervoude: mens → mense, dag → dae, pad → paaie.'},
+{type:'tf',q:'Woorde wat op -f eindig, verander die -f na -we in die meervoud.',a:'true',explanation:'Af → awe, leef → lewe, skelf → skelwe, toekomstige → toekoms. Die -f word -we. Hierdie is \'n reëlmatige patroon in Afrikaans.'}
+],mm:{c:'Meervoude',cc:'#F97316',b:[
+{l:'-e Meervoud (meeste woorde)',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['hond → honde','stoel → stoele','boom → bome']},
+{l:'-s Meervoud',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['seun → seuns','meisie → meisies','motor → motors']},
+{l:'Onreëlmatig',bg:'#1A0E05',bd:'#F59E0B',tc:'#FDE68A',i:['kind → kinders','mens → mense','dag → dae','pad → paaie']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Kies -e of -s?',d:'Gebruik hierdie riglyne om die regte meervoud te kies.',eg:[{lbl:'-e GEBRUIK',txt:'Die meeste Afrikaanse naamwoorde: hond → honde, boek → boeke'},{lbl:'-s GEBRUIK',txt:'Woorde wat op -el, -em, -en, -er, -ie eindig: tafel → tafels, meisie → meisies'}]},
+{n:'2',c:'#F59E0B',t:'Klankveranderings in die meervoud',d:'Sommige woorde verander van klank in die meervoud.',eg:[{lbl:'-f → -we',txt:'brief → briewe, skelf → skelwe, blad → blaaie'},{lbl:'-g → -e',txt:'dag → dae, weg → weë, vlieg → vlieë'}]},
+{n:'3',c:'#EF4444',t:'Onreëlmatige meervoudlys',d:'Leer hierdie onreëlmatige meervoude buite die kop.',eg:[{lbl:'ALGEMEEN',txt:'kind → kinders, mens → mense, pad → paaie'},{lbl:'MEER',txt:'bees → beeste, ak → awwe, skip → skepe'},{lbl:'ONVERANDERLIK',txt:'beet, meel, water — bly dieselfde in meervoud'}]}
+],tip:{t:'Hou \'n meervoudlys-joernaal. Skryf elke onreëlmatige meervoud neer as jy dit lees. Hersien dit weekliks.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_opsomming',sec:'Skryfvaardigheid',icon:'📝',ttl:'Opsomming',sub:'Hoofinligting identifiseer, eie woorde gebruik',fc:[
+{type:'mc',q:'Watter inligting LAAT JY WEG in \'n opsomming?',a:'Voorbeelde, herhalings, beskrywings en opinies',eg:'In \'n opsomming behou jy slegs kernfeite en hoofidees.',w:['Hoofinligting en kernfeite','Die skrywer se naam','Die onderwerp van die teks']},
+{type:'mc',q:'Watter is die BELANGRIKSTE reël van opsomming?',a:'Skryf in JOU EIE WOORDE — moenie die oorspronklike kopieër nie',eg:'As jou opsomming presies soos die oorspronklike klink, is dit nie \'n opsomming nie.',w:['Gebruik altyd dieselfde woorde as die teks','Skryf meer as die oorspronklike teks','Sluit al die voorbeelde in']},
+{type:'id',q:'Beskryf die verkeerslig-metode vir opsomming.',a:'Groen = behou (hoofefeite), oranje = dalk behou (steunbesonderhede), rooi = laat weg (voorbeelde, beskrywings, herhaling). Merk die teks voor jy skryf.',hint:'Drie kleure = drie besluite oor elke stuk inligting',eg:'Groen: kernfeit. Oranje: steunpunt. Rooi: voorbeeld of beskrywing.'},
+{type:'tf',q:'\'n Opsomming moet in die teenwoordige tyd en derde persoon geskryf word.',a:'true',explanation:'Opsommings word in die teenwoordige tyd geskryf (die artikel bespreek...) en in die derde persoon (hy/sy/hulle). Dit is saklik, objektief en in eie woorde.'},
+{type:'tf',q:'Jy mag persoonlike opinies in \'n opsomming insluit.',a:'false',explanation:'\'n Opsomming is objektief — geen persoonlike opinies of persoonlike gevoel nie. Jy gee slegs die feite en hoofidees van die oorspronklike teks.'},
+{type:'tf',q:'Elke paragraaf in die oorspronklike teks het gewoonlik een hoofieidee.',a:'true',explanation:'Elke paragraaf bespreek een hoofieidee. Identifiseer hierdie hoofidee en skryf dit in een sin in eie woorde om. Dit is jou opsommingspunt vir daardie paragraaf.'}
+],mm:{c:'Opsomming',cc:'#F97316',b:[
+{l:'Reël 1: Eie Woorde',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['Kopieë = plagiaat','Lees, sluit toe, skryf','As dit soos die oorspronklike klink, herskryf']},
+{l:'Wat om WEG te laat',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Voorbeelde','Herhalings','Beskrywings','Opinies en gevoelens']},
+{l:'Verkeerslig-metode',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Groen = kernfeite (behou)','Oranje = steunpunte (dalk)','Rooi = voorbeelde (laat weg)']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Een hoofieidee per paragraaf',d:'Lees elke paragraaf en vra: as ek dit in een sin moet sê, wat sou ek sê?',eg:[{lbl:'PROSES',txt:'Lees paragraaf → formuleer hoofieidee → skryf in eie woorde'},{lbl:'OPSOMMINGSPUNT',txt:'Flamingo\'s kry hul pienk kleur van karoteen in hul kos.'}]},
+{n:'2',c:'#F59E0B',t:'Die wegsluit-protokol',d:'Sodra jy notas gemaak het, draai die oorspronklike om en skryf uit jou notas.',eg:[{lbl:'HOEKOM',txt:'As jy die oorspronklike kan sien, sal jy frases kopieer. Dit is NIE opsomming nie.'},{lbl:'PROSES',txt:'Lees → maak notas in eie woorde → draai oorspronklike om → skryf opsomming'}]},
+{n:'3',c:'#EF4444',t:'Toon en register',d:'Opsommings is altyd formeel, objektief en in die teenwoordige tyd.',eg:[{lbl:'TOON',txt:'Die artikel BESPREEK flamingos. Nie: Ek dink flamingos is interessant.'},{lbl:'TYDSVORM',txt:'Die artikel WOON die leser in... (teenwoordig, nie verlede nie)'}]}
+],tip:{t:'As jou opsomming woord-vir-woord soos die teks klink, begin weer. Lees, sluit die teks toe, wag 30 sekondes, skryf dan uit jou geheue.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'af_visuele',sec:'Leesvaardigheid',icon:'🖼️',ttl:'Visuele Geletterdheid',sub:'Advertensies, prente, grafiese tekste lees en interpreteer',fc:[
+{type:'mc',q:'Watter is die EERSTE stap wanneer jy \'n visuele teks ontleed?',a:'Beskryf wat jy SIEN voordat jy verduidelik wat dit BETEKEN',eg:'Ek kan sien... → Dit suggereer dat... — Beskrywing voor interpretasie.',w:['Verduidelik onmiddellik die betekenis','Noem slegs die kleure','Vra wat die advertensie verkoop']},
+{type:'mc',q:'Watter drie vrae stel jy vir elke advertensie?',a:'Wie is die teikengehoor? Wat is die boodskap? Watter tegniek word gebruik?',eg:'Teikengehoor + Boodskap + Oorredings-tegniek = volledige advertensie-ontleding.',w:['Wie het dit gemaak? Wanneer? Hoeveel kos dit?','Wat is die kleur? Hoe groot is dit? Waar is dit?','Is dit duur? Is dit gewild? Is dit nuut?']},
+{type:'tf',q:'\'n Onderskrif is die opskrif bo-aan \'n koerantartikel.',a:'false',explanation:'\'n Onderskrif is die kort sin ONDER of LANGSAAN \'n foto wat dit verduidelik of konteks gee. Die groot opskrif bo-aan \'n artikel word die OPSKRIF genoem.'},
+{type:'tf',q:'Wanneer jy \'n grafiek of tabel ontleed, moet jy altyd spesifieke syfers gebruik.',a:'true',explanation:'Vae antwoorde verloor punte. Spesifieke syfers bewys dat jy die data verstaan. "Die waarde het met 35% gestyg van 40 na 75" is beter as "dit het baie gestyg".'},
+{type:'tf',q:'Kleur in advertensies is altyd lukraak gekies.',a:'false',explanation:'Kleure in advertensies word doelbewouste gekies. Rooi = dringendheid, blou = vertroue, groen = natuur/gesondheid, geel = geluk. Kleur is \'n oorredings-tegniek.'}
+],mm:{c:'Visuele Geletterdheid',cc:'#F97316',b:[
+{l:'Sien dan Sê',bg:'#1A0E05',bd:'#F59E0B',tc:'#FDE68A',i:['Eers beskryf wat jy sien','Dan interpreteer die betekenis','Gebruik die raam: Ek kan sien... dit suggereer...']},
+{l:'Advertensie-ontleding',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['Teikengehoor: Vir wie?','Boodskap: Wat word gesê?','Tegniek: Hoe word ooreed?']},
+{l:'Grafiese Tekste',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Gebruik spesifieke syfers','Vergelyk hoogste en laagste','Noem tendense en patrone']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Sien-dan-sê raam',d:'Gebruik hierdie raam vir elke visuele teksvraag.',eg:[{lbl:'RAAM',txt:'"Ek kan sien [wat is in die beeld] wat suggereer [wat dit beteken]."'},{lbl:'VOORBEELD',txt:'"Ek kan sien \'n groot rooi stopbord wat suggereer dat die boodskap dringend is en onmiddellike aandag vereis."'}]},
+{n:'2',c:'#F59E0B',t:'Drie vrae vir advertensies',d:'Beantwoord hierdie drie vrae vir elke advertensie-vraag.',eg:[{lbl:'Q1: TEIKENGEHOOR',txt:'Vir wie is dit? Ouderdom, geslag, belangstellings — wees spesifiek.'},{lbl:'Q2: BOODSKAP',txt:'Wat word verkoop of voorgestel? Wat is die hoofieidee?'},{lbl:'Q3: TEGNIEK',txt:'Hoe word jy ooreed? Emosie, ster, statistiek, herhaling, kleur?'}]},
+{n:'3',c:'#EF4444',t:'Grafiek-vrae',d:'Gebruik altyd spesifieke syfers uit die grafiek in jou antwoord.',eg:[{lbl:'SWAK',txt:'"Die waarde het baie gestyg." — geen syfers nie.'},{lbl:'STERK',txt:'"Die waarde het met 40% gestyg van 2020 tot 2022."'},{lbl:'REEL',txt:'Elke antwoord oor \'n grafiek moet ten minste een syfer bevat.'}]}
+],tip:{t:'Kyk na elke visuele teks vir ten minste 30 sekondes voor jy begin skryf. Soek na kleur, posisie, grootte, gesiguitdrukkings en teks. Elke detail kan punte verdien.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+]}};
+
 var cSubject='english';
 var T=SUBJECTS[cSubject].terms;
 // ── Helpers ────────────────────────────────────────────────────
@@ -1380,7 +1898,7 @@ function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g
 function updateProg(){
   var total=allT().length,done=Object.keys(doneSet).length,pct=Math.round(done/total*100);
   var el=document.getElementById('pctLbl');if(el)el.textContent=pct+'%';
-  var dl=document.getElementById('doneLbl');if(dl)dl.textContent=done+' of '+total+' topics done';
+  var dl=document.getElementById('doneLbl');if(dl)dl.textContent=done+L(' of '+total+' topics done',' van '+total+' onderwerpe klaar');
   var ring=document.getElementById('ringFill');if(ring)ring.style.strokeDashoffset=150.8-(150.8*pct/100);
 }
 
@@ -1458,7 +1976,7 @@ function renderTopic(){
         '<div class="back-row" onclick="closeT()">'+
           '<div style="width:32px;height:32px;border-radius:50%;background:#1E1B3A;border:2px solid #A78BFA;display:flex;align-items:center;justify-content:center">'+
           '←</div>'+
-          '<span class="back-lbl">Back to topics</span>'+
+          '<span class="back-lbl">'+L('Back to topics','Terug na onderwerpe')+'</span>'+
         '</div>'+
         '<div class="th-ico" style="background:'+tc.lt+';font-size:30px">'+t.icon+'</div>'+
         '<div class="th-title">'+esc(t.ttl)+'</div>'+
@@ -1509,12 +2027,14 @@ function renderFC(t,tc){
   var prevDis=fcIdx===0?' disabled':'',nextDis=fcIdx===total-1?' disabled':'';
   var nextCls=revealed?'nbtn pri':'nbtn';
   var nav='<div class="nav-row">'+
-    '<button class="nbtn"'+prevDis+' onclick="prevCard()">← Previous</button>'+
-    '<button class="'+nextCls+'"'+nextDis+' onclick="nextCard()">'+(revealed?'Next →':'Next →')+'</button>'+
+    '<button class="nbtn"'+prevDis+' onclick="prevCard()">← '+L('Previous','Vorige')+'</button>'+
+    '<button class="'+nextCls+'"'+nextDis+' onclick="nextCard()">'+L('Next','Volgende')+' →</button>'+
     '</div>';
 
   var qBadgeMap={mc:'mc',fill:'fill',fix:'fix',id:'id',tf:'tf'};
-  var qLabelMap={mc:'Multiple choice',fill:'Fill in the blank',fix:'Correct the sentence',id:'Identify and explain',tf:'True or false'};
+  var qLabelMap=cSubject==='afrikaans'
+    ? {mc:'Meervoudige keuse',fill:'Vul in die spasie',fix:'Korrigeer die sin',id:'Identifiseer en verduidelik',tf:'Waar of onwaar'}
+    : {mc:'Multiple choice',fill:'Fill in the blank',fix:'Correct the sentence',id:'Identify and explain',tf:'True or false'};
   var qBadge=qBadgeMap[card.type]||'mc',qLabel=qLabelMap[card.type]||'';
   // For fill questions, passage is rendered inside fill-sent - don't show it twice
   var passHTML=(card.pass&&card.type!=='fill')?'<div class="passage">'+(card.highlights?applyHighlights(card.pass,card.highlights):esc(card.pass))+'</div>':'';
@@ -1529,29 +2049,30 @@ function renderFC(t,tc){
     body+
     (card.type==='mc'?'<div class="att-row"><span style="font-size:12px;color:#6B7280;margin-right:4px">Attempts</span><div class="adot'+(attempts>=1?' red':'')+'"></div><div class="adot'+(attempts>=2?' red':'')+'"></div></div>':'')+
     rev+nav+
-    '<button class="spk-btn" id="spkbtn" onclick="muted?toggleMute()&&speakCurrent():speakCurrent()"> '+(muted?'Tap to unmute and play':'Read full card aloud')+'</button>';
+    '<button class="spk-btn" id="spkbtn" onclick="muted?toggleMute()&&speakCurrent():speakCurrent()"> '+L(muted?'Tap to unmute and play':'Read full card aloud',muted?'Tik om klank aan te skakel':'Lees kaart hardop')+'</button>';
 }
 
 function speakCurrent(){
   if(muted)return;
   var card=cTopic.fc[fcIdx];
   var text=card.q;
+  var blank=L('blank','leeg');
+  var optPfx=L('. Your options are: ','. Jou opsies is: ');
+  var hintPfx=L('. Hint: ','. Wenk: ');
   if(card.type==='fill'){
-    // For fill questions, read the sentence with "blank" replacing underscores
-    var sent=card.pass||card.q;
-    sent=sent.replace(/_+/g,'blank');
+    var sent=(card.pass||card.q).replace(/_+/g,blank);
     text=card.q+'. '+sent;
-    if(card.opts&&!revealed)text+='. Your options are: '+card.opts.join(', ')+'.';
+    if(card.opts&&!revealed)text+=optPfx+card.opts.join(', ')+'.';
   } else if(card.type==='mc'&&!revealed){
     if(card.pass)text+='. '+card.pass;
     var choices=getChoices(cTopic.id,fcIdx),labels=['A','B','C'];
-    text+='. Your options are: ';
+    text+=optPfx;
     for(var i=0;i<choices.length;i++)text+=labels[i]+'. '+choices[i]+'. ';
   } else if(card.type==='tf'){
-    text='True or false? '+card.q+(card.pass?'. '+card.pass:'');
+    text=L('True or false? ','Waar of onwaar? ')+card.q+(card.pass?'. '+card.pass:'');
   } else {
     if(card.pass)text+='. '+card.pass;
-    if((card.type==='fix'||card.type==='id')&&card.hint)text+='. Hint: '+card.hint;
+    if((card.type==='fix'||card.type==='id')&&card.hint)text+=hintPfx+card.hint;
   }
   speakT(text);
 }
@@ -1629,7 +2150,7 @@ function renderFixReveal(card){
 
 function renderIDReveal(card){
   return '<div class="reveal ko">'+
-    '<div class="rv-ttl">Model answer:</div>'+
+    '<div class="rv-ttl">'+L('Model answer:','Modelantwoord:')+'</div>'+
     '<div class="rv-ans">'+esc(card.a)+'</div>'+
     (card.eg?'<div class="rv-eg">'+esc(card.eg)+'</div>':'')+
   '</div>';
@@ -1674,7 +2195,7 @@ function renderFix(card){
   return '<div class="err-box"><div class="err-lbl">Sentence to correct</div>'+
     '<div class="err-txt">'+esc(card.pass||card.q)+'</div></div>'+
     (card.hint&&!revealed?'<div class="hint-box">'+esc(card.hint)+'</div>':'')+
-    '<textarea class="type-in" id="typeIn" placeholder="Type the corrected sentence here..." rows="3"></textarea>'+
+    '<textarea class="type-in" id="typeIn" placeholder="'+L('Type the corrected sentence here...','Skryf die korrekte sin hier...')+'" rows="3"></textarea>'+
     '<button class="chk-btn" id="chkBtn" onclick="checkFix()">Check my answer</button>'+
     (revealed?'<div class="reveal ko"><div class="rv-ttl">Correct version:</div><div class="rv-ans">'+esc(card.a)+'</div>'+(card.eg?'<div class="rv-eg">'+esc(card.eg)+'</div>':'')+'</div>':'');
 }
@@ -1730,8 +2251,8 @@ function pickTF(answer){
   revealed=true;
   if(correct){
     awardXP(10);
-    speakT('Correct! That is '+(card.a==='true'?'true':'false')+'. '+card.explanation);
-  }else speakT('Not quite. The answer is '+(card.a==='true'?'true':'false')+'. '+card.explanation);
+    speakT(L('Correct! That is ','Korrek! Dit is ')+(card.a==='true'?L('true','waar'):L('false','onwaar'))+'. '+card.explanation);
+  }else speakT(L('Not quite. The answer is ','Nie heeltemal nie. Die antwoord is ')+(card.a==='true'?L('true','waar'):L('false','onwaar'))+'. '+card.explanation);
   renderTopic();
 }
 
@@ -1759,7 +2280,7 @@ function renderMM(t){
   return '<div class="mm-wrap">'+
     '<div class="mm-cw"><div class="mm-ctr" style="background:'+mm.cc+'">'+esc(mm.c)+'</div></div>'+
     '<div style="padding:0 0 12px">'+bh+'</div></div>'+
-    '<button class="spk-btn" onclick="muted?(toggleMute(),spkMM(cTopic.mm)):spkMM(cTopic.mm)"> '+(muted?'Tap to unmute':'Read aloud')+'</button>';
+    '<button class="spk-btn" onclick="muted?(toggleMute(),spkMM(cTopic.mm)):spkMM(cTopic.mm)"> '+L(muted?'Tap to unmute':'Read aloud',muted?'Tik om klank aan te skakel':'Lees hardop')+'</button>';
 }
 
 // ── Rules ──────────────────────────────────────────────────────
@@ -1790,7 +2311,7 @@ function renderRules(t){
     '<div class="tip-card" style="background:'+t.tip.c+';border-left-color:'+t.tip.b+'">'+
     '💡'+
     '<div class="tip-txt" style="color:'+t.tip.tc+'">'+esc(t.tip.t)+'</div></div>'+
-    '<button class="spk-btn" onclick="muted?(toggleMute(),spkR(cTopic.rules,cTopic.tip.t)):spkR(cTopic.rules,cTopic.tip.t)"> '+(muted?'Tap to unmute':'Read aloud')+'</button>';
+    '<button class="spk-btn" onclick="muted?(toggleMute(),spkR(cTopic.rules,cTopic.tip.t)):spkR(cTopic.rules,cTopic.tip.t)"> '+L(muted?'Tap to unmute':'Read aloud',muted?'Tik om klank aan te skakel':'Lees hardop')+'</button>';
 }
 
 // ── Init ───────────────────────────────────────────────────────
