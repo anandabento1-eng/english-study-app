@@ -732,7 +732,6 @@ function updateGreetingBar(){
 // ── Subject selector ──────────────────────────────────────────
 
 function showSubjectScreen(){
-  // Render subject cards
   var subjects = Object.values(SUBJECTS);
   var grid = document.getElementById('subjGrid');
   if(!grid) return;
@@ -754,7 +753,7 @@ function showSubjectScreen(){
         '</div>'+
       '</div>';
     } else {
-      html += '<div class="subj-card" style="background:'+s.bg+';border-color:'+s.color+'" onclick="selectSubject(\'+s.id+\')">'+
+      html += '<div class="subj-card" data-sid="'+s.id+'" style="background:'+s.bg+';border-color:'+s.color+'">'+
         '<div class="subj-icon" style="background:'+s.color+'22">'+s.icon+'</div>'+
         '<div class="subj-info">'+
           '<h2>'+esc(s.name)+'</h2>'+
@@ -765,6 +764,11 @@ function showSubjectScreen(){
     }
   });
   grid.innerHTML = html;
+  // Attach click handlers after innerHTML is set (avoids all quote-escaping issues)
+  var cards = grid.querySelectorAll('.subj-card[data-sid]');
+  for(var i=0;i<cards.length;i++){
+    (function(card){ card.addEventListener('click', function(){ selectSubject(card.getAttribute('data-sid')); }); })(cards[i]);
+  }
   document.getElementById('SUBJ-SCREEN').style.display = 'block';
   document.getElementById('R').style.display = 'none';
 }
