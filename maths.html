@@ -413,6 +413,21 @@ html,body{background:#0F0F1A;min-height:100vh}
 .patt-next{border:2px dashed #3B82F6;background:transparent;color:#3B82F6}
 .maths-back{display:flex;align-items:center;gap:8px;color:#93C5FD;font-weight:600;font-size:14px;cursor:pointer;background:none;border:none;font-family:'Lexend',sans-serif;padding:0}
 
+
+/* ── Calculation scratchpad ──────────────────────────────────── */
+.calc-col{background:#0A0F1A;border:1.5px solid #1E3A5F;border-radius:12px;padding:16px;margin-bottom:12px;font-family:'Lexend',monospace;font-size:16px}
+.calc-row{display:flex;justify-content:flex-end;gap:8px;align-items:center;padding:2px 0}
+.calc-num{color:#E2E8F0;font-weight:700;letter-spacing:2px;font-size:20px}
+.calc-op{color:#60A5FA;font-weight:700;font-size:20px;margin-right:4px}
+.calc-line{border-top:2px solid #334155;margin:8px 0}
+.calc-steps{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.calc-step-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.calc-step-label{font-size:12px;color:#60A5FA;min-width:120px;font-weight:600}
+.calc-input{background:#0F1E38;border:2px solid #1E3A5F;border-radius:8px;color:#E2E8F0;font-family:'Lexend',sans-serif;font-size:16px;font-weight:700;padding:8px 12px;width:140px;text-align:right;-webkit-appearance:none;outline:none;transition:border-color .15s}
+.calc-input:focus{border-color:#3B82F6}
+.calc-input-final{width:160px;font-size:18px;border-color:#3B82F6}
+.calc-final-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0}
+
 </style>
 </head>
 <body>
@@ -452,10 +467,9 @@ html,body{background:#0F0F1A;min-height:100vh}
 </div>
 <div id="TGRID"></div>
 </div><!-- close HV -->
+<div id="TV" style="display:none;min-height:100vh;padding-bottom:80px"></div>
 </div><!-- close R -->
-<div id="TV" style="display:none;min-height:100vh"></div>
 <script>
-
 var TERMS = {
   1:[
 
@@ -552,6 +566,20 @@ var TERMS = {
  a:'true',explanation:'Yes! The commutative property states that you can add numbers in any order and get the same answer: a + b = b + a.'},
 {type:'tf',q:'Subtraction is commutative: 800 − 350 = 350 − 800.',
  a:'false',explanation:'No! Subtraction is NOT commutative. 800 − 350 = 450, but 350 − 800 gives a negative number. Only addition and multiplication are commutative.'},
+,
+{type:'calc',q:'Calculate using the column method:',
+ n1:598456,n2:458105,op:'+',
+ steps:[
+   {label:'Units: 6 + 5 =',ans:11,shift:0},
+   {label:'Tens (+ carry 1): 5 + 0 + 1 =',ans:6,shift:0},
+   {label:'Hundreds: 4 + 1 =',ans:5,shift:0},
+   {label:'Thousands: 8 + 8 =',ans:16,shift:0},
+   {label:'Ten thousands (+ carry 1): 9 + 5 + 1 =',ans:15,shift:0},
+   {label:'Hundred thousands (+ carry 1): 5 + 4 + 1 =',ans:10,shift:0}
+ ],
+ a:'1056561',
+ hint:'Work column by column from right to left. Write single digit, carry the tens.',
+ eg:'598456 + 458105 = 1056561. Check: 1056561 - 458105 = 598456 ✓'},
 {type:'fix',q:'Find and correct the error in this calculation.',
  pass:'453 + 287 = 730',
  a:'453 + 287 = 740',hint:'Check the units column: 3 + 7 = 10, write 0 carry 1. Tens: 5 + 8 + 1 = 14, write 4 carry 1. Hundreds: 4 + 2 + 1 = 7. Answer: 740',
@@ -657,6 +685,20 @@ var TERMS = {
  a:'false',explanation:'No! A prime number must have EXACTLY 2 different factors. The number 1 has only ONE factor (1 itself). So 1 is NOT prime. The smallest prime number is 2.'},
 {type:'tf',q:'Every even number greater than 2 is NOT a prime number.',
  a:'true',explanation:'True! Even numbers are divisible by 2, which means they have at least 3 factors (1, 2, and themselves). The only even prime is 2 itself.'},
+,
+{type:'calc',q:'Calculate using long division — show each step:',
+ n1:3865,n2:120,op:'÷',
+ steps:[
+   {label:'120 goes into 386 how many times?',ans:3,shift:0},
+   {label:'Multiply: 3 × 120 =',ans:360,shift:0},
+   {label:'Subtract: 386 − 360 =',ans:26,shift:0},
+   {label:'Bring down 5 → 265. 120 goes into 265 how many times?',ans:2,shift:0},
+   {label:'Multiply: 2 × 120 =',ans:240,shift:0},
+   {label:'Subtract: 265 − 240 =',ans:25,shift:0}
+ ],
+ a:'32',
+ hint:'Use the DMSB method: Divide, Multiply, Subtract, Bring down. 3865 ÷ 120 = 32 remainder 25.',
+ eg:'120×32=3840. 3865-3840=25. Answer: 32 remainder 25.'},
 {type:'id',q:'Find the Highest Common Factor (HCF) of 24 and 36. Show your working.',
  a:'HCF = 12. Factors of 24: 1,2,3,4,6,8,12,24. Factors of 36: 1,2,3,4,6,9,12,18,36. Common factors: 1,2,3,4,6,12. Highest = 12.',
  hint:'List all factors of both numbers, then find the largest factor that appears in BOTH lists.',
@@ -697,6 +739,17 @@ var TERMS = {
  w:['1/2, 3/8, 2/3, 5/6','3/8, 2/3, 1/2, 5/6','5/6, 2/3, 1/2, 3/8']},
 {type:'tf',q:'To add fractions, you only need the same numerator.',
  a:'false',explanation:'No! To add or subtract fractions, you need the same DENOMINATOR (the bottom number). The numerators are then added or subtracted while the denominator stays the same. Example: 1/4 + 2/4 = 3/4.'},
+,
+{type:'calc',q:'Calculate using the column method:',
+ n1:3590,n2:621,op:'×',
+ steps:[
+   {label:'3590 × 1 =',ans:3590,shift:0},
+   {label:'3590 × 20 =',ans:71800,shift:1},
+   {label:'3590 × 600 =',ans:2154000,shift:2}
+ ],
+ a:'2229390',
+ hint:'Multiply 3590 by each digit of 621 (ones, tens, hundreds). Then add all partial products.',
+ eg:'3590×1=3590. 3590×20=71800. 3590×600=2154000. Sum = 2229390'},
 {type:'id',q:'A water tank holds 600 litres. It is 2/3 full. How much water is in the tank?',
  a:'2/3 of 600 = (600 ÷ 3) × 2 = 200 × 2 = 400 litres',
  hint:'Fraction of a quantity: divide by denominator, multiply by numerator.',
@@ -946,579 +999,6 @@ var TERMS = {
 
   ]};
 
-function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-
-function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
-
-function getChoices(tid,idx){var k=tid+'_'+idx;if(!choiceCache[k]){var c=findT(tid).fc[idx];choiceCache[k]=shuffle([c.a].concat(c.w.slice(0,2)));}return choiceCache[k];}
-
-function renderMC(card,tid){
-  var choices=getChoices(tid,fcIdx),labels=['A','B','C'],ch='';
-  for(var i=0;i<choices.length;i++){
-    var c=choices[i],lbl=labels[i],isC=(c===card.a),isW=false;
-    for(var j=0;j<selectedWrong.length;j++)if(selectedWrong[j]===c){isW=true;break;}
-    var cls='choice',ico='';
-    if(revealed){
-      if(isC){cls+=' cor';ico='<span class="cico">&#10003;</span>';}
-      else if(isW){cls+=' wrg';ico='<span class="cico">&#10007;</span>';}
-      else cls+=' dim';
-    }else if(isW){cls+=' wrg';ico='<span class="cico">&#10007;</span>';}
-    var dis=(revealed||isW)?' disabled':'';
-    var safe=c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-    ch+='<button class="'+cls+'" onclick="pickMC(\''+safe+'\')\"'+dis+'>'+
-      '<span class="clbl">'+lbl+'</span><span class="ctxt">'+esc(c)+'</span>'+ico+'</button>';
-  }
-  return '<div class="choices">'+ch+'</div>';
-}
-
-function renderFill(card,tid){
-  var sent=(card.pass||card.q).replace(/_+/g,'<span class="blank" id="bslot0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
-  var opts='<div class="bopts">';
-  var shuffledOpts=card.opts?shuffle(card.opts.slice()):[];
-  for(var i=0;i<shuffledOpts.length;i++){
-    var o=shuffledOpts[i],cls='bopt',dis='';
-    if(revealed){
-      if(o===card.blanks[0])cls+=' ok';
-      else if(o===fillSelected&&o!==card.blanks[0])cls+=' ko';
-      else cls+=' dim';
-      dis=' disabled';
-    }else if(fillSelected===o)cls+=' sel';
-    var safe=o.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-    opts+='<button class="'+cls+'"'+dis+' onclick="pickFill(\"'+safe+'\")">'+esc(o)+'</button>';
-  }
-  opts+='</div>';
-  var rev=revealed?'<div class="reveal '+(fillSelected===card.blanks[0]?'ok':'ko')+'">'+
-    '<div class="rv-ttl">'+(fillSelected===card.blanks[0]?L('Correct! +10 XP','Korrek! +10 XP'):L('The answer is:','Die antwoord is:'))+' </div>'+
-    '<div class="rv-ans">'+esc(card.blanks[0])+'</div>'+
-    (card.eg?'<div class="rv-eg">'+L('Example — ','Voorbeeld — ')+esc(card.eg)+'</div>':'')+'</div>':'';
-  return '<div class="fill-sent">'+sent+'</div>'+opts+rev;
-}
-
-function renderFix(card){
-  return '<div class="err-box"><div class="err-lbl">'+L('Sentence to correct','Sin om te korrigeer')+'</div>'+
-    '<div class="err-txt">'+esc(card.pass||card.q)+'</div></div>'+
-    (card.hint&&!revealed?'<div class="hint-box">'+esc(card.hint)+'</div>':'')+
-    '<textarea class="type-in" id="typeIn" placeholder="'+L('Type the corrected sentence here...','Skryf die korrekte sin hier...')+'" rows="3"></textarea>'+
-    '<button class="chk-btn" id="chkBtn" onclick="checkFix()">'+L('Check my answer','Kontroleer my antwoord')+'</button>'+
-    (revealed?'<div class="reveal ko"><div class="rv-ttl">'+L('Correct version:','Korrekte weergawe:')+'</div><div class="rv-ans">'+esc(card.a)+'</div>'+(card.eg?'<div class="rv-eg">'+L('Example — ','Voorbeeld — ')+esc(card.eg)+'</div>':'')+'</div>':'');
-}
-
-function renderFixReveal(card){
-  var inp=document.getElementById('typeIn');
-  var userAns=inp?inp.value.trim():'';
-  var correct=userAns.toLowerCase()===card.a.toLowerCase();
-  return '<div class="reveal '+(correct?'ok':'ko')+'">'+
-    '<div class="rv-ttl">'+(correct?L('Correct! +10 XP','Korrek! +10 XP'):L('The correct version:','Korrekte weergawe:'))+' </div>'+
-    '<div class="rv-ans">'+esc(card.a)+'</div>'+
-    (card.eg?'<div class="rv-eg">'+L('Example — ','Voorbeeld — ')+esc(card.eg)+'</div>':'')+
-  '</div>';
-}
-
-function renderID(card){
-  return (card.hint&&!revealed?'<div class="hint-box">'+esc(card.hint)+'</div>':'')+
-    '<textarea class="type-in" id="typeIn" placeholder="Type your answer here..." rows="3"></textarea>'+
-    '<button class="chk-btn" id="chkBtn" onclick="checkID()">'+L('Check my answer','Kontroleer my antwoord')+'</button>'+
-    (revealed?'<div class="reveal ko"><div class="rv-ttl">'+L('Model answer:','Modelantwoord:')+'</div><div class="rv-ans">'+esc(card.a)+'</div>'+(card.eg?'<div class="rv-eg">'+L('Example — ','Voorbeeld — ')+esc(card.eg)+'</div>':'')+'</div>':'');
-}
-
-function renderIDReveal(card){
-  return '<div class="reveal ko">'+
-    '<div class="rv-ttl">'+L('Model answer:','Modelantwoord:')+'</div>'+
-    '<div class="rv-ans">'+esc(card.a)+'</div>'+
-    (card.eg?'<div class="rv-eg">'+L('Example — ','Voorbeeld — ')+esc(card.eg)+'</div>':'')+
-  '</div>';
-}
-
-function renderTF(card){
-  var tCls='tf-btn true-btn',fCls='tf-btn false-btn';
-  if(revealed){if(card.a==='true'){tCls+=' sel-cor';fCls+=' dim';}else{fCls+=' sel-cor';tCls+=' dim';}}
-  var dis=revealed?' disabled':'';
-  var rev=revealed?'<div class="reveal ok"><div class="rv-ttl">'+L('The answer is ','Die antwoord is ')+(card.a==='true'?L('TRUE','WAAR'):L('FALSE','ONWAAR'))+'</div><div class="rv-ans">'+esc(card.explanation)+'</div></div>':'';
-  return '<div class="tf-row">'+
-    '<button class="'+tCls+'"'+dis+' onclick="pickTF(\'true\')"><span style="font-size:28px">✓</span>'+L('True','Waar')+'</button>'+
-    '<button class="'+fCls+'"'+dis+' onclick="pickTF(\'false\')"><span style="font-size:28px">✗</span>'+L('False','Onwaar')+'</button>'+
-    '</div>'+rev;
-}
-
-function renderMM(t){
-  var mm=t.mm,bh='';
-  for(var i=0;i<mm.b.length;i++){
-    var b=mm.b[i],ih='';
-    for(var j=0;j<b.i.length;j++)ih+='<div class="mm-it" style="color:'+b.tc+'">'+esc(b.i[j])+'</div>';
-    bh+='<div class="mm-br" style="background:'+b.bg+';border-left-color:'+b.bd+'">'+
-      '<div class="mm-brtl" style="color:'+b.tc+'">'+esc(b.l)+'</div>'+ih+'</div>';
-  }
-  return '<div class="mm-wrap">'+
-    '<div class="mm-cw"><div class="mm-ctr" style="background:'+mm.cc+'">'+esc(mm.c)+'</div></div>'+
-    '<div style="padding:0 0 12px">'+bh+'</div></div>'+
-    '<button class="spk-btn" onclick="muted?(toggleMute(),spkMM(cTopic.mm)):spkMM(cTopic.mm)"> '+L(muted?'Tap to unmute':'Read aloud',muted?'Tik om klank aan te skakel':'Lees hardop')+'</button>';
-}
-
-function renderRules(t){
-  var rh='';
-  for(var i=0;i<t.rules.length;i++){
-    var r=t.rules[i];
-    // Build example rows if r.eg is an array of {lbl,txt} objects
-    var egHTML='';
-    if(r.eg&&r.eg.length){
-      egHTML='<div class="rule-eg">';
-      for(var j=0;j<r.eg.length;j++){
-        var row=r.eg[j];
-        egHTML+='<div class="rule-eg-row">'+
-          '<span class="rule-eg-lbl" style="background:'+r.c+'22;color:'+r.c+'">'+esc(row.lbl)+'</span>'+
-          '<span class="rule-eg-txt">'+esc(row.txt)+'</span>'+
-          '</div>';
-      }
-      egHTML+='</div>';
-    }
-    rh+='<div class="rule-card">'+
-      '<div class="rnm" style="background:'+r.c+'">'+r.n+'</div>'+
-      '<div style="flex:1"><div class="rt" style="color:'+r.c+'">'+esc(r.t)+'</div>'+
-      '<div class="rd">'+esc(r.d)+'</div>'+egHTML+
-      '</div></div>';
-  }
-  return rh+
-    '<div class="tip-card" style="background:'+t.tip.c+';border-left-color:'+t.tip.b+'">'+
-    '💡'+
-    '<div class="tip-txt" style="color:'+t.tip.tc+'">'+esc(t.tip.t)+'</div></div>'+
-    '<button class="spk-btn" onclick="muted?(toggleMute(),spkR(cTopic.rules,cTopic.tip.t)):spkR(cTopic.rules,cTopic.tip.t)"> '+L(muted?'Tap to unmute':'Read aloud',muted?'Tik om klank aan te skakel':'Lees hardop')+'</button>';
-}
-
-function renderTopic(){
-  var t=cTopic,tc=getCol(t),body='';
-  if(cMode==='fc')body=renderFC(t,tc);
-  else if(cMode==='mm')body=renderMM(t);
-  else body=renderRules(t);
-  document.getElementById('TV').innerHTML=
-    '<div class="tv-sticky">'+
-      '<div class="topic-hdr" style="background:'+tc.bg+'">'+
-        '<div class="back-row" onclick="closeT()">'+
-          '<div style="width:32px;height:32px;border-radius:50%;background:#1E1B3A;border:2px solid #A78BFA;display:flex;align-items:center;justify-content:center">'+
-          '←</div>'+
-          '<span class="back-lbl">'+L('Back to topics','Terug na onderwerpe')+'</span>'+
-        '</div>'+
-        '<div class="th-ico" style="background:'+tc.lt+';font-size:30px">'+t.icon+'</div>'+
-        '<div class="th-title">'+esc(t.ttl)+'</div>'+
-        '<div class="th-sub">'+esc(t.sub)+'</div>'+
-      '</div>'+
-      '<div class="mode-pills">'+
-        '<button class="mp'+(cMode==='fc'?' on':'')+'" onclick="setMode(\'fc\')">🃏 '+L('Cards','Kaarte')+'</button>'+
-        '<button class="mp'+(cMode==='mm'?' on':'')+'" onclick="setMode(\'mm\')">🗺️ '+L('Mind map','Breinkaart')+'</button>'+
-        '<button class="mp'+(cMode==='rules'?' on':'')+'" onclick="setMode(\'rules\')">💡 '+L('Rules','Reëls')+'</button>'+
-      '</div>'+
-    '</div>'+
-    '<div class="tv-scroll"><div class="study-area">'+body+'</div></div>';
-  setTimeout(applyGlowIfPending, 50);
-}
-
-function pickMC(c){
-  if(revealed)return;
-  var already=false;for(var i=0;i<selectedWrong.length;i++)if(selectedWrong[i]===c){already=true;break;}
-  if(already)return;
-  var card=cTopic.fc[fcIdx];
-  if(c===card.a){
-    revealed=true;
-    awardXP(10);
-    spkOK(card.a,card.eg);
-  }else{
-    selectedWrong.push(c);attempts++;
-    if(attempts>=2){revealed=true;spkW2(card.a,card.eg);}else spkW1();
-  }
-  renderTopic();
-}
-
-function pickTF(answer){
-  if(revealed)return;
-  var card=cTopic.fc[fcIdx],correct=(answer===card.a);
-  revealed=true;
-  if(correct){
-    awardXP(10);
-    speakT(L('Correct! That is ','Korrek! Dit is ')+(card.a==='true'?L('true','waar'):L('false','onwaar'))+'. '+card.explanation);
-  }else speakT(L('Not quite. The answer is ','Nie heeltemal nie. Die antwoord is ')+(card.a==='true'?L('true','waar'):L('false','onwaar'))+'. '+card.explanation);
-  renderTopic();
-}
-
-function pickFillIdx(i){
-  if(revealed)return;
-  var card=cTopic.fc[fcIdx],o=window._fillOpts[i];
-  var isMulti=card.blanks.length>1;
-  var pos=fillSelections.indexOf(o);
-  if(pos!==-1){fillSelections.splice(pos,1);}
-  else if(fillSelections.length<card.blanks.length){fillSelections.push(o);}
-  if(fillSelections.length===card.blanks.length){
-    revealed=true;
-    var allOk=card.blanks.every(function(b){return fillSelections.indexOf(b)!==-1;});
-    if(allOk){
-      awardXP(10);
-      spkOK(card.blanks.join(' and '),card.eg);
-    }else spkW2(card.blanks.join(' and '),card.eg);
-  }
-  renderTopic();
-}
-
-function pickFill(o){pickFillIdx(window._fillOpts?window._fillOpts.indexOf(o):0);}
-
-function checkFix(){
-  if(revealed)return;
-  var card=cTopic.fc[fcIdx],inp=document.getElementById('typeIn');
-  if(!inp||!inp.value.trim())return;
-  var correct=inp.value.trim().toLowerCase()===card.a.toLowerCase();
-  revealed=true;
-  if(correct){inp.className='type-in ok';awardXP(10);
-    spkOK(card.a,card.eg);
-  }else{inp.className='type-in ko';spkW2(card.a,card.eg);}
-  var chk=document.getElementById('chkBtn');if(chk)chk.disabled=true;
-  var rev=document.createElement('div');
-  rev.innerHTML='<div class="reveal '+(correct?'ok':'ko')+'"><div class="rv-ttl">'+(correct?L('Correct! +10 XP','Korrek! +10 XP'):L('Correct version:','Korrekte weergawe:'))+'</div><div class="rv-ans">'+esc(card.a)+'</div>'+(card.eg?'<div class="rv-eg">'+L('Example — ','Voorbeeld — ')+esc(card.eg)+'</div>':'')+'</div>';
-  chk.parentNode.insertBefore(rev.firstChild,chk.nextSibling);
-}
-
-function checkID(){
-  if(revealed)return;
-  var card=cTopic.fc[fcIdx],inp=document.getElementById('typeIn');
-  if(!inp||!inp.value.trim())return;
-  revealed=true;markAnswered(cTopic.id,fcIdx);
-  saveUser();
-  spkW2(card.a,card.eg);
-  var chk=document.getElementById('chkBtn');if(chk)chk.disabled=true;
-  var rev=document.createElement('div');
-  rev.innerHTML='<div class="reveal ko"><div class="rv-ttl">'+L('Model answer:','Modelantwoord:')+'</div><div class="rv-ans">'+esc(card.a)+'</div>'+(card.eg?'<div class="rv-eg">'+L('Example — ','Voorbeeld — ')+esc(card.eg)+'</div>':'')+'</div>';
-  chk.parentNode.insertBefore(rev.firstChild,chk.nextSibling);
-}
-
-function nextCard(){
-  if(fcIdx<cTopic.fc.length-1){
-    fcIdx++;attempts=0;revealed=false;selectedWrong=[];fillSelected=null;stopS();renderTopic();
-  }
-}
-
-function prevCard(){
-  if(fcIdx>0){
-    fcIdx--;attempts=0;revealed=false;selectedWrong=[];fillSelected=null;fillSelections=[];stopS();renderTopic();
-    scrollToTop();
-  }
-}
-
-function closeT(){
-  document.getElementById('TV').style.display='none';
-  document.getElementById('HV').style.display='block';
-  stopS();renderHome();
-}
-
-function swTab(t){
-  cTerm=t;
-  document.getElementById('tb1').className='term-btn '+(t===1?'on':'off');
-  document.getElementById('tb2').className='term-btn '+(t===2?'on':'off');
-  renderHome();
-}
-
-function updateProg(){
-  var total=allT().length,done=Object.keys(doneSet).length,pct=Math.round(done/total*100);
-  var el=document.getElementById('pctLbl');if(el)el.textContent=pct+'%';
-  var dl=document.getElementById('doneLbl');if(dl)dl.textContent=done+L(' of '+total+' topics done',' van '+total+' onderwerpe klaar');
-  var ring=document.getElementById('ringFill');if(ring)ring.style.strokeDashoffset=150.8-(150.8*pct/100);
-}
-
-function allT(){return T[1].concat(T[2]);}
-
-function findT(id){var a=allT();for(var i=0;i<a.length;i++)if(a[i].id===id)return a[i];return null;}
-
-function getSecs(term){var seen={},out=[];for(var i=0;i<T[term].length;i++){var s=T[term][i].sec;if(!seen[s]){seen[s]=true;out.push(s);}}return out;}
-
-function awardXP(amount){
-  var old=xp;
-  xp=Math.min(xp+amount,500);
-  streak++;
-  markAnswered(cTopic.id, fcIdx);
-  animateXP(old, xp);
-  document.getElementById('strVal').textContent=streak;
-  showConfetti();
-  saveUser();
-  // Apply green glow to correct answer button after next render
-  window._pendingGlow=true;
-}
-
-function markAnswered(topicId, qIdx){
-  answeredSet[topicId+'_'+qIdx]=true;
-  // Topic complete only when every question has been answered
-  var t=findT(topicId);
-  var allDone=true;
-  for(var i=0;i<t.fc.length;i++){
-    if(!answeredSet[topicId+'_'+i]){allDone=false;break;}
-  }
-  if(allDone){
-    doneSet[topicId]=true;
-    // Show completion banner if just finished
-    window._justCompleted=(window._justCompleted||0)+1;
-  } else {
-    delete doneSet[topicId];
-  }
-  updateProg();
-}
-
-function speakT(text){
-  if(muted)return;
-  stopS();
-  var clean=cleanForTTS(text);
-  if(!clean)return;
-  if(!GOOGLE_TTS_KEY||GOOGLE_TTS_KEY==='YOUR_API_KEY_HERE'){browserSpeak(clean);return;}
-  // Use SSML for better pauses and pronunciation
-  var ssml=toSSML(text);
-  var cacheKey=clean;
-  if(ttsCache[cacheKey]){playBase64(ttsCache[cacheKey]);return;}
-  fetch('https://texttospeech.googleapis.com/v1/text:synthesize?key='+GOOGLE_TTS_KEY,{
-    method:'POST',mode:'cors',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({input:{ssml:ssml},voice:TTS_VOICE,audioConfig:TTS_CONFIG})
-  }).then(function(r){return r.json();}).then(function(data){
-    if(data.audioContent){ttsCache[cacheKey]=data.audioContent;playBase64(data.audioContent);}
-    else browserSpeak(clean);
-  }).catch(function(){browserSpeak(clean);});
-}
-
-function speakCurrent(){
-  if(muted)return;
-  var card=cTopic.fc[fcIdx];
-  var text=card.q;
-  var blank=L('blank','leeg');
-  var optPfx=L('. Your options are: ','. Jou opsies is: ');
-  var hintPfx=L('. Hint: ','. Wenk: ');
-  if(card.type==='fill'){
-    var sent=(card.pass||card.q).replace(/_+/g,blank);
-    text=card.q+'. '+sent;
-    if(card.opts&&!revealed)text+=optPfx+card.opts.join(', ')+'.';
-  } else if(card.type==='mc'&&!revealed){
-    if(card.pass)text+='. '+card.pass;
-    var choices=getChoices(cTopic.id,fcIdx),labels=['A','B','C'];
-    text+=optPfx;
-    for(var i=0;i<choices.length;i++)text+=labels[i]+'. '+choices[i]+'. ';
-  } else if(card.type==='tf'){
-    text=L('True or false? ','Waar of onwaar? ')+card.q+(card.pass?'. '+card.pass:'');
-  } else {
-    if(card.pass)text+='. '+card.pass;
-    if((card.type==='fix'||card.type==='id')&&card.hint)text+=hintPfx+card.hint;
-  }
-  speakT(text);
-}
-
-function spkOK(a,eg){
-  if(muted)return;
-  var t=L('Excellent! That is correct. ','Uitstekend! Dit is korrek. ')+a+'.';
-  if(eg)t+=L(' For example, ',' Byvoorbeeld, ')+eg+'.';
-  speakT(t);
-}
-
-function spkW1(){
-  if(muted)return;
-  var p=L(
-    ['Not quite, try again! You have got this!','Hmm, not this one. Give it another go!','Close! Think again, I know you can do it!'],
-    ['Nie heeltemal nie, probeer weer! Jy kan dit!','Hmm, nie hierdie een nie. Probeer nog een keer!','Amper! Dink weer, ek weet jy kan dit doen!']
-  );
-  speakT(p[Math.floor(Math.random()*p.length)]);
-}
-
-function spkW2(a,eg){
-  if(muted)return;
-  var t=L('Good try! The answer is ','Goeie poging! Die antwoord is ')+a+'.';
-  if(eg)t+=L(' Remember, ',' Onthou, ')+eg+'.';
-  t+=L(' Keep going!',' Gaan voort!');
-  speakT(t);
-}
-
-function spkMM(mm){
-  if(muted)return;
-  var tx=L('Mind map for ','Breinkaart vir ')+mm.c+'. ';
-  for(var i=0;i<mm.b.length;i++)tx+=mm.b[i].l+': '+mm.b[i].i.join('. ')+'. ';
-  speakT(tx);
-}
-
-function spkR(rules,tip){
-  if(muted)return;
-  var tx='';
-  var ruleWord=L('Rule ','Reël ');
-  for(var i=0;i<rules.length;i++){
-    var d=rules[i].d.replace(/\|/g,'. ');
-    tx+=ruleWord+rules[i].n+'. '+rules[i].t+'. '+d+'. ';
-  }
-  tx+=L('Tip: ','Wenk: ')+tip;
-  speakT(tx);
-}
-
-function scrollToTop(){
-  var tv=document.getElementById('TV');
-  if(tv) tv.scrollTop=0;
-  // Also scroll the main R div
-  var r=document.getElementById('R');
-  if(r) r.scrollTop=0;
-  window.scrollTo(0,0);
-}
-
-function showConfetti(){
-  var stage=document.getElementById('confetti-stage');
-  if(!stage) return;
-  // Clear any existing pieces
-  stage.innerHTML='';
-  var count=28;
-  for(var i=0;i<count;i++){
-    var el=document.createElement('div');
-    el.className='cf';
-    el.style.left=(5+Math.random()*90)+'%';
-    el.style.background=CF_COLOURS[Math.floor(Math.random()*CF_COLOURS.length)];
-    el.style.width=(6+Math.random()*8)+'px';
-    el.style.height=(6+Math.random()*8)+'px';
-    el.style.borderRadius=Math.random()>0.5?'50%':'2px';
-    var dur=0.9+Math.random()*0.8;
-    var delay=Math.random()*0.4;
-    el.style.animationDuration=dur+'s';
-    el.style.animationDelay=delay+'s';
-    stage.appendChild(el);
-  }
-  // Clean up after animation
-  setTimeout(function(){if(stage)stage.innerHTML='';}, 2000);
-}
-
-function animateXP(oldXP, newXP){
-  var el=document.getElementById('xpFill');
-  if(!el)return;
-  el.style.width=Math.round(newXP/500*100)+'%';
-  // Ping the level badge area
-  var lbl=document.getElementById('xpVal');
-  if(lbl){
-    lbl.textContent=newXP;
-    lbl.classList.remove('xp-ping');
-    void lbl.offsetWidth; // force reflow
-    lbl.classList.add('xp-ping');
-    setTimeout(function(){lbl.classList.remove('xp-ping');},600);
-  }
-  // Pulse streak flame if streak increased
-  var sf=document.getElementById('streakFlame');
-  if(sf){
-    sf.classList.add('flame-active');
-    setTimeout(function(){sf.classList.remove('flame-active');},2100);
-  }
-}
-
-function toggleMute(){
-  muted=!muted;
-  var btn=document.getElementById('muteBtn');
-  var ico=document.getElementById('muteIcon');
-  if(btn)btn.className='mute-btn'+(muted?' muted':'');
-  if(ico)ico.textContent=muted?'🔇':'🔊';
-  if(muted)stopS();
-  if(cTopic)renderTopic();
-}
-
-function stopS(){
-  if(currentAudio){currentAudio.pause();currentAudio.currentTime=0;currentAudio=null;}
-  if(window.speechSynthesis&&window.speechSynthesis.speaking)window.speechSynthesis.cancel();
-}
-
-function applyGlowIfPending(){
-  if(!window._pendingGlow)return;
-  window._pendingGlow=false;
-  // Highlight the correct answer button — stays green permanently
-  var cor=document.querySelector('.choice.cor');
-  if(cor){
-    cor.classList.add('correct-glow');
-    cor.style.boxShadow='0 0 0 3px rgba(16,185,129,0.5), 0 0 20px rgba(16,185,129,0.3)';
-  }
-  // TF correct button
-  var tfCor=document.querySelector('.tf-btn.sel-cor');
-  if(tfCor){
-    tfCor.style.boxShadow='0 0 0 3px rgba(16,185,129,0.5), 0 0 20px rgba(16,185,129,0.3)';
-  }
-  // Reveal block entrance
-  var rev=document.querySelector('.reveal.ok');
-  if(rev) rev.style.animation='slideUp .35s ease';
-  // Topic complete banner
-  if(window._justCompleted){
-    window._justCompleted=0;
-    var sa=document.querySelector('.study-area');
-    if(sa){
-      var banner=document.createElement('div');
-      banner.style.cssText='background:linear-gradient(135deg,#052E16,#065F46);border:2px solid #10B981;border-radius:14px;padding:16px;text-align:center;animation:slideUp .4s ease;margin-top:8px';
-      banner.innerHTML='<div style="font-size:28px;margin-bottom:6px">🎉</div>'+
-        '<div style="font-size:16px;font-weight:700;color:#34D399;margin-bottom:4px">'+L('Topic complete!','Onderwerp voltooi!')+'</div>'+
-        '<div style="font-size:13px;color:#6EE7B7">'+L('You answered every question in this topic.<br>Head back to tick it off!','Jy het elke vraag in hierdie onderwerp beantwoord.<br>Gaan terug om dit af te merk!')+'</div>';
-      sa.appendChild(banner);
-    }
-  }
-}
-
-function loadUser(){
-  try {
-    var raw = localStorage.getItem(STORE_KEY);
-    if(raw) return JSON.parse(raw);
-  } catch(e){}
-  return null;
-}
-
-function saveUser(){
-  if(!currentUser) return;
-  currentUser.xp = xp;
-  currentUser.streak = streak;
-  currentUser.doneTopics = Object.keys(doneSet);
-  currentUser.answeredQuestions = answeredSet;
-  currentUser.savedAt = Date.now();
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(currentUser)); } catch(e){}
-}
-
-function enterApp(){
-  document.getElementById('NAME-SCREEN').style.display = 'none';
-  document.getElementById('R').style.display = 'block';
-  // Load saved progress
-  if(currentUser){
-    xp = currentUser.xp || 0;
-    streak = currentUser.streak || 0;
-    doneSet = {};
-    answeredSet = currentUser.answeredQuestions || {};
-    if(currentUser.doneTopics){
-      currentUser.doneTopics.forEach(function(id){ doneSet[id] = true; });
-    }
-  }
-  // Update UI
-  var xpEl = document.getElementById('xpVal');
-  var fillEl = document.getElementById('xpFill');
-  var strEl = document.getElementById('strVal');
-  if(xpEl) xpEl.textContent = xp;
-  if(fillEl) fillEl.style.width = Math.round(xp/500*100) + '%';
-  if(strEl) strEl.textContent = streak;
-  // Show greeting bar
-  updateGreetingBar();
-  // Set avatar to user initials
-  var av = document.getElementById('avatarBadge');
-  if(av && currentUser && currentUser.name){
-    av.textContent = currentUser.name.charAt(0).toUpperCase();
-    av.title = currentUser.name + ' — tap to switch user';
-  }
-  updateSubjectUI();
-  renderHome();
-}
-
-function updateSubjectUI(){
-  var s = SUBJECTS[cSubject];
-  if(!s) return;
-  var isAf = cSubject === 'afrikaans_ht' || cSubject === 'afrikaans_eat';
-  // Update top bar subject button
-  var subLbl = document.getElementById('subjectLabel');
-  if(subLbl) subLbl.textContent = s.icon + ' ' + s.name;
-  // Update hero title
-  var heroTitle = document.getElementById('heroTitle');
-  if(heroTitle) heroTitle.innerHTML = s.name + '<br><span>' + s.subtitle + '</span>';
-  // Update term tab labels
-  var tb1 = document.getElementById('tb1');
-  var tb2 = document.getElementById('tb2');
-  if(tb1) tb1.textContent = isAf ? 'Termyn 1' : 'Term 1';
-  if(tb2) tb2.textContent = isAf ? 'Termyn 2' : 'Term 2';
-  // Update TTS voice for Afrikaans
-  if(isAf){
-    TTS_VOICE = {languageCode:'af-ZA',name:'af-ZA-Standard-A',ssmlGender:'FEMALE'};
-  } else {
-    TTS_VOICE = {languageCode:'en-GB',name:'en-GB-Wavenet-C',ssmlGender:'FEMALE'};
-  }
-  // Clear TTS cache when switching language
-  ttsCache = {};
-}
 // ── Diagram Rendering ─────────────────────────────────────────────
 function renderDiag(d){
   if(!d) return '';
@@ -1710,212 +1190,658 @@ function renderFracLine(d){
   return s;
 }
 
-// ── Maths app variables ───────────────────────────────────────────
-var STORE_KEY = 'eng_app_v1';
-var currentUser = null;
-var xp=0, streak=0;
-var doneSet={}, answeredSet={};
-var cTerm=1, cTopic=null, cMode='fc';
-var fcIdx=0, attempts=0, revealed=false;
-var selectedWrong=[], fillSelected=null, fillSelections=[], choiceCache={};
-var ttsCache={};
-var muted=false;
 
-var GOOGLE_TTS_KEY = ('AIzaSyANJM8Q1gQ7XMzG'+'xn6IjEXLfoKZY0ot8Z0');
-var TTS_VOICE = {languageCode:'en-GB',name:'en-GB-Wavenet-C',ssmlGender:'FEMALE'};
-var TTS_CONFIG = {audioEncoding:'MP3',pitch:0,speakingRate:0.95};
+
+// ── Core utilities ────────────────────────────────────────────────
+function esc(s){
+  if(typeof s!=='string')s=String(s||'');
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function L(en){return en;}
+
+// ── State ─────────────────────────────────────────────────────────
+var STORE_KEY='eng_app_v1';
+var currentUser=null;
+var xp=0,streak=0,doneSet={},answeredSet={};
+var cTerm=1,cTopic=null,cMode='fc';
+var fcIdx=0,attempts=0,revealed=false;
+var selectedWrong=[],fillSelected=null,fillSelections=[];
+var choiceCache={};
+var muted=false;
+var ttsCache={};
+var GOOGLE_TTS_KEY=('AIzaSyANJM8Q1gQ7XMzG'+'xn6IjEXLfoKZY0ot8Z0');
+var TTS_VOICE={languageCode:'en-GB',name:'en-GB-Wavenet-C',ssmlGender:'FEMALE'};
+var TTS_CONFIG={audioEncoding:'MP3',pitch:0,speakingRate:0.92};
 
 var COLS=[
-  {bg:'#1A1032',lt:'#2D1B69',tc:'#A78BFA'},
-  {bg:'#0A1F1A',lt:'#052E16',tc:'#6EE7B7'},
-  {bg:'#0A1A2E',lt:'#0F2544',tc:'#93C5FD'},
-  {bg:'#1A1005',lt:'#2D1A0A',tc:'#FCD34D'},
-  {bg:'#1A0505',lt:'#2D0A0A',tc:'#FCA5A5'}
+  {bg:'#0A0F1A',lt:'#1E3A5F',tc:'#93C5FD'},
+  {bg:'#0A1A0A',lt:'#1E3A1E',tc:'#86EFAC'},
+  {bg:'#0F0A1A',lt:'#2A1A5F',tc:'#C4B5FD'},
+  {bg:'#1A0F0A',lt:'#3A1E0A',tc:'#FCD34D'},
+  {bg:'#1A0A0A',lt:'#3A0F0F',tc:'#FCA5A5'}
 ];
 
-var T = TERMS;
-
-function allT(){ return T[1].concat(T[2]); }
-function findT(id){ var a=allT(); for(var i=0;i<a.length;i++) if(a[i].id===id) return a[i]; return null; }
-function getSecs(term){ var seen={},out=[]; for(var i=0;i<T[term].length;i++){ var s=T[term][i].sec; if(!seen[s]){seen[s]=true;out.push(s);}} return out; }
-function getChoices(tid,idx){ var k=tid+'_'+idx; if(!choiceCache[k]){ var c=findT(tid).fc[idx]; choiceCache[k]=shuffle([c.a].concat(c.w.slice(0,3)));} return choiceCache[k]; }
-function shuffle(arr){ var a=arr.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t;} return a; }
-function esc(s){ if(typeof s!=='string') s=String(s||''); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-function L(en,af){ return en; } // English only for maths
-
-function goBack(){ window.location.href='index.html'; }
-
-function loadUser(){
-  try{ var raw=localStorage.getItem(STORE_KEY); if(raw) return JSON.parse(raw); }catch(e){}
-  return null;
+// ── Data helpers ───────────────────────────────────────────────────
+var T=TERMS;
+function allT(){return T[1].concat(T[2]);}
+function findT(id){var a=allT();for(var i=0;i<a.length;i++)if(a[i].id===id)return a[i];return null;}
+function getSecs(term){var seen={},out=[];T[term].forEach(function(t){if(!seen[t.sec]){seen[t.sec]=true;out.push(t.sec);}});return out;}
+function getChoices(tid,idx){
+  var k=tid+'_'+idx;
+  if(!choiceCache[k]){var c=findT(tid).fc[idx];choiceCache[k]=shuffle([c.a].concat((c.w||[]).slice(0,3)));}
+  return choiceCache[k];
 }
+
+// ── User / Progress ────────────────────────────────────────────────
+function loadUser(){try{var r=localStorage.getItem(STORE_KEY);if(r)return JSON.parse(r);}catch(e){}return null;}
 function saveUser(){
-  if(!currentUser) return;
-  currentUser.xp=xp; currentUser.streak=streak;
+  if(!currentUser)return;
+  currentUser.xp=xp;currentUser.streak=streak;
   currentUser.doneTopics=Object.keys(doneSet);
   currentUser.answeredQuestions=answeredSet;
-  currentUser.savedAt=Date.now();
-  try{ localStorage.setItem(STORE_KEY,JSON.stringify(currentUser)); }catch(e){}
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(currentUser));}catch(e){}
 }
-
-function markAnswered(topicId,qIdx){
-  answeredSet[topicId+'_'+qIdx]=true;
-  var t=findT(topicId);
-  var allDone=true;
-  for(var i=0;i<t.fc.length;i++){
-    if(!answeredSet[topicId+'_'+i]){allDone=false;break;}
-    if(i===t.fc.length-1) break;
-  }
-  if(allDone) doneSet[topicId]=true;
-  else delete doneSet[topicId];
+function markAnswered(tid,qi){
+  answeredSet[tid+'_'+qi]=true;
+  var t=findT(tid);
+  var done=t.fc.every(function(_,i){return answeredSet[tid+'_'+i];});
+  if(done)doneSet[tid]=true; else delete doneSet[tid];
   updateProg();
 }
-
+function awardXP(amt){
+  var old=xp;xp=Math.min(xp+amt,9999);streak++;
+  markAnswered(cTopic.id,fcIdx);
+  var el=document.getElementById('xpVal');if(el)el.textContent=xp;
+  var fill=document.getElementById('xpFill');if(fill)fill.style.width=Math.min(xp/500*100,100)+'%';
+  var str=document.getElementById('strVal');if(str)str.textContent=streak;
+  saveUser();showConfetti();
+  window._pendingGlow=true;
+  setTimeout(applyGlowIfPending,80);
+}
 function updateProg(){
-  var total=allT().length, done=Object.keys(doneSet).length, pct=Math.round(done/total*100);
-  var el=document.getElementById('pctLbl'); if(el) el.textContent=pct+'%';
-  var dl=document.getElementById('doneLbl'); if(dl) dl.textContent=done+' / '+total+' topics done';
-  var ring=document.getElementById('ringFill'); if(ring) ring.style.strokeDashoffset=150.8-(150.8*pct/100);
+  var all=allT(),done=Object.keys(doneSet).length,total=all.length,pct=Math.round(done/total*100);
+  var el=document.getElementById('pctLbl');if(el)el.textContent=pct+'%';
+  var dl=document.getElementById('doneLbl');if(dl)dl.textContent=done+' / '+total+' topics done';
+  var ring=document.getElementById('ringFill');if(ring)ring.style.strokeDashoffset=150.8*(1-pct/100);
 }
 
+// ── Navigation ─────────────────────────────────────────────────────
+function goBack(){window.location.href='index.html';}
+function scrollToTop(){
+  window.scrollTo(0,0);
+  var r=document.getElementById('R');if(r)r.scrollTop=0;
+  var tv=document.getElementById('TV');if(tv)tv.scrollTop=0;
+  document.body.scrollTop=0;document.documentElement.scrollTop=0;
+}
 function swTab(t){
   cTerm=t;
   document.getElementById('tb1').className='term-btn '+(t===1?'on':'off');
   document.getElementById('tb2').className='term-btn '+(t===2?'on':'off');
-  renderHome();
+  renderHome();scrollToTop();
 }
-
-function scrollToTop(){
-  var tv=document.getElementById('TV'); if(tv) tv.scrollTop=0;
-  var r=document.getElementById('R'); if(r) r.scrollTop=0;
-  window.scrollTo(0,0);
-}
-
 function openT(id){
-  cTopic=findT(id); cMode='fc'; attempts=0; revealed=false; selectedWrong=[];
-  fillSelected=null; fillSelections=[];
+  cTopic=findT(id);cMode='fc';attempts=0;revealed=false;
+  selectedWrong=[];fillSelected=null;fillSelections=[];
   fcIdx=0;
   for(var i=0;i<cTopic.fc.length;i++){
     if(!answeredSet[id+'_'+i]){fcIdx=i;break;}
-    if(i===cTopic.fc.length-1) fcIdx=i;
+    if(i===cTopic.fc.length-1)fcIdx=i;
   }
   document.getElementById('HV').style.display='none';
   document.getElementById('TV').style.display='block';
   renderTopic();
-  setTimeout(scrollToTop,50);
+  setTimeout(scrollToTop,30);
 }
-
 function closeT(){
   document.getElementById('TV').style.display='none';
   document.getElementById('HV').style.display='block';
+  scrollToTop();
+}
+function nextCard(){
+  if(fcIdx<cTopic.fc.length-1){
+    fcIdx++;attempts=0;revealed=false;selectedWrong=[];
+    fillSelected=null;fillSelections=[];
+    renderTopic();setTimeout(scrollToTop,30);
+  }
+}
+function prevCard(){
+  if(fcIdx>0){
+    fcIdx--;attempts=0;revealed=false;selectedWrong=[];
+    fillSelected=null;fillSelections=[];
+    renderTopic();setTimeout(scrollToTop,30);
+  }
+}
+function setMode(m){
+  cMode=m;
+  var tv=document.getElementById('TV');
+  if(!tv)return;
+  if(m==='mm'){
+    tv.innerHTML='<div class="tv-sticky"><button class="back-btn" data-action="close">← Back to topics</button></div><div class="tv-scroll"><div class="study-area">'+renderMM(cTopic)+'</div></div>';
+  } else if(m==='rules'){
+    tv.innerHTML='<div class="tv-sticky"><button class="back-btn" data-action="close">← Back to topics</button></div><div class="tv-scroll"><div class="study-area">'+renderRules(cTopic)+'</div></div>';
+  } else {
+    renderTopic();
+  }
+  attachHandlers();
+  setTimeout(scrollToTop,30);
 }
 
-function renderHome(){
-  var secs=getSecs(cTerm), html='';
-  for(var s=0;s<secs.length;s++){
-    var sec=secs[s];
-    var topics=T[cTerm].filter(function(t){return t.sec===sec;});
-    html+='<div class="sec-lbl">'+esc(sec)+'</div><div class="topic-grid">';
-    for(var i=0;i<topics.length;i++){
-      var t=topics[i], ci=i%COLS.length, isDone=!!doneSet[t.id];
-      html+='<div class="tc'+(isDone?' done':'')+'" style="background:'+COLS[ci].bg+';border-color:'+(isDone?'#10B981':'transparent')+'" data-tid="'+t.id+'">'+
-        '<div class="tc-ico" style="background:'+COLS[ci].lt+';font-size:22px">'+t.icon+'</div>'+
-        '<div style="flex:1"><div class="tc-title">'+esc(t.ttl)+'</div><div class="tc-sub">'+esc(t.sub)+'</div></div>'+
-        (isDone?'✓':'›')+
-        '</div>';
-    }
-    html+='</div>';
+// ── Answer handlers ────────────────────────────────────────────────
+function pickMC(choiceIdx){
+  if(revealed)return;
+  var choices=getChoices(cTopic.id,fcIdx);
+  var chosen=choices[choiceIdx];
+  var card=cTopic.fc[fcIdx];
+  if(selectedWrong.indexOf(chosen)!==-1)return;
+  if(chosen===card.a){
+    revealed=true;awardXP(10);spkOK(card.a,card.eg);
+  } else {
+    selectedWrong.push(chosen);attempts++;
+    if(attempts>=2){revealed=true;spkW2(card.a,card.eg);}else spkW1();
   }
-  document.getElementById('TGRID').innerHTML=html;
-  // Attach click handlers via event delegation (avoids inline onclick escaping)
-  var cards=document.querySelectorAll('.tc[data-tid]');
-  for(var ci=0;ci<cards.length;ci++){
-    (function(card){card.addEventListener('click',function(){openT(card.getAttribute('data-tid'));});})(cards[ci]);
+  renderTopic();attachHandlers();setTimeout(scrollToTop,30);
+}
+function pickTF(val){
+  if(revealed)return;
+  var card=cTopic.fc[fcIdx];
+  revealed=true;
+  if(val===card.a){
+    awardXP(10);
+    speakT('Correct! That is '+(card.a==='true'?'true':'false')+'. '+card.explanation);
+  } else {
+    speakT('Not quite. The answer is '+(card.a==='true'?'true':'false')+'. '+card.explanation);
   }
-  updateProg();
+  renderTopic();attachHandlers();setTimeout(scrollToTop,30);
+}
+function pickFillIdx(idx){
+  if(revealed)return;
+  var card=cTopic.fc[fcIdx];
+  var opts=window._fillOpts||[];
+  var chosen=opts[idx];
+  if(!chosen)return;
+  // Toggle selection
+  var fi=fillSelections.indexOf(chosen);
+  if(fi===-1){
+    fillSelections.push(chosen);
+  } else {
+    fillSelections.splice(fi,1);
+  }
+  if(fillSelections.length===card.blanks.length){
+    var allOk=card.blanks.every(function(b){return fillSelections.indexOf(b)!==-1;});
+    if(allOk){revealed=true;awardXP(10);spkOK(card.blanks.join(' and '),card.eg);}
+    else{fillSelections=[];spkW1();}
+  }
+  renderTopic();attachHandlers();
+}
+function checkFix(){
+  if(revealed)return;
+  var card=cTopic.fc[fcIdx];
+  var inp=document.getElementById('typeIn');
+  if(!inp||!inp.value.trim())return;
+  revealed=true;
+  var correct=inp.value.trim().toLowerCase()===card.a.toLowerCase();
+  if(correct){inp.className='type-in ok';awardXP(10);spkOK(card.a,card.eg);}
+  else{inp.className='type-in ko';spkW2(card.a,card.eg);}
+  var chk=document.getElementById('chkBtn');if(chk)chk.disabled=true;
+  // Append reveal
+  var rev=document.createElement('div');
+  rev.className='reveal '+(correct?'ok':'ko');
+  rev.innerHTML='<div class="rv-ttl">'+(correct?'Correct! +10 XP':'Correct version:')+'</div>'+
+    '<div class="rv-ans">'+esc(card.a)+'</div>'+
+    (card.eg?'<div class="rv-eg">Example — '+esc(card.eg)+'</div>':'');
+  inp.parentNode.appendChild(rev);
+  setTimeout(scrollToTop,30);
+}
+function checkID(){
+  if(revealed)return;
+  var card=cTopic.fc[fcIdx];
+  var inp=document.getElementById('typeIn');
+  if(!inp||!inp.value.trim())return;
+  revealed=true;
+  markAnswered(cTopic.id,fcIdx);saveUser();
+  spkW2(card.a,card.eg);
+  var chk=document.getElementById('chkBtn');if(chk)chk.disabled=true;
+  var rev=document.createElement('div');
+  rev.className='reveal ko';
+  rev.innerHTML='<div class="rv-ttl">Model answer:</div>'+
+    '<div class="rv-ans">'+esc(card.a)+'</div>'+
+    (card.eg?'<div class="rv-eg">'+esc(card.eg)+'</div>':'');
+  inp.parentNode.appendChild(rev);
+  setTimeout(scrollToTop,30);
 }
 
-// ── Modified renderTopic with diag support ────────────────────────
+// ── Calculation scratchpad ─────────────────────────────────────────
+function checkCalcStep(stepIdx){
+  var card=cTopic.fc[fcIdx];
+  var inp=document.getElementById('calc-step-'+stepIdx);
+  if(!inp)return;
+  var val=inp.value.replace(/[\s,]/g,'');
+  var expected=String(card.steps[stepIdx].ans).replace(/[\s,]/g,'');
+  if(val===expected){
+    inp.style.borderColor='#10B981';inp.style.background='#052E16';inp.style.color='#6EE7B7';
+    inp.setAttribute('data-ok','1');
+    checkAllCalcSteps(card);
+  } else if(val.length>=expected.length){
+    inp.style.borderColor='#EF4444';inp.style.background='#450A0A';inp.style.color='#FCA5A5';
+  }
+}
+function checkAllCalcSteps(card){
+  var allOk=card.steps.every(function(_,i){
+    var inp=document.getElementById('calc-step-'+i);
+    return inp&&inp.getAttribute('data-ok')==='1';
+  });
+  if(allOk){
+    // Enable final answer check
+    var finBtn=document.getElementById('calc-check-final');
+    if(finBtn){finBtn.disabled=false;finBtn.style.opacity='1';}
+  }
+}
+function checkCalcFinal(){
+  var card=cTopic.fc[fcIdx];
+  var inp=document.getElementById('calc-final');
+  if(!inp||!inp.value.trim())return;
+  var val=inp.value.replace(/[\s,]/g,'');
+  var expected=String(card.a).replace(/[\s,]/g,'');
+  if(val===expected){
+    inp.style.borderColor='#10B981';inp.style.background='#052E16';inp.style.color='#6EE7B7';
+    revealed=true;awardXP(10);
+    var msg=document.getElementById('calc-msg');
+    if(msg){msg.innerHTML='<div class="reveal ok"><div class="rv-ttl">Correct! +10 XP</div><div class="rv-ans">'+esc(card.a)+'</div><div class="rv-eg">'+esc(card.eg)+'</div></div>';}
+  } else {
+    inp.style.borderColor='#EF4444';inp.style.background='#450A0A';inp.style.color='#FCA5A5';
+    var msg=document.getElementById('calc-msg');
+    if(msg){msg.innerHTML='<div style="color:#FCA5A5;padding:8px;font-size:13px">Not quite — check your partial products above and try again.</div>';}
+  }
+}
+
+// ── Render functions ──────────────────────────────────────────────
+function renderRevealBox(card,correct){
+  if(!revealed)return '';
+  var cls=correct?'ok':'ko';
+  var title=correct?'Correct! +10 XP':'The answer is:';
+  return '<div class="reveal '+cls+'">'+
+    '<div class="rv-ttl">'+title+'</div>'+
+    '<div class="rv-ans">'+esc(card.a)+'</div>'+
+    (card.eg?'<div class="rv-eg">Example — '+esc(card.eg)+'</div>':'')+
+    '</div>';
+}
+
+function renderMC(card,tid){
+  var choices=getChoices(tid,fcIdx);
+  var labels=['A','B','C','D'];
+  var ch='<div class="choices">';
+  for(var i=0;i<choices.length;i++){
+    var isCorrect=(choices[i]===card.a);
+    var isWrong=(selectedWrong.indexOf(choices[i])!==-1);
+    var cls='choice';
+    if(revealed&&isCorrect)cls+=' cor';
+    if(isWrong)cls+=' wrg';
+    var dis=(revealed||isWrong)?'disabled':'';
+    ch+='<button class="'+cls+'" '+dis+' data-action="pick-mc" data-idx="'+i+'">'+
+      '<span class="clbl">'+labels[i]+'</span>'+esc(choices[i])+'</button>';
+  }
+  ch+='</div>';
+  var correct=(revealed&&selectedWrong.length===0);
+  var att='';
+  if(!revealed||!correct){
+    att='<div class="att-row"><span style="font-size:12px;color:#6B7280;margin-right:6px">Attempts</span>';
+    for(var a=0;a<2;a++)att+='<span class="att-dot'+(a<attempts?' used':'')+'"></span>';
+    att+='</div>';
+  }
+  return ch+att+renderRevealBox(card,correct)+renderNav();
+}
+
+function renderTF(card){
+  var tCls='tf-btn true-btn',fCls='tf-btn false-btn';
+  var dis='';
+  if(revealed){
+    if(card.a==='true'){tCls+=' sel-cor';fCls+=' dim';}
+    else{fCls+=' sel-cor';tCls+=' dim';}
+    dis='disabled';
+  }
+  var correct=(revealed&&card.a===window._tfAnswer);
+  var rev=revealed?'<div class="reveal '+(correct?'ok':'ko')+'">'+
+    '<div class="rv-ttl">The answer is '+(card.a==='true'?'TRUE':'FALSE')+'</div>'+
+    '<div class="rv-ans">'+esc(card.explanation)+'</div></div>':'';
+  return '<div class="tf-row">'+
+    '<button class="'+tCls+'" '+dis+' data-action="pick-tf" data-val="true"><span style="font-size:28px">✓</span>True</button>'+
+    '<button class="'+fCls+'" '+dis+' data-action="pick-tf" data-val="false"><span style="font-size:28px">✗</span>False</button>'+
+    '</div>'+rev+renderNav();
+}
+
+function renderFill(card,tid){
+  var opts=shuffle((card.opts||[]).slice());
+  window._fillOpts=opts;
+  var sent=esc(card.pass||card.q);
+  card.blanks.forEach(function(b){
+    var filled=fillSelections.indexOf(b)!==-1;
+    sent=sent.replace('___',
+      filled?'<span class="blank ok">'+esc(b)+'</span>':
+             '<span class="blank">___</span>');
+  });
+  var allOk=revealed&&card.blanks.every(function(b){return fillSelections.indexOf(b)!==-1;});
+  var bopts='<div class="bopts">';
+  opts.forEach(function(o,i){
+    var isSel=fillSelections.indexOf(o)!==-1;
+    var isAns=revealed&&card.blanks.indexOf(o)!==-1;
+    var cls='bopt'+(isSel?' sel':'')+(isAns?' ok':'');
+    var dis=(revealed||isSel)?'disabled':'';
+    bopts+='<button class="'+cls+'" '+dis+' data-action="pick-fill" data-idx="'+i+'">'+esc(o)+'</button>';
+  });
+  bopts+='</div>';
+  var prompt='<div style="font-size:12px;color:#93C5FD;font-weight:600;margin:6px 0">'+
+    '👆 Tap all '+card.blanks.length+' correct answers — order does not matter</div>';
+  var rev=allOk?renderRevealBox(card,true):'';
+  return '<div class="fill-sent">'+sent+'</div>'+prompt+bopts+rev+renderNav();
+}
+
+function renderFix(card){
+  var errBox='<div class="err-box"><div class="err-lbl">Sentence to correct</div><div class="err-txt">'+esc(card.pass)+'</div></div>';
+  if(card.hint)errBox+='<div class="hint-box">💡 Hint: '+esc(card.hint)+'</div>';
+  var inp='<textarea class="type-in" id="typeIn" placeholder="Type the corrected version here..." rows="3"></textarea>'+
+    '<button class="chk-btn" id="chkBtn" data-action="check-fix">Check my answer</button>';
+  return errBox+inp+renderNav();
+}
+
+function renderID(card){
+  var ctx=card.pass?'<div class="passage">'+esc(card.pass)+'</div>':'';
+  if(card.hint)ctx+='<div class="hint-box">💡 Hint: '+esc(card.hint)+'</div>';
+  var inp='<textarea class="type-in" id="typeIn" placeholder="Type your answer / working here..." rows="4"></textarea>'+
+    '<button class="chk-btn" id="chkBtn" data-action="check-id">Check answer</button>';
+  return ctx+inp+renderNav();
+}
+
+// ── Calculation scratchpad renderer ───────────────────────────────
+function renderCalc(card){
+  var n1=card.n1, n2=card.n2, op=card.op||'×';
+  var steps=card.steps||[];
+  
+  // Format number with spaces for readability
+  function fmt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,' ');}
+  
+  // Column display header
+  var colHtml='<div class="calc-col">'+
+    '<div class="calc-row"><span class="calc-num">'+fmt(n1)+'</span></div>'+
+    '<div class="calc-row"><span class="calc-op">'+op+'</span><span class="calc-num">'+fmt(n2)+'</span></div>'+
+    '<div class="calc-line"></div></div>';
+  
+  // Step inputs
+  var stepHtml='<div class="calc-steps">';
+  steps.forEach(function(step,i){
+    var shift=step.shift||0;
+    stepHtml+='<div class="calc-step-row">'+
+      '<div class="calc-step-label">'+esc(step.label)+'</div>'+
+      '<div style="padding-left:'+(shift*18)+'px">'+
+      '<input type="number" class="calc-input" id="calc-step-'+i+'" placeholder="?" '+
+      'data-action="check-step" data-idx="'+i+'" inputmode="numeric">'+
+      '</div></div>';
+  });
+  stepHtml+='</div>';
+  
+  // Divider and final answer
+  var finalHtml='<div class="calc-line"></div>'+
+    '<div class="calc-final-row">'+
+    '<div class="calc-step-label">Final answer:</div>'+
+    '<input type="number" class="calc-input calc-input-final" id="calc-final" placeholder="?" inputmode="numeric" '+
+    (steps.length>0?'disabled style="opacity:0.5"':'')+'>'+
+    '</div>'+
+    '<button class="chk-btn" id="calc-check-final" data-action="check-calc-final" '+
+    (steps.length>0?'disabled style="opacity:0.5"':'')+'>Check answer</button>';
+  
+  var msgBox='<div id="calc-msg"></div>';
+  
+  if(card.hint){
+    finalHtml+='<div class="hint-box">💡 '+esc(card.hint)+'</div>';
+  }
+  
+  return colHtml+stepHtml+finalHtml+msgBox+renderNav();
+}
+
+function renderNav(){
+  var prevDis=fcIdx===0?' disabled':'';
+  var nextDis=fcIdx>=cTopic.fc.length-1?' disabled':'';
+  var nextCls=revealed?'nbtn active':'nbtn';
+  return '<div class="nav-row">'+
+    '<button class="nbtn"'+prevDis+' data-action="prev">← Previous</button>'+
+    '<button class="'+nextCls+'"'+nextDis+' data-action="next">Next →</button>'+
+    '</div>'+
+    '<button class="spk-btn" data-action="speak">'+(muted?'Tap to unmute':'Read question aloud')+'</button>';
+}
+
 function renderTopic(){
-  if(!cTopic) return;
+  if(!cTopic)return;
   var t=cTopic, card=t.fc[fcIdx];
-  var body='';
-  var qBadgeMap={mc:'mc',fill:'fill',fix:'fix',id:'id',tf:'tf'};
-  var qLabelMap={mc:'Multiple choice',fill:'Fill in the blank',fix:'Correct the error',id:'Solve and explain',tf:'True or false'};
-  var qBadge=qBadgeMap[card.type]||'mc', qLabel=qLabelMap[card.type]||'';
-  
-  // Build diagram HTML if present
-  var diagHTML = card.diag ? renderDiag(card.diag) : '';
-  
-  // Build passage if present (for context/worked examples)
+  var diagHTML=card.diag?renderDiag(card.diag):'';
   var passHTML='';
-  if(card.pass && card.type!=='fill'){
-    passHTML='<div class="passage" style="font-family:monospace;font-size:14px;white-space:pre-line">'+esc(card.pass)+'</div>';
+  if(card.pass&&card.type!=='fill'&&card.type!=='fix'&&card.type!=='calc'){
+    passHTML='<div class="passage" style="font-family:monospace;white-space:pre-wrap">'+esc(card.pass)+'</div>';
   }
+  var qLabelMap={mc:'Multiple choice',fill:'Fill in the blank',fix:'Correct the error',id:'Solve and explain',tf:'True or false',calc:'Show your working'};
+  var qBadge=card.type||'mc', qLabel=qLabelMap[card.type]||'';
   
+  var body='';
   if(card.type==='mc') body=renderMC(card,t.id);
   else if(card.type==='fill') body=renderFill(card,t.id);
   else if(card.type==='fix') body=renderFix(card);
   else if(card.type==='id') body=renderID(card);
   else if(card.type==='tf') body=renderTF(card);
+  else if(card.type==='calc') body=renderCalc(card);
   
   var prog='<div class="q-prog">'+
-    '<span style="font-size:13px;font-weight:700;color:#3B82F6">'+
-    (fcIdx+1)+'/'+t.fc.length+'</span>'+
+    '<span style="font-size:13px;font-weight:700;color:#3B82F6">'+(fcIdx+1)+'/'+t.fc.length+'</span>'+
     '<div class="prog-bar-sm"><div style="width:'+Math.round((fcIdx+1)/t.fc.length*100)+'%;background:#3B82F6;height:100%;border-radius:3px"></div></div>'+
     '<span style="font-size:12px;color:#60A5FA">+10 XP</span></div>';
   
   document.getElementById('TV').innerHTML=
     '<div class="tv-sticky">'+
-    '<button class="back-btn" onclick="closeT()">←<span class="back-lbl"> Back to topics</span></button>'+
-    '<div class="subj-hero" style="background:linear-gradient(135deg,#0F2544,#1E3A5F)">'+
-    '<div style="font-size:32px;margin-bottom:4px">'+t.icon+'</div>'+
-    '<div class="tc-title" style="font-size:17px;color:#fff">'+esc(t.ttl)+'</div>'+
-    '<div class="tc-sub" style="color:#93C5FD">'+esc(t.sub)+'</div>'+
-    '</div>'+
+    '<button class="back-btn" data-action="close">←<span class="back-lbl"> Back to topics</span></button>'+
+    '<div class="subj-hero" style="background:linear-gradient(135deg,#0A0F1A,#0F2544)">'+
+    '<div style="font-size:28px;margin-bottom:2px">'+t.icon+'</div>'+
+    '<div class="tc-title" style="font-size:16px;color:#fff">'+esc(t.ttl)+'</div>'+
+    '<div class="tc-sub" style="color:#93C5FD">'+esc(t.sub)+'</div></div>'+
     '<div class="mode-pills">'+
-    '<button class="mp'+(cMode==='fc'?' active':'')+'" onclick="setMode(\'fc\')">🔢 Questions</button>'+
-    '<button class="mp'+(cMode==='mm'?' active':'')+'" onclick="setMode(\'mm\')">🗺️ Mind map</button>'+
-    '<button class="mp'+(cMode==='rules'?' active':'')+'" onclick="setMode(\'rules\')">💡 Rules</button>'+
-    '</div>'+
-    '</div>'+
+    '<button class="mp'+(cMode==='fc'?' active':'')+'" data-action="mode" data-val="fc">🔢 Questions</button>'+
+    '<button class="mp'+(cMode==='mm'?' active':'')+'" data-action="mode" data-val="mm">🗺️ Mind map</button>'+
+    '<button class="mp'+(cMode==='rules'?' active':'')+'" data-action="mode" data-val="rules">💡 Rules</button>'+
+    '</div></div>'+
     '<div class="tv-scroll"><div class="study-area">'+
     prog+
-    '<div class="q-box">'+
-    '<div class="q-badge '+qBadge+'">'+qLabel+'</div>'+
-    diagHTML+
-    passHTML+
-    '<div class="q-text">'+esc(card.q)+'</div>'+
-    '</div>'+
-    body+
-    '</div></div>';
-  setTimeout(applyGlowIfPending,50);
+    '<div class="q-box"><div class="q-badge '+qBadge+'">'+qLabel+'</div>'+
+    diagHTML+passHTML+
+    '<div class="q-text">'+esc(card.q)+'</div></div>'+
+    body+'</div></div>';
+  
+  attachHandlers();
 }
 
-function setMode(m){
-  cMode=m;
-  if(m==='mm') document.getElementById('TV').innerHTML='<div class="tv-sticky"><button class="back-btn" onclick="closeT()">← Back to topics</button></div><div class="tv-scroll"><div class="study-area">'+renderMM(cTopic)+'</div></div>';
-  else if(m==='rules') document.getElementById('TV').innerHTML='<div class="tv-sticky"><button class="back-btn" onclick="closeT()">← Back to topics</button></div><div class="tv-scroll"><div class="study-area">'+renderRules(cTopic)+'</div></div>';
-  else renderTopic();
+// ── Event delegation ──────────────────────────────────────────────
+function attachHandlers(){
+  var tv=document.getElementById('TV');
+  if(!tv)return;
+  tv.onclick=function(e){
+    var el=e.target.closest('[data-action]');
+    if(!el)return;
+    var action=el.getAttribute('data-action');
+    var val=el.getAttribute('data-val');
+    var idx=el.getAttribute('data-idx');
+    if(action==='pick-mc') pickMC(parseInt(idx));
+    else if(action==='pick-tf'){window._tfAnswer=val;pickTF(val);}
+    else if(action==='pick-fill') pickFillIdx(parseInt(idx));
+    else if(action==='check-fix') checkFix();
+    else if(action==='check-id') checkID();
+    else if(action==='check-step') checkCalcStep(parseInt(idx));
+    else if(action==='check-calc-final') checkCalcFinal();
+    else if(action==='next') nextCard();
+    else if(action==='prev') prevCard();
+    else if(action==='mode') setMode(val);
+    else if(action==='close') closeT();
+    else if(action==='speak') speakCurrent();
+  };
+  // Step inputs need oninput for real-time checking
+  var stepInputs=tv.querySelectorAll('.calc-input[data-idx]');
+  for(var i=0;i<stepInputs.length;i++){
+    (function(inp,idx){inp.addEventListener('input',function(){checkCalcStep(idx);});})(stepInputs[i],parseInt(stepInputs[i].getAttribute('data-idx')));
+  }
+}
+
+// ── Mind map ──────────────────────────────────────────────────────
+function renderMM(t){
+  var m=t.mm;
+  if(!m)return '<div style="padding:20px;color:#94A3B8">No mind map for this topic.</div>';
+  var h='<div class="mm-wrap"><div class="mm-cw"><div class="mm-ctr" style="background:'+m.cc+'">'+esc(m.c)+'</div></div>';
+  (m.b||[]).forEach(function(b){
+    h+='<div class="mm-br" style="background:'+(b.bg||'#0A0F1A')+';border-left-color:'+(b.bd||'#3B82F6')+'">'+
+      '<div class="mm-brtl" style="color:'+(b.tc||'#93C5FD')+'">'+esc(b.l)+'</div>';
+    (b.i||[]).forEach(function(item){h+='<div class="mm-it"><span>'+esc(item)+'</span></div>';});
+    h+='</div>';
+  });
+  return h+'</div>'+
+    '<button class="spk-btn" data-action="speak">Read aloud</button>';
+}
+
+function renderRules(t){
+  var h='';
+  (t.rules||[]).forEach(function(r){
+    var egH='';
+    if(r.eg&&r.eg.length){
+      egH='<div class="rule-eg">';
+      r.eg.forEach(function(e){
+        egH+='<div class="rule-eg-row">'+
+          '<span class="rule-eg-lbl" style="background:'+r.c+'22;color:'+r.c+'">'+esc(e.lbl)+'</span>'+
+          '<span class="rule-eg-txt">'+esc(e.txt)+'</span></div>';
+      });
+      egH+='</div>';
+    }
+    h+='<div class="rule-card">'+
+      '<div class="rnm" style="background:'+r.c+'">'+r.n+'</div>'+
+      '<div style="flex:1"><div class="rt" style="color:'+r.c+'">'+esc(r.t)+'</div>'+
+      '<div class="rd">'+esc(r.d)+'</div>'+egH+'</div></div>';
+  });
+  var tip=t.tip||{};
+  h+='<div class="tip-card" style="background:'+(tip.c||'#030712')+';border-left-color:'+(tip.b||'#3B82F6')+'">💡'+
+    '<div class="tip-txt" style="color:'+(tip.tc||'#BFDBFE')+'">'+esc(tip.t||'')+'</div></div>';
+  h+='<button class="spk-btn" data-action="speak">Read rules aloud</button>';
+  return h;
+}
+
+// ── TTS ───────────────────────────────────────────────────────────
+var _au=null,_st=false;
+function stopS(){if(_au){_au.pause();_au=null;}_st=false;}
+function speakT(text){
+  if(muted)return;
+  stopS();
+  var clean=text.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
+  if(ttsCache[clean]){_play(ttsCache[clean]);return;}
+  fetch('https://texttospeech.googleapis.com/v1/text:synthesize?key='+GOOGLE_TTS_KEY,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({input:{text:clean},voice:TTS_VOICE,audioConfig:TTS_CONFIG})
+  }).then(function(r){return r.json();}).then(function(d){
+    if(d.audioContent){ttsCache[clean]=d.audioContent;_play(d.audioContent);}
+  }).catch(function(){});
+}
+function _play(b64){
+  try{_au=new Audio('data:audio/mp3;base64,'+b64);_au.play();}catch(e){}
+}
+function speakCurrent(){
+  if(!cTopic)return;
+  var card=cTopic.fc[fcIdx];
+  var text=card.q;
+  if(card.type==='tf')text='True or false? '+card.q;
+  if(card.pass)text+='. '+card.pass;
+  speakT(text);
+}
+function spkOK(a,eg){
+  var t='Excellent! That is correct. '+a+'.';
+  if(eg)t+=' For example, '+eg+'.';
+  speakT(t);
+}
+function spkW1(){
+  var p=['Not quite, try again! You have got this!','Hmm, not this one. Give it another go!','Close! Think again!'];
+  speakT(p[Math.floor(Math.random()*p.length)]);
+}
+function spkW2(a,eg){
+  var t='Good try! The answer is '+a+'.';
+  if(eg)t+=' Remember, '+eg+'.';
+  speakT(t);
+}
+function toggleMute(){
+  muted=!muted;
+  var ic=document.getElementById('muteIcon');if(ic)ic.textContent=muted?'🔇':'🔊';
+  if(muted)stopS();
+}
+
+// ── Confetti ──────────────────────────────────────────────────────
+function showConfetti(){
+  var stage=document.getElementById('confetti-stage');
+  if(!stage)return;
+  var colors=['#3B82F6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899'];
+  for(var i=0;i<24;i++){
+    (function(){
+      var d=document.createElement('div');
+      d.style.cssText='position:absolute;width:'+(6+Math.random()*6)+'px;height:'+(6+Math.random()*6)+'px;'+
+        'background:'+colors[Math.floor(Math.random()*colors.length)]+';border-radius:2px;'+
+        'left:'+(Math.random()*100)+'vw;top:-10px;z-index:9999;pointer-events:none;';
+      stage.appendChild(d);
+      var vy=2+Math.random()*4,vx=(Math.random()-0.5)*3,ry=Math.random()*360;
+      var t=0;
+      function frame(){
+        t++;d.style.top=(parseFloat(d.style.top)+vy)+'px';
+        d.style.left=(parseFloat(d.style.left)+vx)+'px';
+        d.style.transform='rotate('+(ry+t*5)+'deg)';
+        d.style.opacity=Math.max(0,1-t/60);
+        if(t<60)requestAnimationFrame(frame);else d.remove();
+      }
+      requestAnimationFrame(frame);
+    })();
+  }
+}
+function applyGlowIfPending(){
+  if(!window._pendingGlow)return;
+  window._pendingGlow=false;
+  var cor=document.querySelector('.choice.cor,.tf-btn.sel-cor');
+  if(cor)cor.style.boxShadow='0 0 0 3px rgba(16,185,129,0.5),0 0 20px rgba(16,185,129,0.3)';
+}
+
+// ── Home ──────────────────────────────────────────────────────────
+function renderHome(){
+  var secs=getSecs(cTerm),html='';
+  for(var s=0;s<secs.length;s++){
+    var sec=secs[s];
+    var topics=T[cTerm].filter(function(t){return t.sec===sec;});
+    html+='<div class="sec-lbl">'+esc(sec)+'</div><div class="topic-grid">';
+    for(var i=0;i<topics.length;i++){
+      var t=topics[i],ci=i%COLS.length,isDone=!!doneSet[t.id];
+      html+='<div class="tc'+(isDone?' done':'')+'\" style=\"background:'+COLS[ci].bg+';border-color:'+(isDone?'#10B981':'transparent')+'" data-tid="'+t.id+'">'+
+        '<div class="tc-ico" style="background:'+COLS[ci].lt+';font-size:22px">'+t.icon+'</div>'+
+        '<div style="flex:1"><div class="tc-title">'+esc(t.ttl)+'</div><div class="tc-sub">'+esc(t.sub)+'</div></div>'+
+        (isDone?'✓':'›')+'</div>';
+    }
+    html+='</div>';
+  }
+  document.getElementById('TGRID').innerHTML=html;
+  // Attach topic card click handlers
+  var cards=document.querySelectorAll('.tc[data-tid]');
+  for(var i=0;i<cards.length;i++){
+    (function(card){card.addEventListener('click',function(){openT(card.getAttribute('data-tid'));});})(cards[i]);
+  }
+  updateProg();
 }
 
 // ── Init ──────────────────────────────────────────────────────────
 (function(){
-  var saved = loadUser();
-  if(saved && saved.name){
-    currentUser = saved;
-    xp = saved.xp || 0;
-    streak = saved.streak || 0;
-    doneSet = {};
-    answeredSet = saved.answeredQuestions || {};
-    if(saved.doneTopics) saved.doneTopics.forEach(function(id){ doneSet[id]=true; });
+  var saved=loadUser();
+  if(saved&&saved.name){
+    currentUser=saved;
+    xp=saved.xp||0;streak=saved.streak||0;
+    doneSet={};answeredSet=saved.answeredQuestions||{};
+    if(saved.doneTopics)saved.doneTopics.forEach(function(id){doneSet[id]=true;});
   }
-  var xpEl=document.getElementById('xpVal'); if(xpEl) xpEl.textContent=xp;
-  var fill=document.getElementById('xpFill'); if(fill) fill.style.width=Math.round(xp/500*100)+'%';
-  var str=document.getElementById('strVal'); if(str) str.textContent=streak;
+  var xpEl=document.getElementById('xpVal');if(xpEl)xpEl.textContent=xp;
+  var fill=document.getElementById('xpFill');if(fill)fill.style.width=Math.min(xp/500*100,100)+'%';
+  var str=document.getElementById('strVal');if(str)str.textContent=streak;
   var av=document.getElementById('avatarBadge');
-  if(av && currentUser && currentUser.name) av.textContent=currentUser.name.charAt(0).toUpperCase();
+  if(av&&currentUser&&currentUser.name)av.textContent=currentUser.name.charAt(0).toUpperCase();
   renderHome();
 })();
 
