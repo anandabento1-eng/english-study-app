@@ -743,7 +743,16 @@ function showSubjectScreen(){
       if(doneSet[t.id]) doneTopic++;
     });
     var pct = totalTopics ? Math.round(doneTopic/totalTopics*100) : 0;
-    if(s.comingSoon){
+    if(s.external){ 
+      html += '<div class="subj-card" style="background:'+s.bg+';border-color:'+s.color+'" data-sid="'+s.id+'" >'+
+        '<div class="subj-icon" style="background:'+s.color+'22">'+s.icon+'</div>'+
+        '<div class="subj-info">'+
+          '<h2>'+esc(s.name)+'</h2>'+
+          '<p style="color:'+s.color+'">'+esc(s.subtitle)+'</p>'+
+          '<div class="subj-progress" style="color:#3B82F6;font-weight:600">📖 Tap to open</div>'+
+        '</div>'+
+      '</div>';
+    } else if(s.comingSoon){
       html += '<div class="subj-card" style="background:'+s.bg+';border-color:'+s.color+';opacity:0.6;cursor:default">'+
         '<div class="subj-icon" style="background:'+s.color+'22">'+s.icon+'</div>'+
         '<div class="subj-info">'+
@@ -775,6 +784,7 @@ function showSubjectScreen(){
 
 function selectSubject(id){
   if(!SUBJECTS[id]) return;
+  if(SUBJECTS[id].external){ window.location.href=SUBJECTS[id].url; return; }
   cSubject = id;
   T = SUBJECTS[id].terms;
   cTerm = 1;
@@ -1117,7 +1127,7 @@ tip:{t:"Upgrade challenge. Take 'The dog ran.' Add pink adjectives and orange ad
 {type:'fix',q:'Correct ALL spelling and punctuation errors. Rewrite the full sentence.',pass:"Are flamingo's the most elegent birds in the world",a:"Are flamingos the most elegant birds in the world?",hint:"Remove the wrong apostrophe. Fix the spelling of elegant. Add a question mark at the end.",eg:"flamingos = plural (no apostrophe). elegant = correct spelling. Question needs a ?"},
 {type:'fill',q:'Choose the correct word.',pass:"The dog wagged ___ tail excitedly.",blanks:['its'],opts:["its","it's","its'","it is"],eg:"Belonging — no apostrophe needed. it's would mean 'it is' which makes no sense here"},
 {type:'fix',q:'Add the missing punctuation. Rewrite the sentence correctly.',pass:'I need three things a pen a ruler and paper',a:'I need three things: a pen, a ruler, and paper.',hint:'Use a colon to introduce the list. Use commas to separate the items.',eg:'Colon (:) = here comes a list. Comma (,) separates each item.'},
-{type:'mc',q:"The word don't — what does the apostrophe show?",a:"A contraction — two words have been joined. Do not becomes don't.",eg:"don't = do not, can't = cannot, it's = it is",w:["Possession — something belongs to something","Plural — there is more than one","Comparison — something is more than something"]},
+{type:'mc',q:"The word do not — what does the apostrophe show?",a:"A contraction — two words have been joined. Do not becomes do not.",eg:"do not = do not, cannot = cannot, it's = it is",w:["Possession — something belongs to something","Plural — there is more than one","Comparison — something is more than something"]},
 {type:'mc',q:"The dog's bone — what does the apostrophe show?",a:"Possession — the bone belongs to ONE dog. The apostrophe goes before the s.",eg:"One owner means apostrophe before the s",w:["A contraction — two words have been joined","A plural — there is more than one dog here","A comparison — the dog is better than something"]},
 ,
 {type:'tf',q:'A colon is used to introduce a list.',a:'true',explanation:'A colon tells the reader here is what follows. I need three things: a pen, a ruler and paper.'},
@@ -1126,9 +1136,9 @@ tip:{t:"Upgrade challenge. Take 'The dog ran.' Add pink adjectives and orange ad
 ],mm:{c:'Punctuation',cc:'#EF4444',b:[
 {l:'End of sentence',bg:'#0A1628',bd:'#2563EB',tc:'#93C5FD',i:['Full stop ends a statement','Question mark ends a question','Exclamation mark shows strong feeling']},
 {l:'Inside sentence',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Comma — list or pause','Semi-colon — joins two related sentences','Colon — introduces a list']},
-{l:'Apostrophe',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:["Possession: boy's hat — one owner","Plural possession: boys' hats","Contraction: don't = do not"]},
+{l:'Apostrophe',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:["Possession: boy's hat — one owner","Plural possession: boys' hats","Contraction: do not = do not"]},
 ]},rules:[
-{n:"1",c:"#2563EB",t:"Apostrophe — contraction or possession?",d:"Try expanding the word. If it expands into two words it is a contraction. If it shows belonging it is possession.",eg:[{lbl:"CONTRACTION",txt:"don't = do not. can't = cannot. it's = it is. Expands into two words."},{lbl:"POSSESSION",txt:"The boy's hat = the hat belongs to the boy. Shows who owns it."},{lbl:"TRICK",txt:"Say it is in place of it's. If it fits, write it's with the apostrophe."}]},
+{n:"1",c:"#2563EB",t:"Apostrophe — contraction or possession?",d:"Try expanding the word. If it expands into two words it is a contraction. If it shows belonging it is possession.",eg:[{lbl:"CONTRACTION",txt:"do not = do not. cannot = cannot. it's = it is. Expands into two words."},{lbl:"POSSESSION",txt:"The boy's hat = the hat belongs to the boy. Shows who owns it."},{lbl:"TRICK",txt:"Say it is in place of it's. If it fits, write it's with the apostrophe."}]},
 {n:"2",c:"#10B981",t:"Commas in lists",d:"Put a comma after every item except the last. The last item uses and.",eg:[{lbl:"CORRECT",txt:"I like cats, dogs, and fish. Comma after each item except the last."},{lbl:"WRONG",txt:"I like cats dogs and fish. No commas makes it hard to read."},{lbl:"RULE",txt:"If you can say pause between items, put a comma there."}]},
 {n:"3",c:"#FB923C",t:"Colon vs semi-colon — different jobs",d:"A colon introduces something. A semi-colon joins two closely linked sentences.",eg:[{lbl:"COLON ( : )",txt:"I need three things: a pen, a ruler, and paper. Introduces a list."},{lbl:"SEMI-COLON ( ; )",txt:"I love reading; books are my escape. Joins two related sentences."},{lbl:"TEST",txt:"Colon = here is what follows. Semi-colon = these two ideas are connected."}]}
 ],
@@ -1160,7 +1170,7 @@ tip:{t:"Draw it! Take any simile and sketch the literal image. Her smile was sun
 {type:'mc',q:'What is an idiom?',a:"A phrase whose meaning is completely different from the actual words — you cannot take it literally",eg:"It's raining cats and dogs means it is raining very heavily",w:['A short wise saying that gives life advice','The repetition of the same starting sound','A comparison using like or as']},
 {type:'id',q:'Paragraph 5 uses alliteration. Write down THREE words that illustrate the alliteration.',pass:'The dog was furious and charged at the animals, snarling, scowling and snapping his jaws!',highlights:[{word:'snarling',type:'alliteration'},{word:'scowling',type:'alliteration'},{word:'snapping',type:'alliteration'}],a:'snarling, scowling, snapping',hint:'Alliteration = same starting sound repeated. Look for words starting with the same letter.',eg:'snarling, scowling, snapping — all start with the S sound'},
 {type:'mc',q:"What does the idiom under the weather mean?",a:'Feeling sick or unwell',eg:'She stayed home because she was feeling under the weather.',w:['Standing outside in the rain','Feeling very excited and energetic','Being confused about the weather forecast']},
-{type:'mc',q:'What is a proverb?',a:'A short well-known saying that gives life advice or a moral truth',eg:"Don't judge a book by its cover means don't judge by appearances",w:['A phrase whose real meaning differs from the words','The repetition of the same starting sound','A comparison using like or as']},
+{type:'mc',q:'What is a proverb?',a:'A short well-known saying that gives life advice or a moral truth',eg:"Don't judge a book by its cover means do not judge by appearances",w:['A phrase whose real meaning differs from the words','The repetition of the same starting sound','A comparison using like or as']},
 {type:'id',q:'Select the IDIOM in this sentence and explain its meaning.',pass:'Despite losing the match, the team decided to face the music and speak to their coach.',a:'face the music — to accept the consequences of your actions',hint:'Which phrase sounds impossible if taken literally? That is the idiom.',eg:'Face the music does not mean turning toward sound — it means accepting consequences'},
 {type:'mc',q:'What is alliteration?',a:'The repetition of the same starting sound in a series of words',eg:'Peter Piper picked a peck of pickled peppers — the P sound is repeated',w:['Words that rhyme at the end of lines','The repetition of vowel sounds in the middle','A phrase that cannot be taken at face value']},
 ,
@@ -1224,7 +1234,7 @@ tip:{t:"Draw the mood. After reading a poem, imagine a colour or weather that ma
 
 {id:'desc',sec:'Writing',icon:'🎨',ttl:'Descriptive writing',sub:'Senses, figurative language and strong word choices',fc:[
 {type:'mc',q:'What are the five senses in descriptive writing?',a:'See, hear, smell, touch and taste',eg:'The burning sun scorched my skin. I smelled the salty sea air.',w:['Think, feel, guess, wonder, imagine','Read, write, speak, listen, draw','Look, sound, taste, smell, move']},
-{type:'fix',q:'"Show don\'t tell" — rewrite this sentence to SHOW the feeling instead of naming it.',pass:'Jamie was very excited about the race.',a:"Jamie's heart hammered in his chest. His feet bounced off the ground as he waited at the starting line.",hint:'Instead of naming the feeling (excited), describe what the body DOES when excited.',eg:'hammering heart, bouncing feet — these SHOW excitement without naming it'},
+{type:'fix',q:'"Show don\'t tell" — rewrite this sentence to SHOW the feeling instead of naming it.',pass:'Jamie was very excited about the race.',a:"Jamie heart hammered in his chest. His feet bounced off the ground as he waited at the starting line.",hint:'Instead of naming the feeling (excited), describe what the body DOES when excited.',eg:'hammering heart, bouncing feet — these SHOW excitement without naming it'},
 {type:'mc',q:'What is a topic sentence?',a:'The first sentence of a paragraph — it tells the reader exactly what the whole paragraph is about',eg:'The market was a feast for all the senses.',w:['The last sentence that summarises the paragraph','A sentence that must always contain a simile','The most descriptive sentence in the paragraph']},
 {type:'mc',q:'Which words should you avoid in descriptive writing?',a:'Vague words like nice, good, bad, big and small — replace them with specific powerful words',eg:'nice becomes wonderful or delightful or breathtaking',w:['Adjectives and adverbs — they complicate writing','Past tense verbs — always write in present tense','Long sentences — always use short simple sentences']},
 {type:'id',q:'Upgrade this sentence. Replace the weak verb and add at least one adjective.',pass:'The big dog walked down the road.',a:'The enormous dog lumbered down the dusty road.',hint:'Replace big with a precise adjective. Replace walked with a stronger verb.',eg:'big → enormous. walked → lumbered. road → dusty road'},
@@ -1401,7 +1411,7 @@ tip:{t:"Traffic light method. Highlight main ideas green, supporting details ora
 {id:'trans',sec:'Writing',icon:'✉️',ttl:'Transactional writing',sub:'Letters, emails and notices — format earns marks',fc:[
 {type:'mc',q:'What are the six parts of a formal letter?',a:"Sender\'s address, the date, the recipient's address, the salutation, the body and the sign-off",eg:'Use Yours sincerely when you know their name. Use Yours faithfully for Dear Sir/Madam.',w:['Title, introduction, body, conclusion, signature, date','Heading, subheading, topic sentence, evidence, conclusion, sign-off','To, from, subject, greeting, message, attachment']},
 {type:'id',q:'Which sign-off is correct? Explain why.',pass:'Dear Mr Johnson,\nI am writing to request...',a:"Yours sincerely — because you used the person's actual name (Mr Johnson) in the salutation.",hint:'Sincerely = you know their name. Faithfully = Dear Sir or Dear Madam (no name).',eg:'Rule: if you wrote their NAME → Yours sincerely. If you wrote Sir or Madam → Yours faithfully'},
-{type:'fix',q:'This formal letter sentence has a register error. Correct it.',pass:"I'm writing to ask if you guys can send me more info about guide dogs.",a:'I am writing to request further information about guide dogs.',hint:"No contractions in formal letters. No slang. Use formal vocabulary.",eg:"I'm → I am. you guys → you/the organisation. ask → request. info → information"},
+{type:'fix',q:'This formal letter sentence has a register error. Correct it.',pass:"I am writing to ask if you guys can send me more info about guide dogs.",a:'I am writing to request further information about guide dogs.',hint:"No contractions in formal letters. No slang. Use formal vocabulary.",eg:"I am → I am. you guys → you/the organisation. ask → request. info → information"},
 {type:'mc',q:'Yours sincerely or Yours faithfully — when do you use each one?',a:'Sincerely when you used their actual name. Faithfully when you wrote Dear Sir or Dear Madam.',eg:'Dear Sir means Yours faithfully. Dear Mr Smith means Yours sincerely.',w:['Sincerely for informal, faithfully for formal','Sincerely for short letters, faithfully for long ones','Sincerely for female recipients, faithfully for male recipients']},
 {type:'mc',q:'What must every email include?',a:'A subject line, a greeting, short clear paragraphs and a polite sign-off',eg:'Subject: Request for information about the school trip.',w:["Sender\'s address, recipient's address, date, postscript",'Headline, introduction, body, caption, byline','Opening statement, evidence, counter-argument, conclusion']},
 {type:'mc',q:'Why are format marks the easiest marks to get in transactional writing?',a:'Because they require no creative thinking — just write the address, date, salutation and sign-off correctly',eg:'Always write the template structure first, even under time pressure.',w:['Because the examiner only checks format and ignores content','Because you can copy the format from the question paper','Because format marks come at the end where examiners are generous']},
@@ -1416,7 +1426,7 @@ tip:{t:"Traffic light method. Highlight main ideas green, supporting details ora
 ]},rules:[
 {n:"1",c:"#2563EB",t:"Format marks are always free marks",d:"Write the structure first, even under time pressure. Zero creative thinking required.",eg:[{lbl:"FORMAL LETTER",txt:"Your address (top right) → Date → Recipient address (left) → Dear [Name] → Body → Yours sincerely or faithfully → Signature"},{lbl:"EMAIL",txt:"Subject: [clear subject line] → Dear [Name] → Body paragraphs → Kind regards → Your name"},{lbl:"NOTICE",txt:"NOTICE (heading) → Date → To: [audience] → Purpose → Key information → Contact details"}]},
 {n:"2",c:"#10B981",t:"Sincerely vs faithfully — one clear rule",d:"The sign-off depends entirely on whether you used the person's actual NAME in the salutation.",eg:[{lbl:"KNOW THEIR NAME",txt:"Dear Mr Smith → Yours sincerely. You used their actual name."},{lbl:"DO NOT KNOW NAME",txt:"Dear Sir or Dear Madam → Yours faithfully. You used a title, not a name."},{lbl:"MEMORY TRICK",txt:"SincerelY — You know their name. Both words end with a Y sound."}]},
-{n:"3",c:"#FB923C",t:"Formal register — what to avoid",d:"Formal writing has strict language rules. Breaking them costs marks.",eg:[{lbl:"NO CONTRACTIONS",txt:"I am not I'm. Do not not don't. Cannot not can't. Will not not won't."},{lbl:"NO SLANG",txt:"you guys → you or the organisation. info → information. gonna → going to."},{lbl:"NO EXCLAMATION MARKS",txt:"Never use ! in the body of a formal letter. It sounds unprofessional and emotional."}]}
+{n:"3",c:"#FB923C",t:"Formal register — what to avoid",d:"Formal writing has strict language rules. Breaking them costs marks.",eg:[{lbl:"NO CONTRACTIONS",txt:"I am not I am. Do not not do not. Cannot not cannot. Will not not will not."},{lbl:"NO SLANG",txt:"you guys → you or the organisation. info → information. gonna → going to."},{lbl:"NO EXCLAMATION MARKS",txt:"Never use ! in the body of a formal letter. It sounds unprofessional and emotional."}]}
 ],
 tip:{t:"Make a template card for each text type. Memorise it. In the exam write the template first then fill in the content.",c:'#0A1F1A',b:'#10B981',tc:'#6EE7B7'}},
 
@@ -1482,9 +1492,9 @@ tip:{t:"Preposition trick — if you can imagine it physically (on, under, behin
 {l:'Common punctuation errors',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:["Wrong apostrophe in plurals (dogs' is possessive, dogs is just plural)",'Missing question mark','Missing capital letters for proper nouns','its vs it\'s — belonging vs contraction']},
 {l:'Common word confusions',bg:'#1C1005',bd:'#FB923C',tc:'#FED7AA',i:['there (place) / their (belonging) / they\'re (they are)','to (direction) / too (very) / two (number)','principal (person) / principle (rule)','affect (verb) / effect (noun)']},
 ]},rules:[
-{n:"1",c:"#2563EB",t:"Four-step error correction check",d:"Use these four steps in order every time you check a sentence for errors.",eg:[{lbl:"STEP 1: CAPITALS",txt:"Check every proper noun: names, places, days, months. All need a capital letter."},{lbl:"STEP 2: APOSTROPHES",txt:"Every apostrophe must be a contraction (don't) or possession (the dog's bone). No other use."},{lbl:"STEP 3: SPELLING",txt:"Sound the word out. Check common trouble spots: beautiful, library, necessary, definitely."},{lbl:"STEP 4: END MARK",txt:"Every sentence ends with . or ? or ! — make sure it is the right one."}]},
+{n:"1",c:"#2563EB",t:"Four-step error correction check",d:"Use these four steps in order every time you check a sentence for errors.",eg:[{lbl:"STEP 1: CAPITALS",txt:"Check every proper noun: names, places, days, months. All need a capital letter."},{lbl:"STEP 2: APOSTROPHES",txt:"Every apostrophe must be a contraction (do not) or possession (the dog's bone). No other use."},{lbl:"STEP 3: SPELLING",txt:"Sound the word out. Check common trouble spots: beautiful, library, necessary, definitely."},{lbl:"STEP 4: END MARK",txt:"Every sentence ends with . or ? or ! — make sure it is the right one."}]},
 {n:"2",c:"#10B981",t:"Plural vs possessive — apostrophe position",d:"Most plurals have NO apostrophe. Only add one if something BELONGS to the noun.",eg:[{lbl:"PLURAL (no apostrophe)",txt:"The dogs ran away. More than one dog, no possession, no apostrophe."},{lbl:"POSSESSION (apostrophe before s)",txt:"The dog's bone. The bone belongs to one dog."},{lbl:"PLURAL POSSESSION (apostrophe after s)",txt:"The dogs' bones. The bones belong to many dogs."}]},
-{n:"3",c:"#FB923C",t:"Confusable words — there / their / they're",d:"These three words sound identical but have completely different meanings.",eg:[{lbl:"THERE = PLACE",txt:"The book is over THERE. Think: HERE and THERE both have HERE in them."},{lbl:"THEIR = BELONGING",txt:"It is THEIR bag. Think: THEIR has HEIR in it — someone who inherits = belongs to."},{lbl:"THEY'RE = THEY ARE",txt:"THEY'RE going home. Expand it: They are going home. If it fits, use they're."}]}
+{n:"3",c:"#FB923C",t:"Confusable words — there / their / they are",d:"These three words sound identical but have completely different meanings.",eg:[{lbl:"THERE = PLACE",txt:"The book is over THERE. Think: HERE and THERE both have HERE in them."},{lbl:"THEIR = BELONGING",txt:"It is THEIR bag. Think: THEIR has HEIR in it — someone who inherits = belongs to."},{lbl:"THEY'RE = THEY ARE",txt:"THEY'RE going home. Expand it: They are going home. If it fits, use they are."}]}
 ],
 tip:{t:"Read the sentence backwards word by word. This breaks the flow and forces you to look at each word individually. Spelling errors are much easier to spot this way.",c:'#1A0A0A',b:'#EF4444',tc:'#FCA5A5'}},
 
@@ -1509,6 +1519,123 @@ tip:{t:"Read the sentence backwards word by word. This breaks the flow and force
 {n:"3",c:"#FB923C",t:"Format marks are the easiest marks",d:"Write the newspaper structure first — even under time pressure.",eg:[{lbl:"FORMAT",txt:"1. Newspaper name | 2. HEADLINE IN CAPITALS | 3. By [Reporter Name] | 4. Introduction (5 Ws) | 5. Body paragraphs"},{lbl:"TIP",txt:"Even if you run out of time, write the format structure first. Those marks cost zero creativity."}]}
 ],
 tip:{t:"Mind map first. Put the event in the centre. Five branches = 5 Ws. Fill each branch. Then write your introduction sentence using all five branches at once.",c:'#0A1A1A',b:'#06B6D4',tc:'#67E8F9'}},
+,
+
+{id:'determiners',sec:'Grammar',icon:'🔍',ttl:'Determiners',sub:'Articles, demonstratives and quantifiers',fc:[
+{type:'mc',q:'What is a determiner?',a:'A word that introduces a noun and gives more information about it',eg:'a dog, the book, this pen, some water — the bold words are determiners.',w:['A word that describes a verb','A word that replaces a noun','A word that joins two sentences']},
+{type:'mc',q:'Which sentence uses the CORRECT article?',a:'I saw an elephant at the zoo.',eg:'Use AN before vowel sounds (a,e,i,o,u): an elephant, an apple, an hour.',w:['I saw a elephant at the zoo.','I saw the elephant at the zoo yesterday for first time.','I saw some elephant at the zoo.']},
+{type:'mc',q:'Which word is a DEMONSTRATIVE determiner?',a:'this',eg:'This, that, these, those point to specific nouns: this book, those dogs.',w:['some','few','every']},
+{type:'mc',q:'What type of determiner is "several" in: "Several children arrived"?',a:'Quantifier — it tells us how many',eg:'Quantifiers: some, many, few, several, any, every, each, much, a lot of.',w:['Article — a/an/the','Demonstrative — this/that/these/those','Possessive — my/your/his/her']},
+{type:'fill',q:'Choose the correct article.',pass:'She ate ___ apple for lunch.',blanks:['an'],opts:['a','an','the','some'],eg:'AN before vowel sounds: an apple, an orange, an umbrella'},
+{type:'tf',q:'The articles in English are: a, an, and the.',a:'true',explanation:'Yes! A and an are indefinite articles (non-specific). The is the definite article (specific). I want a book (any book). I want the book (a specific book).'},
+{type:'tf',q:'"A" is used before words that begin with a vowel sound.',a:'false',explanation:'No! AN is used before vowel sounds. A is used before consonant sounds. An apple, an egg, an hour BUT a cat, a university (u sounds like "you" = consonant sound).'},
+{type:'tf',q:'Possessive determiners include: my, your, his, her, our, their.',a:'true',explanation:'Yes! Possessive determiners show ownership: my book, your pen, his bag, her dress, our school, their teacher.'}
+],mm:{c:'Determiners',cc:'#7C3AED',b:[
+{l:'Articles',bg:'#1A1032',bd:'#7C3AED',tc:'#C4B5FD',i:['a (before consonant sounds)','an (before vowel sounds)','the (specific, definite)']},
+{l:'Demonstratives',bg:'#1A1032',bd:'#4F46E5',tc:'#A5B4FC',i:['this / these (nearby)','that / those (far away)','This book. Those dogs.']},
+{l:'Possessives',bg:'#1A1032',bd:'#7C3AED',tc:'#C4B5FD',i:['my, your, his, her','our, their, its','My bag. Their school.']},
+{l:'Quantifiers',bg:'#1A1032',bd:'#4F46E5',tc:'#A5B4FC',i:['some, many, few, each','every, several, any','Some water. Every child.']}
+]},rules:[
+{n:'1',c:'#7C3AED',t:'a or an — sound not letter',d:'Use AN before a VOWEL SOUND. Use A before a CONSONANT SOUND. Focus on the sound, not the letter.',eg:[{lbl:'AN (vowel sound)',txt:'an apple, an egg, an island, an orange, an umbrella, an hour'},{lbl:'A (consonant sound)',txt:'a cat, a dog, a university (sounds like you), a European'},{lbl:'TRICK',txt:'Say it aloud. Does it start with a vowel SOUND? Then use an.'}]},
+{n:'2',c:'#4F46E5',t:'the — specific or general',d:'Use THE when both speaker and listener know exactly which one is meant.',eg:[{lbl:'SPECIFIC',txt:'Please close the door. (a specific door — the one in this room)'},{lbl:'FIRST MENTION',txt:'I saw a dog. The dog was black. (a = first mention, the = referred back to)'},{lbl:'UNIQUE',txt:'the sun, the moon, the president — only one exists'}]},
+{n:'3',c:'#7C3AED',t:'Demonstratives — near and far',d:'This/these for things nearby. That/those for things further away.',eg:[{lbl:'NEAR',txt:'This pen (one, near). These pens (many, near).'},{lbl:'FAR',txt:'That building (one, far). Those clouds (many, far).'}]}
+],tip:{t:'Determiners always come BEFORE the noun. If you can replace the word with the/a/this/my and it still makes sense, it is a determiner!',c:'#1A0A2E',b:'#7C3AED',tc:'#C4B5FD'}},
+
+{id:'homophones',sec:'Vocabulary',icon:'👂',ttl:'Homonyms and Homophones',sub:'Words that sound the same or have multiple meanings',fc:[
+{type:'mc',q:'What are HOMOPHONES?',a:'Words that sound the same but have different spellings and meanings',eg:'there/their/they are, to/too/two, hear/here, wear/where',w:['Words with the same spelling and meaning','Words that are opposites of each other','Words built from the same root']},
+{type:'mc',q:'What are HOMONYMS?',a:'Words that are spelled the same but have different meanings',eg:'bank (river bank or financial bank), bat (cricket bat or flying bat), bark (tree bark or a dog barks)',w:['Words that sound alike but are spelled differently','Words that are synonyms','Words with prefixes and suffixes']},
+{type:'mc',q:'Choose the correct homophone: "I ___ you at the park yesterday."',a:'saw',eg:'saw (past tense of see) vs sore (painful). Context: seeing someone = saw.',w:['sore','soar','source']},
+{type:'fill',q:'Choose the correct homophone.',pass:'Please put the books over ___.',blanks:['there'],opts:['there','their','they are (they are)'],eg:'there = place. their = belonging. they are = they are (contraction)'},
+{type:'fix',q:'Correct the homophone error.',pass:'Their going to the shop now.',a:'They are going to the shop now.',hint:'Expand it: "They are going to the shop now." = they are',eg:'they are = they are (contraction). their = belonging to them.'},
+{type:'tf',q:'"Right" and "write" are homophones.',a:'true',explanation:'Yes! Right and write sound identical but have completely different meanings and spellings. They are homophones.'},
+{type:'tf',q:'A homonym and a homophone are the same thing.',a:'false',explanation:'No! A HOMOPHONE sounds the same but is spelled differently (their/there). A HOMONYM is spelled the same but means something different (bank/bank). Related but different concepts.'},
+{type:'tf',q:'"bark" is a homonym because it can mean dog sound or tree covering.',a:'true',explanation:'Yes! Bark is spelled the same both ways. The meaning depends on context. Same spelling, different meanings = homonym.'}
+],mm:{c:'Homonyms and Homophones',cc:'#0891B2',b:[
+{l:'Homophones',bg:'#0A1A2E',bd:'#0891B2',tc:'#67E8F9',i:['Same sound, different spelling','there/their/they are','to/too/two, hear/here']},
+{l:'Homonyms',bg:'#0A1A2E',bd:'#0284C7',tc:'#7DD3FC',i:['Same spelling, different meaning','bank, bat, bark, light','Context tells you the meaning']},
+{l:'Common Homophones',bg:'#0A1A2E',bd:'#0891B2',tc:'#67E8F9',i:['wear/where/were','right/write','know/no, new/knew']}
+]},rules:[
+{n:'1',c:'#0891B2',t:'there / their / they are',d:'Three of the most tested homophones. Learn the test for each.',eg:[{lbl:'THERE = place',txt:'"The book is over there." Think: HERE and THERE both contain HERE.'},{lbl:'THEIR = belonging',txt:'"It is their bag." Think: THEIR has HEIR in it — someone who owns things.'},{lbl:'THEY ARE (apostrophe)',txt:'"They are going home." Expand it: "They are going home." If it fits, use they are.'}]},
+{n:'2',c:'#0284C7',t:'to / too / two',d:'Three more commonly confused homophones.',eg:[{lbl:'TO = direction or infinitive',txt:'"Go to school." "I want to eat."'},{lbl:'TOO = also or very',txt:'"I am tired too." "It is too hot." (Think: TOO has an extra O — it is too much!)'},{lbl:'TWO = the number 2',txt:'"I have two books." Always the number.'}]},
+{n:'3',c:'#0891B2',t:'Context is everything for homonyms',d:'For homonyms, read the whole sentence to find which meaning fits.',eg:[{lbl:'BANK',txt:'I put money in the bank. (financial) / We sat on the bank of the river. (river edge)'},{lbl:'BAT',txt:'He hit the ball with a bat. (cricket) / A bat flew out of the cave. (animal)'}]}
+],tip:{t:'For homophones: expand contractions (they are = they are), check if it is a place (there), or ownership (their). When in doubt, say the sentence aloud with each option.',c:'#0A1A2E',b:'#0891B2',tc:'#67E8F9'}},
+
+{id:'parts_of_speech',sec:'Grammar',icon:'🗂️',ttl:'Parts of speech',sub:'The eight word classes and how they work',fc:[
+{type:'mc',q:'What part of speech is the word "quickly" in: "She ran quickly."?',a:'Adverb — it describes how she ran',eg:'Adverbs describe verbs. They answer how, when, where or how much.',w:['Adjective — it describes a noun','Verb — it shows action','Conjunction — it joins ideas']},
+{type:'mc',q:'What part of speech is "and" in: "Tom and Sam played football."?',a:'Conjunction — it joins two subjects',eg:'Conjunctions join words, phrases or clauses: and, but, or, because, although.',w:['Preposition — it shows position','Pronoun — it replaces a noun','Interjection — it expresses emotion']},
+{type:'mc',q:'What part of speech is "Wow!" in: "Wow! That was amazing."?',a:'Interjection — it expresses strong emotion',eg:'Interjections stand alone: Wow! Ouch! Oh dear! Hey! They express sudden feeling.',w:['Adjective — it describes a noun','Adverb — it describes a verb','Verb — it shows action']},
+{type:'fill',q:'Identify the part of speech.',pass:'The ___ girl sang beautifully. (tall)',blanks:['adjective'],opts:['adjective','adverb','noun','verb'],eg:'Tall describes the girl (noun) = adjective'},
+{type:'id',q:'Name the eight parts of speech.',a:'Noun, pronoun, verb, adjective, adverb, preposition, conjunction, interjection',hint:'Think of the categories: naming, replacing, action, describing, connecting',eg:'Every word in English belongs to one of these eight classes.'},
+{type:'tf',q:'A word can only ever be one part of speech.',a:'false',explanation:'No! Many words can be different parts of speech depending on context. "Fast" can be an adjective (a fast car) or an adverb (she ran fast). Context determines the part of speech.'},
+{type:'tf',q:'A preposition always comes before a noun or pronoun.',a:'true',explanation:'Yes! PRE-position means placed BEFORE. Prepositions show relationships: on the table, in the room, under the bed, before dinner.'},
+{type:'tf',q:'Pronouns replace nouns to avoid repetition.',a:'true',explanation:'Yes! Instead of "Jamie walked to Jamie school," we say "Jamie walked to his school." The pronoun his replaces the noun Jamie.'}
+],mm:{c:'Parts of Speech',cc:'#7C3AED',b:[
+{l:'Naming words',bg:'#1A1032',bd:'#7C3AED',tc:'#C4B5FD',i:['Noun: person/place/thing/idea','Pronoun: replaces a noun','Jamie, city, love / he, she, it']},
+{l:'Describing words',bg:'#1A1032',bd:'#4F46E5',tc:'#A5B4FC',i:['Adjective: describes a noun','Adverb: describes a verb/adj/adv','tall girl / ran quickly']},
+{l:'Action and linking',bg:'#1A1032',bd:'#7C3AED',tc:'#C4B5FD',i:['Verb: action or state','run, eat, is, was, seem']},
+{l:'Connecting words',bg:'#1A1032',bd:'#4F46E5',tc:'#A5B4FC',i:['Preposition: on, in, under, before','Conjunction: and, but, because','Interjection: Wow! Ouch! Oh!']}
+]},rules:[
+{n:'1',c:'#7C3AED',t:'Test each word with a question',d:'Ask one question to identify the part of speech.',eg:[{lbl:'NOUN',txt:'Is it the name of a person, place, thing or idea? Yes = noun.'},{lbl:'VERB',txt:'Does it show action or state? Yes = verb.'},{lbl:'ADJECTIVE',txt:'Does it describe a noun and answer what kind/which? Yes = adjective.'},{lbl:'ADVERB',txt:'Does it describe a verb and answer how/when/where? Yes = adverb.'}]},
+{n:'2',c:'#4F46E5',t:'Context determines the part of speech',d:'The same word can be different parts of speech in different sentences.',eg:[{lbl:'EXAMPLE',txt:'"She has a fast car." (fast = adjective, describes car)'},{lbl:'EXAMPLE',txt:'"She runs fast." (fast = adverb, describes runs)'},{lbl:'RULE',txt:'Always look at what role the word plays in its specific sentence.'}]},
+{n:'3',c:'#7C3AED',t:'Eight parts — memory trick',d:'Use this sentence to remember all eight: Never Produce Violent Arguments; Clearly, Proper Instruction Improves.',eg:[{lbl:'N-P-V-A',txt:'Noun, Pronoun, Verb, Adjective'},{lbl:'C-P-I-I',txt:'Conjunction, Preposition, Interjection, (Adverb — swap order as needed)'}]}
+],tip:{t:'When identifying parts of speech in an exam, always look at the ROLE of the word in its sentence, not just the word itself. Context is everything.',c:'#1A0A2E',b:'#7C3AED',tc:'#C4B5FD'}},
+
+{id:'plurals_yo',sec:'Spelling',icon:'📝',ttl:'Spelling: Plurals (-y and -o)',sub:'Rules for plurals of words ending in -y and -o',fc:[
+{type:'mc',q:'What is the plural of "city"?',a:'cities',eg:'consonant + y → change y to i and add -es: city→cities, baby→babies, party→parties',w:['citys','cityes','cityes']},
+{type:'mc',q:'What is the plural of "monkey"?',a:'monkeys',eg:'vowel + y → just add -s: monkey→monkeys, key→keys, valley→valleys',w:['monkies','monkeyes','monkeis']},
+{type:'mc',q:'What is the plural of "potato"?',a:'potatoes',eg:'Most words ending in -o add -es: potato→potatoes, tomato→tomatoes, hero→heroes',w:['potatos','potatoe','potatoies']},
+{type:'fill',q:'Choose the correct plural.',pass:'The ___ were playing in the park. (baby)',blanks:['babies'],opts:['babies','babys','babyies','babyes'],eg:'baby: consonant (b) before y → babies'},
+{type:'fix',q:'Correct the plural spelling.',pass:'The three citys are very busy.',a:'The three cities are very busy.',hint:'city ends in consonant+y → change y to i, add -es',eg:'city → cities (not citys)'},
+{type:'tf',q:'Words ending in vowel + y just add -s for the plural.',a:'true',explanation:'Yes! monkey→monkeys, key→keys, valley→valleys, day→days. The y stays because there is a vowel before it.'},
+{type:'tf',q:'All words ending in -o add -es to make the plural.',a:'false',explanation:'No! Some words add -es (potato→potatoes) but some just add -s (piano→pianos, photo→photos, solo→solos). Musical terms usually just add -s.'},
+{type:'tf',q:'"Party" becomes "parties" in the plural.',a:'true',explanation:'Yes! party ends in consonant (t) + y. Rule: change y to i and add -es. party→parties, story→stories, fly→flies.'}
+],mm:{c:'Plural Rules: -y and -o',cc:'#10B981',b:[
+{l:'Consonant + y',bg:'#0A1A0A',bd:'#10B981',tc:'#6EE7B7',i:['Change y to i, add -es','city→cities, baby→babies','party→parties, story→stories']},
+{l:'Vowel + y',bg:'#0A1A0A',bd:'#059669',tc:'#A7F3D0',i:['Just add -s','monkey→monkeys','key→keys, valley→valleys']},
+{l:'Words ending in -o',bg:'#0A1A0A',bd:'#10B981',tc:'#6EE7B7',i:['Most add -es: potato→potatoes','Some add -s: photo→photos','Piano, solo, radio → add -s']}
+]},rules:[
+{n:'1',c:'#10B981',t:'Consonant + y rule',d:'Look at the letter BEFORE the y. Consonant before y? Change y to i and add -es.',eg:[{lbl:'CONSONANT + Y',txt:'city (t+y) → cities | baby (b+y) → babies | fly (l+y) → flies'},{lbl:'TEST',txt:'What is the letter before y? Consonant = change y to i + es. Vowel = just add s.'}]},
+{n:'2',c:'#059669',t:'Vowel + y rule',d:'Vowel before y? Simply add -s. The y stays.',eg:[{lbl:'VOWEL + Y',txt:'monkey (e+y) → monkeys | key (e+y) → keys | day (a+y) → days'},{lbl:'REMEMBER',txt:'boy→boys, toy→toys, way→ways — all vowel before y, just add s.'}]},
+{n:'3',c:'#10B981',t:'Words ending in -o',d:'No single rule fits all -o words. Learn the common ones.',eg:[{lbl:'ADD -ES',txt:'potato→potatoes, tomato→tomatoes, hero→heroes, echo→echoes'},{lbl:'ADD -S',txt:'photo→photos, piano→pianos, radio→radios, zoo→zoos'},{lbl:'TIP',txt:'Musical and modern words (piano, video, radio) usually just add -s.'}]}
+],tip:{t:'Quick test for -y words: what is the letter BEFORE the y? Write it down. Consonant? Change y to i + es. Vowel? Just add s. Works every time!',c:'#0A1A0A',b:'#10B981',tc:'#6EE7B7'}},
+
+{id:'subj_pred',sec:'Grammar',icon:'⚖️',ttl:'Subject and predicate',sub:'Every sentence has a subject and a predicate',fc:[
+{type:'mc',q:'What is the SUBJECT of a sentence?',a:'The person or thing the sentence is about — who or what does the action',eg:'The dog barked. — "The dog" is the subject. It tells us WHO barked.',w:['The action word in the sentence','The describing word','The joining word']},
+{type:'mc',q:'What is the PREDICATE of a sentence?',a:'Everything the sentence says about the subject — includes the verb and all other words',eg:'The dog barked loudly at the cat. — "barked loudly at the cat" is the predicate.',w:['Only the verb of the sentence','The subject of the sentence','The adjective in the sentence']},
+{type:'mc',q:'What is the subject of: "The old teacher wrote on the board."?',a:'The old teacher',eg:'Ask: WHO or WHAT wrote on the board? The old teacher = subject.',w:['wrote on the board','on the board','The old']},
+{type:'fill',q:'Identify the predicate.',pass:'In "The children played outside all day", the predicate is ___.',blanks:['played outside all day'],opts:['played outside all day','The children','The children played','children'],eg:'Predicate = everything said about the subject (the children).'},
+{type:'fix',q:'Add a predicate to complete the sentence.',pass:'The hungry lion ___.',a:'The hungry lion roared loudly.',hint:'The predicate must contain a verb.',eg:'Subject: The hungry lion. Predicate: roared loudly.'},
+{type:'tf',q:'Every complete sentence must have a subject AND a predicate.',a:'true',explanation:'Yes! A sentence without a subject or predicate is a fragment. "The dog" = fragment (no predicate). "The dog barked." = complete sentence.'},
+{type:'tf',q:'The predicate always contains a verb.',a:'true',explanation:'Yes! The predicate includes the verb plus everything else the sentence says about the subject. No verb = no predicate = not a complete sentence.'},
+{type:'tf',q:'The subject is always the first word of the sentence.',a:'false',explanation:'No! The subject can appear anywhere. "Down the street ran the children." — the subject "the children" comes at the end.'}
+],mm:{c:'Subject and Predicate',cc:'#F59E0B',b:[
+{l:'Subject',bg:'#1A1005',bd:'#F59E0B',tc:'#FDE68A',i:['WHO or WHAT the sentence is about','Includes noun/pronoun + any describing words','The hungry lion (subject)']},
+{l:'Predicate',bg:'#1A1005',bd:'#D97706',tc:'#FCD34D',i:['WHAT the subject does or is','Always contains the verb','roared loudly at the zebra (predicate)']},
+{l:'Finding each one',bg:'#1A1005',bd:'#F59E0B',tc:'#FDE68A',i:['Ask WHO or WHAT = subject','Ask WHAT DOES IT DO = predicate','Split the sentence at the verb']}
+]},rules:[
+{n:'1',c:'#F59E0B',t:'Two questions to find each part',d:'Two questions locate the subject and predicate in any sentence.',eg:[{lbl:'FIND SUBJECT',txt:'Ask: WHO or WHAT is this sentence about? That answer is the subject.'},{lbl:'FIND PREDICATE',txt:'Ask: What does the subject do or what is said about it? That is the predicate.'}]},
+{n:'2',c:'#D97706',t:'The predicate includes the verb',d:'The verb is always part of the predicate, never the subject.',eg:[{lbl:'EXAMPLE',txt:'"The tired boy | fell asleep quickly." Subject: The tired boy. Predicate: fell asleep quickly.'},{lbl:'TRICK',txt:'Find the verb first. Everything up to the verb (the who/what) = subject. The verb + everything after = predicate.'}]},
+{n:'3',c:'#F59E0B',t:'Simple vs complete subject/predicate',d:'The simple subject is just the main noun. The complete subject includes all describing words.',eg:[{lbl:'SIMPLE',txt:'"The old tired dog" — simple subject: dog. Complete subject: the old tired dog.'},{lbl:'SIMPLE PREDICATE',txt:'"ran quickly down the street" — simple predicate (verb): ran. Complete predicate: ran quickly down the street.'}]}
+],tip:{t:'Divide the sentence with a vertical line: "The old man | walked slowly." Everything before the line = subject. Everything after = predicate. The verb is always in the predicate.',c:'#1A1005',b:'#F59E0B',tc:'#FDE68A'}},
+
+{id:'finite_verbs',sec:'Grammar',icon:'⚡',ttl:'Verbs: finite and non-finite',sub:'Finite verbs, infinitives and participles',fc:[
+{type:'mc',q:'What is a FINITE verb?',a:'A verb that changes form to match the subject and tense',eg:'"She runs." / "They run." — the verb changes with subject. Finite verbs are the main verb of a clause.',w:['A verb that never changes form','A verb that always ends in -ing','A verb used only in questions']},
+{type:'mc',q:'What is a NON-FINITE verb (infinitive)?',a:'The base form of the verb, usually preceded by "to"',eg:'"I want to eat." / "She loves to dance." — to eat, to dance are infinitives.',w:['A verb that shows past tense','A verb that must agree with the subject','A verb that ends in -ed']},
+{type:'mc',q:'What is a PARTICIPLE?',a:'A verb form used as an adjective or in compound tenses',eg:'Present participle: running, eating (-ing). Past participle: eaten, broken, played (-ed/-en).',w:['A verb that shows the future','A verb used only in questions','A verb that replaces a noun']},
+{type:'fill',q:'Identify the finite verb.',pass:'The children are playing outside. The finite verb is ___.',blanks:['are'],opts:['are','playing','outside','children'],eg:'Are is the finite verb — it changes with subject and tense. Playing is a participle.'},
+{type:'tf',q:'A finite verb must agree with the subject of its clause.',a:'true',explanation:'Yes! She RUNS (singular). They RUN (plural). He IS happy. They ARE happy. The finite verb changes form to match the subject.'},
+{type:'tf',q:'The infinitive always contains the word "to".',a:'false',explanation:'Not always! "To eat" is the FULL infinitive, but bare infinitives drop "to": "I helped him carry the bags." (carry = bare infinitive without to).'},
+{type:'tf',q:'Present participles end in -ing.',a:'true',explanation:'Yes! Running, eating, swimming, writing — all present participles end in -ing. They are used in progressive tenses: She is running. They were eating.'},
+{type:'tf',q:'A sentence must have at least one finite verb.',a:'true',explanation:'Yes! Every complete sentence needs a finite verb — a verb that is linked to a subject and shows tense. Without a finite verb, it is a fragment.'}
+],mm:{c:'Types of Verbs',cc:'#EF4444',b:[
+{l:'Finite Verbs',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['Changes with subject and tense','She RUNS. They RUN.','Main verb of any clause']},
+{l:'Infinitives (non-finite)',bg:'#1A0505',bd:'#DC2626',tc:'#FCA5A5',i:['Base form of verb','to + verb: to eat, to run','Does not change with subject']},
+{l:'Participles (non-finite)',bg:'#1A0505',bd:'#EF4444',tc:'#FCA5A5',i:['Present: -ing (running, eating)','Past: -ed/-en (played, broken)','Used in compound tenses or as adj']}
+]},rules:[
+{n:'1',c:'#EF4444',t:'Finite verb test',d:'A finite verb has a subject and a tense. It can stand alone as the main verb of a sentence.',eg:[{lbl:'TEST',txt:'Can you say "yesterday, it ___"? If the verb fits, it is finite.'},{lbl:'FINITE',txt:'She RUNS. He ATE. They WILL GO. — all change with subject and tense.'},{lbl:'NON-FINITE',txt:'to run, running, eaten — no subject, no tense on their own.'}]},
+{n:'2',c:'#DC2626',t:'Infinitive uses',d:'Infinitives (to + verb) are used after certain verbs.',eg:[{lbl:'AFTER VERBS',txt:'want to, need to, love to, try to, hope to, decide to'},{lbl:'EXAMPLE',txt:'She WANTS TO EAT. He DECIDED TO LEAVE. I LOVE TO READ.'}]},
+{n:'3',c:'#EF4444',t:'Participles in compound tenses',d:'Participles combine with auxiliary verbs to form compound tenses.',eg:[{lbl:'PRESENT PARTICIPLE',txt:'She IS RUNNING. (is + running = present progressive)'},{lbl:'PAST PARTICIPLE',txt:'He HAS EATEN. (has + eaten = present perfect)'},{lbl:'BOTH',txt:'They HAVE BEEN PLAYING. (have + been + playing)'}]}
+],tip:{t:'Finite verb = boss of the sentence. It has a subject and a tense. If the verb changes when you swap "she" for "they", it is finite. Non-finite verbs never change.',c:'#1A0505',b:'#EF4444',tc:'#FCA5A5'}}
 ]}};
 // Set T to active subject terms (all existing code uses T unchanged)
 // ── Afrikaans EAT (Eerste Addisionele Taal) ────────────────────
@@ -1883,6 +2010,156 @@ SUBJECTS.afrikaans_ht={
 {n:'3',c:'#EF4444',t:'Grafiek-vrae',d:'Gebruik altyd spesifieke syfers uit die grafiek in jou antwoord.',eg:[{lbl:'SWAK',txt:'"Die waarde het baie gestyg." — geen syfers nie.'},{lbl:'STERK',txt:'"Die waarde het met 40% gestyg van 2020 tot 2022."'},{lbl:'REEL',txt:'Elke antwoord oor \'n grafiek moet ten minste een syfer bevat.'}]}
 ],tip:{t:'Kyk na elke visuele teks vir ten minste 30 sekondes voor jy begin skryf. Soek na kleur, posisie, grootte, gesiguitdrukkings en teks. Elke detail kan punte verdien.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
 
+,
+
+{id:'aht_alfa',sec:'Taalstrukture',icon:'🔡',ttl:'Alfabetiese Volgorde',sub:'Woorde alfabeties rangskik en woordeboekvaardighede',fc:[
+{type:'mc',q:'Watter reeks is in die KORREKTE alfabetiese volgorde?',a:'appel, boom, dag, eend',eg:'a-b-c-d-e-f: appel (a), boom (b), dag (d), eend (e) = korrekte volgorde',w:['boom, appel, eend, dag','dag, boom, appel, eend','eend, dag, boom, appel']},
+{type:'mc',q:'As twee woorde dieselfde eerste letter het, wat doen jy?',a:'Kyk na die TWEEDE letter van elke woord',eg:'bad, bal, berg — b is dieselfde, so kyk na die tweede letter: a (bad/bal) dan e (berg). bad/bal: a is dieselfde, kyk na 3de: d vs l — d kom voor l.',w:['Kyk na die laaste letter','Kyk na die langste woord','Die volgorde maak nie saak nie']},
+{type:'mc',q:'In watter alfabetiese volgorde kom hierdie woorde? stoel, skoene, skool',a:'skoene, skool, stoel',eg:'sk-o-e-n-e vs sk-o-o-l vs st-o-e-l: sk voor st. Tussen skoene/skool: sko-e vs sko-o — e (5de letter) voor o (15de letter).',w:['stoel, skoene, skool','skool, skoene, stoel','skoene, stoel, skool']},
+{type:'fill',q:'Rangskik hierdie woorde alfabeties (eerste woord).',pass:'kat, appel, boom — die eerste woord is ___.',blanks:['appel'],opts:['appel','kat','boom','seun'],eg:'a kom voor b en k in die alfabet.'},
+{type:'tf',q:'Die alfabet het 26 letters.',a:'true',explanation:'Ja! a b c d e f g h i j k l m n o p q r s t u v w x y z — 26 letters. Afrikaans gebruik dieselfde alfabet as Engels.'},
+{type:'tf',q:'As twee woorde begin met dieselfde letter, kan hulle in enige volgorde wees.',a:'false',explanation:'Nee! As twee woorde dieselfde eerste letter het, kyk jy na die TWEEDE letter. Dan die derde, ens. Hierdie proses gaan voort totdat jy n verskil vind.'},
+{type:'tf',q:'Alfabetiese volgorde word gebruik in woordeboeke en ensiklopediee.',a:'true',explanation:'Ja! Woordeboeke, ensiklopediee, naamlys, register — almal gebruik alfabetiese volgorde sodat jy woorde vinnig kan vind.'}
+],mm:{c:'Alfabetiese Volgorde',cc:'#F97316',b:[
+{l:'Die Alfabet',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['a b c d e f g h i j k l m','n o p q r s t u v w x y z','26 letters in totaal']},
+{l:'Hoe om te rangskik',bg:'#1A0D05',bd:'#F59E0B',tc:'#FDE68A',i:['Kyk na die eerste letter','As eenders: kyk na die tweede','Gaan voort tot jy n verskil vind']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Letter vir letter metode',d:'Vergelyk een letter op n slag, van links na regs.',eg:[{lbl:'STAP 1',txt:'Kyk na die eerste letter. Watter een kom eerder in die alfabet?'},{lbl:'STAP 2',txt:'As eerste letters dieselfde is, kyk na die tweede letter.'},{lbl:'STAP 3',txt:'Gaan voort tot jy n verskil vind.'}]},
+{n:'2',c:'#F59E0B',t:'Alfabet uitdeel-truuk',d:'Verdeel die alfabet in vier kwarte om vinnig te soek.',eg:[{lbl:'DEEL 1 (a-f)',txt:'a b c d e f — begin van die alfabet'},{lbl:'DEEL 2 (g-m)',txt:'g h i j k l m — eerste helfte'},{lbl:'DEEL 3 (n-s)',txt:'n o p q r s — tweede helfte'},{lbl:'DEEL 4 (t-z)',txt:'t u v w x y z — einde van die alfabet'}]}
+],tip:{t:'Om vinnig te rangskik: sorteer eers op die eerste letter. Groepeer dan al die woorde met dieselfde eerste letter en sorteer hulle op die tweede letter.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'aht_klankgrepe',sec:'Taalstrukture',icon:'🔤',ttl:'Klankgrepe en Lettergrepe',sub:'Woorde in lettergrepe verdeel en beklemtoning',fc:[
+{type:'mc',q:'Hoeveel lettergrepe het "skooljuffrou"?',a:'3',eg:'skool-juf-frou = 3 lettergrepe. Elke lettergreep het n klinker.',w:['2','4','5']},
+{type:'mc',q:'Hoe verdeel jy "tafel" in lettergrepe?',a:'ta-fel',eg:'ta (klinker a) + fel (klinker e) = 2 lettergrepe',w:['taf-el','t-afel','ta-f-el']},
+{type:'mc',q:'Watter woord het 4 lettergrepe?',a:'onderwyser',eg:'on-der-wy-ser = 4 lettergrepe',w:['skool','juffrou','leerder']},
+{type:'fill',q:'Verdeel die woord in lettergrepe.',pass:'"blomme" verdeel as ___.',blanks:['blom-me'],opts:['blom-me','bl-omme','b-lom-me','blomme'],eg:'blom (klinker o) + me (klinker e) = 2 lettergrepe'},
+{type:'tf',q:'Elke lettergreep het n klinker (a, e, i, o, u).',a:'true',explanation:'Ja! Elke lettergreep moet n klinker he. Tel die klinkers om lettergrepe te tel.'},
+{type:'tf',q:'Die woord "kat" het twee lettergrepe.',a:'false',explanation:'Nee! "kat" het EEN lettergreep — een klinker (a) = een lettergreep.'},
+{type:'tf',q:'Jy kan jou hande klap om lettergrepe te tel.',a:'true',explanation:'Ja! Klap vir elke lettergreep: ta-FEL (2 klappe), on-der-wy-ser (4 klappe). Dit is die maklikste metode.'}
+],mm:{c:'Klankgrepe en Lettergrepe',cc:'#F97316',b:[
+{l:'Wat is n lettergreep?',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['n Deel van n woord','Elke deel het n klinker','skool-juf-frou = 3 dele']},
+{l:'Hoe tel jy dit?',bg:'#1A0D05',bd:'#F59E0B',tc:'#FDE68A',i:['Tel die klinkers (a,e,i,o,u)','Klap jou hande vir elke deel','Elke klinker = een lettergreep']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Tel die klinkers',d:'Die maklikste manier: tel die klinkers in die woord.',eg:[{lbl:'KLINKERS',txt:'a, e, i, o, u — die vyf klinkers'},{lbl:'VOORBEELD',txt:'"blomme" — blOmmE = 2 klinkers = 2 lettergrepe'},{lbl:'OEFEN',txt:'ta-fel (2), on-der-wy-ser (4), skool-juf-frou (3)'}]},
+{n:'2',c:'#F59E0B',t:'Beklemtoonde lettergreep',d:'Een lettergreep in n woord word harder uitgespreek. Dit is die beklemtoonde lettergreep.',eg:[{lbl:'VOORBEELD',txt:'ta-FEL — FEL word beklemtoon'},{lbl:'VOORBEELD',txt:'ON-der-wy-ser — ON word beklemtoon'},{lbl:'GEBRUIK',txt:'Beklemtoning kan die betekenis van n woord verander.'}]}
+],tip:{t:'Klap jou hande saggies vir elke lettergreep terwyl jy die woord se. Dit is die vinnigste en maklikste manier om lettergrepe te tel — selfs tydens n toets!',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'aht_verklein',sec:'Taalstrukture',icon:'🐾',ttl:'Verkleinwoorde',sub:'Hoe om verkleinwoorde in Afrikaans te vorm',fc:[
+{type:'mc',q:'Wat is die verkleinwoord van "kat"?',a:'katjie',eg:'kat + jie = katjie. -tjie of -jie word na die meeste woorde gevoeg.',w:['kattie','kattjie','katies']},
+{type:'mc',q:'Watter uitgang gebruik jy vir die verkleinwoord van "huis"?',a:'-ie (huisie)',eg:'Woorde wat op s, f, g, k eindig kry -ie: huis→huisie, brief→briefie',w:['-jie (huisjie)','-tjie (huistjie)','-etjie (huisetjie)']},
+{type:'mc',q:'Wat is die verkleinwoord van "boom"?',a:'boompie',eg:'Woorde wat op m, n, ng, l, r eindig kry -pie: boom→boompie, tuin→tuintjie',w:['boomjie','boomtjie','boomie']},
+{type:'fill',q:'Kies die korrekte verkleinwoord.',pass:'Die kind koop n klein ___ by die winkel.',blanks:['broodjie'],opts:['broodjie','broodtjie','broodie','broodjies'],eg:'brood + jie = broodjie'},
+{type:'fix',q:'Korrigeer die verkleinwoord.',pass:'Sy het n nuwe hondtjie gekry.',a:'Sy het n nuwe hondjie gekry.',hint:'hond + jie = hondjie (nie hondtjie)',eg:'hond → hondjie'},
+{type:'tf',q:'"Katjie" is die korrekte verkleinwoord van "kat".',a:'true',explanation:'Ja! kat + jie = katjie. Baie woorde kry -tjie of -jie: katjie, hondjie, broodjie, bandjie.'},
+{type:'tf',q:'Alle verkleinwoorde kry die uitgang -tjie.',a:'false',explanation:'Nee! Verskillende uitgangs: -jie (hondjie), -tjie (katjie), -ie (huisie), -pie (boompie). Die uitgang hang af van die laaste letter(s) van die woord.'},
+{type:'tf',q:'Verkleinwoorde word gebruik om iets kleiner of liefdes voor te stel.',a:'true',explanation:'Ja! Verkleinwoorde wys dat iets KLEIN is (katjie = klein kat) OF dat jy LIEF is vir iets (mamma, pappa, sussie). Konteks bepaal die betekenis.'}
+],mm:{c:'Verkleinwoorde',cc:'#F97316',b:[
+{l:'-tjie (meeste woorde)',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['kat→katjie, pot→potjie','hand→handjie, band→bandjie','Meeste woorde gebruik -tjie']},
+{l:'-jie',bg:'#1A0D05',bd:'#F59E0B',tc:'#FDE68A',i:['hond→hondjie, brood→broodjie','Na d, t, s, f, g, k, p, b']},
+{l:'-ie',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['huis→huisie, roos→roosie','Na s, f, g, k word -ie gebruik']},
+{l:'-pie en -etjie',bg:'#1A0D05',bd:'#F59E0B',tc:'#FDE68A',i:['boom→boompie, trou→troutjie','-etjie vir eenlettergrepige woorde','Leer die uitsonderings uit']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Die vier vernaamste uitgangs',d:'Die korrekte uitgang hang af van die laaste letter(s) van die woord.',eg:[{lbl:'-tjie (algemeen)',txt:'kat→katjie, pot→potjie, hand→handjie'},{lbl:'-jie',txt:'hond→hondjie, brood→broodjie'},{lbl:'-ie',txt:'huis→huisie, roos→roosie'},{lbl:'-pie',txt:'boom→boompie, tuin→tuintjie'}]},
+{n:'2',c:'#F59E0B',t:'Gebruik van verkleinwoorde',d:'Verkleinwoorde het twee hoofgebruike in Afrikaans.',eg:[{lbl:'KLEIN',txt:'katjie = n klein kat. hondjie = n klein hond.'},{lbl:'LIEF / SAG',txt:'mammie, pappie, sussie, broertjie — affeksie of teerheid'},{lbl:'KONTEKS',txt:'Die gebruik hang af van die sin en die toon.'}]}
+],tip:{t:'Verkleinwoorde is n eiesoortige kenmerk van Afrikaans! Leer die vier uitgangs: -tjie (meeste), -jie (na sekere medeklinkers), -ie (na s/f/g/k), -pie (na m/n/l/r).',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'aht_idiome',sec:'Woordeskat',icon:'💬',ttl:'Idiome',sub:'Uitdrukkings met n figuurlike betekenis',fc:[
+{type:'mc',q:'Wat beteken die idioom "dit reent katte en honde"?',a:'Dit reent baie swaar',eg:'Idiome het n figuurlike betekenis — die letterlike betekenis maak nie sin nie.',w:['Diere val uit die lug','Dit is n ligte reen','Die diere is nat']},
+{type:'mc',q:'Wat beteken "hy is onder die grond in"?',a:'Hy weet baie meer as wat hy laat blyk',eg:'Iemand wat "onder die grond in is" het baie kennis of inligting wat hulle verberg.',w:['Hy is begrawe','Hy is in n gat','Hy het ingegaan']},
+{type:'mc',q:'Wat beteken "sy het koue voete gekry"?',a:'Sy het teruggedeinsd of bang geword',eg:'Koue voete kry = bang word op die laaste oomblik en nie deurdruk met n plan nie.',w:['Haar voete was koud','Sy het nuwe skoene nodig','Sy het n siekte gekry']},
+{type:'id',q:'Verduidelik die verskil tussen n idioom en n spreekwoord.',a:'n Idioom is n uitdrukking met n figuurlike betekenis wat nie letterlik verstaan kan word nie. n Spreekwoord is n volsin met n lewensles of wyse raad.',hint:'Dink aan: is dit n volsin? Gee dit lewensadvies?',eg:'Idioom: koue voete kry (bang word). Spreekwoord: Alle baat help (elke bietjie tel).'},
+{type:'tf',q:'n Idioom kan letterlik verstaan word.',a:'false',explanation:'Nee! n Idioom moet FIGUURLIK verstaan word. "Dit reent katte en honde" beteken nie werklik dat diere val nie — dit beteken dit reent baie swaar.'},
+{type:'tf',q:'Die idioom "iemand om die bos lei" beteken om iemand te mislei.',a:'true',explanation:'Ja! Om iemand om die bos te lei = om hulle te mislei of te bedrieg. Dit is n figuurlike uitdrukking.'},
+{type:'tf',q:'Idiome is spesifiek aan een taal en kan nie direk vertaal word nie.',a:'true',explanation:'Ja! Idiome is taaleie — hulle kan nie woord-vir-woord vertaal word nie. "Koue voete kry" in Afrikaans is "to get cold feet" in Engels — dieselfde idee, maar verskillende woorde.'}
+],mm:{c:'Idiome',cc:'#F97316',b:[
+{l:'Wat is n idioom?',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Figuurlike uitdrukking','Letterlike betekenis maak nie sin','Moet uit die kop geleer word']},
+{l:'Algemene idiome',bg:'#1A0D05',bd:'#F59E0B',tc:'#FDE68A',i:['Koue voete kry = bang word','Om die bos lei = mislei','Boontjie kry sy loontjie = straf kry']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Idioom vs spreekwoord',d:'Idiome is frases. Spreekwoorde is volsinne met lewensadvies.',eg:[{lbl:'IDIOOM (frase)',txt:'koue voete kry, om die bos lei, in die wolke wees'},{lbl:'SPREEKWOORD (volsin)',txt:'Alle baat help. Boontjie kry sy loontjie. n Mens leer solank jy leef.'}]},
+{n:'2',c:'#F59E0B',t:'Figuurlike vs letterlike betekenis',d:'Lees die idioom eers letterlik. As dit nie sin maak nie, is dit figuurlik.',eg:[{lbl:'TOETS',txt:'"Hy is in die wolke." Letterlik: hy is fisies in wolke? Onmoontlik. Figuurlik: hy is baie bly.'},{lbl:'TOETS',txt:'"Sy kry koue voete." Letterlik: haar voete is koud? Of figuurlik: sy word bang?'}]}
+],tip:{t:'Maak jou eie idioom-woordeboekjie! Skryf elke nuwe idioom neer met sy figuurlike betekenis en n voorbeeldsin. Hersien dit gereeld voor toetse.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'aht_akronieme',sec:'Taalstrukture',icon:'🔡',ttl:'Akronieme en Afkortings',sub:'Verkorte vorms van woorde en frases',fc:[
+{type:'mc',q:'Wat is n akroniem?',a:'n Woord gevorm uit die begin-letters van n frase wat as n nuwe woord uitgespreek word',eg:'NASA (National Aeronautics and Space Administration), SARS, SANDF — uitgespreek as woorde.',w:['n Verkorte vorm van een woord','n Woord met n koppelteken','n Woord met n deelteken']},
+{type:'mc',q:'Wat is n afkorting?',a:'n Verkorte skryfvorm van n woord of frase, gewoonlik gevolg deur n punt',eg:'Dr. (Doktor), mnr. (meneer), bl. (bladsy), ens. (ensovoorts)',w:['n Woord wat letter-vir-letter uitgespreek word','n Lang woord wat verdeel word','n Saamgestelde woord']},
+{type:'mc',q:'Wat is die verskil tussen n akroniem en n afkorting?',a:'n Akroniem word as n woord uitgespreek; n afkorting word letter-vir-letter gespel of as die volledige woord',eg:'NASA = akroniem (uitgespreek as woord). Dr. = afkorting (jy se "doktor" of "dee-er").',w:['Daar is geen verskil nie','n Akroniem gebruik koppeltekens','n Afkorting is altyd in hoofletters']},
+{type:'fill',q:'Kies die korrekte afkorting vir "Meneer".',pass:'___ Pieterse sal more kom.',blanks:['Mnr.'],opts:['Mnr.','Mev.','Dr.','Prof.'],eg:'Mnr. = Meneer. Mev. = Mevrou. Dr. = Doktor.'},
+{type:'tf',q:'n Akroniem word letter-vir-letter uitgespreek.',a:'false',explanation:'Nee! n Akroniem word as n WOORD uitgespreek: NASA (naa-sa), SARS (sars). n Inisialisme word letter-vir-letter uitgespreek: RSA (R-S-A), VSA (V-S-A).'},
+{type:'tf',q:'Afkortings word gewoonlik gevolg deur n punt.',a:'true',explanation:'Ja! Dr. Mnr. Mev. bl. ens. usw. — die punt wys dit is n afkorting. Akronieme gebruik gewoonlik nie punte nie: NASA SARS SANDF.'},
+{type:'tf',q:'SARS is n voorbeeld van n akroniem.',a:'true',explanation:'Ja! SARS = South African Revenue Service. Dit word as een woord uitgespreek (sars) = akroniem.'}
+],mm:{c:'Akronieme en Afkortings',cc:'#F97316',b:[
+{l:'Akronieme',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Begin-letters van n frase','Uitgespreek as n woord','NASA, SARS, SANDF']},
+{l:'Afkortings',bg:'#1A0D05',bd:'#F59E0B',tc:'#FDE68A',i:['Verkorte vorm van n woord','Gevolg deur n punt','Dr. Mnr. Mev. bl. ens.']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Akroniem of afkorting?',d:'Vra: word dit as n woord uitgespreek of letter-vir-letter?',eg:[{lbl:'AKRONIEM (word)',txt:'NASA, SARS, SANDF, UNESCO — uitgespreek as woorde'},{lbl:'AFKORTING (letters)',txt:'Dr. Mnr. bl. ens. — jy se die volledige woord of elke letter apart'}]},
+{n:'2',c:'#F59E0B',t:'Algemene Afrikaanse afkortings',d:'Leer hierdie veelgebruikte afkortings.',eg:[{lbl:'TITELAFKORTINGS',txt:'Mnr. (Meneer), Mev. (Mevrou), Dr. (Doktor), Prof. (Professor)'},{lbl:'ALGEMEEN',txt:'bl. (bladsy), ens. (ensovoorts), d.w.s. (dit wil se), t.o.v. (ten opsigte van)'}]}
+],tip:{t:'Akroniem = uitgespreek as n WOORD (NASA). Afkorting = jy se die volledige woord of elke letter (Dr = Doktor). Dit is die sleutelverskil!',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'aht_skryftekens',sec:'Taalstrukture',icon:'✍️',ttl:'Skryftekens: Koppelteken en Deelteken',sub:'Koppelteken (-) en deelteken (twee kolletjies oe, ui, ieu)',fc:[
+{type:'mc',q:'Wanneer gebruik jy n KOPPELTEKEN (-)?',a:'Om twee dele van n saamgestelde woord te verbind of n woord aan die end van n reel te verdeel',eg:'gees-krag, man-like, derde-graads, Noord-Amerika. Ook: woordverdeling aan die einde van n reel.',w:['Om n sin te eindig','Om n lys in te lei','Om n aanhaling te wys']},
+{type:'mc',q:'Watter woord het n DEELTEKEN nodig?',a:'oefening',eg:'Deelteken word gebruik waar twee vokale afsonderlik uitgespreek word: o-e-fening (die o en e is afsonderlik).',w:['boom','eten','roep']},
+{type:'mc',q:'In watter woord word die koppelteken KORREK gebruik?',a:'Noord-Kaap',eg:'Eiename wat uit twee dele bestaan kry n koppelteken: Noord-Kaap, Suid-Afrika, Klein-Karoo.',w:['hond-e','kat-jie','skool-boek']},
+{type:'fix',q:'Voeg die korrekte skryfteken by.',pass:'Die seun het n goeie geestige gevoel.',a:'Die seun het n goeie geestige gevoel.',hint:'Kyk of enige vokale afsonderlik uitgespreek word.',eg:'geestige: die ee is n enkele klank, geen deelteken nodig.'},
+{type:'tf',q:'n Koppelteken verbind twee woorde of woorddele.',a:'true',explanation:'Ja! Koppeltekens verbind saamgestelde woorde (gees-krag), eiename (Suid-Afrika), rangtelwoorde (derde-graads), en verdeel woorde aan die einde van n reel.'},
+{type:'tf',q:'n Deelteken (twee kolletjies) word gebruik wanneer twee vokale as EEN klank uitgespreek word.',a:'false',explanation:'Nee! n Deelteken word gebruik wanneer twee vokale AFSONDERLIK uitgespreek word: ge-er (twee aparte klanke). Wanneer hulle saam uitgespreek word (soos oe in moet) is daar geen deelteken.'},
+{type:'tf',q:'"Suid-Afrika" skryf jy met n koppelteken.',a:'true',explanation:'Ja! Saamgestelde eiename wat uit twee dele bestaan kry n koppelteken: Suid-Afrika, Noord-Kaap, Klein-Karoo, Oos-Londen.'}
+],mm:{c:'Koppelteken en Deelteken',cc:'#F97316',b:[
+{l:'Koppelteken (-)',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Verbind twee woorddele','Noord-Kaap, Suid-Afrika','Woordverdeling aan reel-einde']},
+{l:'Deelteken (twee kolletjies)',bg:'#1A0D05',bd:'#F59E0B',tc:'#FDE68A',i:['Twee vokale afsonderlik uitgespreek','oe (in oe-fen, nie in moet)','Voorbeelde: eeu, oefening']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Koppelteken gebruike',d:'Vier hoofgebruike van die koppelteken.',eg:[{lbl:'SAAMGESTELDE EIENAME',txt:'Suid-Afrika, Noord-Kaap, Klein-Karoo'},{lbl:'SAAMGESTELDE WOORDE',txt:'gees-krag, aas-vooel, self-versekerd'},{lbl:'RANGTELWOORDE',txt:'eerste-graads, derde-kwartaal'},{lbl:'REELVERDELING',txt:'Verdeel woorde op lettergreepgrense aan reeloorde'}]},
+{n:'2',c:'#F59E0B',t:'Deelteken toets',d:'Spreek die woord hardop uit. Hoor jy twee afsonderlike vokale? Dan is n deelteken nodig.',eg:[{lbl:'DEELTEKEN NODIG',txt:'oefening (o-e apart), eeu (e-e-u apart), geeer (g-e-e-r)'},{lbl:'GEEN DEELTEKEN',txt:'moet (oe is een klank), boek (oe is een klank)'}]}
+],tip:{t:'Koppelteken (-) verbind dinge. Deelteken (twee kolletjies) skei klanke. Spreek die woord hardop uit — as jy twee aparte vokale hoor, benodig jy n deelteken.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'aht_woordvorming',sec:'Taalstrukture',icon:'🔧',ttl:'Woordvorming: Voorvoegsels en Agtervoegsels',sub:'Basisvorme, voorvoegsels, agtervoegsels en woordvorming',fc:[
+{type:'mc',q:'Wat is n VOORVOEGSEL?',a:'n Letter of lettergroep wat VOOR n basisvorm gevoeg word om n nuwe woord te maak',eg:'on- + gelukkig = ongelukkig. ver- + duidelik = verduidelik. be- + handel = behandel.',w:['n Letter wat AGTER n woord gevoeg word','n Los woord wat n sin verbind','n Uitgang wat n meervoud vorm']},
+{type:'mc',q:'Watter voorvoegsel keer die betekenis om?',a:'on-',eg:'on- + eerlik = oneerlik. on- + moontlik = onmoontlik. on- + gelukkig = ongelukkig.',w:['ver-','be-','ge-']},
+{type:'mc',q:'Watter agtervoegsel verander n werkwoord na n persoon?',a:'-er',eg:'leer + -er = leerder. speel + -er = speler. werk + -er = werker.',w:['-heid','-ing','-lik']},
+{type:'fill',q:'Kies die korrekte voorvoegsel.',pass:'Sy was ___ gelukkig met die uitslag.',blanks:['on'],opts:['on','ver','be','ge'],eg:'on- + gelukkig = ongelukkig (die teenoorgestelde van gelukkig)'},
+{type:'tf',q:'n Basisvorm is die eenvoudigste vorm van n woord waaruit ander woorde gebou word.',a:'true',explanation:'Ja! Basisvorm = die kern van die woord. Byvoorbeeld: "loop" is die basisvorm. Geloop, geloophet, loper, rondloop — almal is gebou op die basisvorm "loop".'},
+{type:'tf',q:'"Ongelukkig" het die voorvoegsel "on-" en die basisvorm "gelukkig".',a:'true',explanation:'Ja! on- (voorvoegsel) + gelukkig (basisvorm) = ongelukkig. Die voorvoegsel on- keer die betekenis om.'},
+{type:'tf',q:'Agtervoegsels word VOOR die basisvorm gevoeg.',a:'false',explanation:'Nee! AGTER-voegsels kom AGTER die basisvorm: gelukkig + -heid = gelukKIGHEID. VOOR-voegsels kom voor: on- + gelukkig.'}
+],mm:{c:'Woordvorming',cc:'#F97316',b:[
+{l:'Basisvorm',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Die kern van n woord','loop, werk, gelukkig','Alle ander vorme bou hierop']},
+{l:'Voorvoegsels',bg:'#1A0D05',bd:'#F59E0B',tc:'#FDE68A',i:['Kom VOOR die basisvorm','on- (ontken), ver-, be-, ge-','on+eerlik = oneerlik']},
+{l:'Agtervoegsels',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Kom AGTER die basisvorm','-heid, -ing, -er, -lik, -loos','-heid: gelukkig+heid = gelukKIGHEID']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Voorvoegsels en hul betekenisse',d:'Leer hierdie veelgebruikte voorvoegsels en wat hulle beteken.',eg:[{lbl:'ON- (teendeel)',txt:'on+gelukkig=ongelukkig, on+eerlik=oneerlik'},{lbl:'VER- (verandering)',txt:'ver+duidelik=verduidelik, ver+koop=verkoop'},{lbl:'BE- (aksie)',txt:'be+handel=behandel, be+spreek=bespreek'},{lbl:'GE- (verlede tyd)',txt:'ge+loop=geloop, ge+eet=geeet'}]},
+{n:'2',c:'#F59E0B',t:'Agtervoegsels en woordsoorte',d:'Agtervoegsels kan die woordsoort verander.',eg:[{lbl:'-HEID (adjektief→naamwoord)',txt:'gelukkig→geluk KIGHEID, eerlik→eerlikHEID'},{lbl:'-ING (werkwoord→naamwoord)',txt:'onderrig→onderrigING, oefening'},{lbl:'-ER (werkwoord→persoon)',txt:'leer→leerDER, speel→speLER'}]}
+],tip:{t:'Onthou: VOOR-voegsel kom VOOR die basisvorm. AGTER-voegsel kom AGTER die basisvorm. Die basisvorm is die kern — jy kan dit alleen gebruik as n woord.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'aht_sinsontleding',sec:'Taalstrukture',icon:'⚖️',ttl:'Sinsontleding',sub:'Onderwerp, gesegde en voorwerp van n sin',fc:[
+{type:'mc',q:'Wat is die ONDERWERP van n sin?',a:'Die persoon of ding wat die handeling verrig — wie of wat die sin oor gaan',eg:'"Die hond blaf." — Die hond is die onderwerp. Hy verrig die handeling.',w:['Die werkwoord in die sin','Die beskrywende woord','Die verbindingswoord']},
+{type:'mc',q:'Wat is die GESEGDE van n sin?',a:'Die werkwoord (of werkwoordgroep) wat wys wat die onderwerp doen',eg:'"Die hond blaf luid." — blaf is die gesegde. Dit wys wat die hond doen.',w:['Die naamwoord in die sin','Die bywoord in die sin','Die onderwerp van die sin']},
+{type:'mc',q:'Wat is die VOORWERP van n sin?',a:'Die persoon of ding wat die handeling ontvang — dit ontvang die aksie',eg:'"Die seun gooi die bal." — die bal is die voorwerp. Dit ontvang die handeling (gooi).',w:['Die persoon wat die handeling verrig','Die werkwoord wat die handeling wys','Die bywoord wat die handeling beskryf']},
+{type:'fill',q:'Identifiseer die voorwerp.',pass:'In "Die meisie lees die boek", is die voorwerp ___.',blanks:['die boek'],opts:['die boek','die meisie','lees','die'],eg:'Vra: wat lees die meisie? Die boek = voorwerp.'},
+{type:'tf',q:'Die onderwerp verrig die handeling in die sin.',a:'true',explanation:'Ja! Die onderwerp = die persoon of ding wat die handeling DOEN. Vra: WIE of WAT doen dit? Die antwoord is die onderwerp.'},
+{type:'tf',q:'Elke sin het altyd n voorwerp.',a:'false',explanation:'Nee! Sommige sinne het geen voorwerp nie: "Die hond blaf." Blaf wat? Niks — geen voorwerp. n Sin het net n voorwerp as die werkwoord n objek nodig het.'},
+{type:'tf',q:'"Die kinders speel sokker." — "sokker" is die voorwerp.',a:'true',explanation:'Ja! Vra: wat speel die kinders? Sokker. Sokker ontvang die handeling (speel) = voorwerp.'}
+],mm:{c:'Sinsontleding',cc:'#F97316',b:[
+{l:'Onderwerp (O)',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Verrig die handeling','Vra: WIE of WAT?','Die hond, Die kinders']},
+{l:'Gesegde (G)',bg:'#1A0D05',bd:'#F59E0B',tc:'#FDE68A',i:['Wys wat die onderwerp doen','Vra: WAT DOEN dit?','blaf, speel, loop, lees']},
+{l:'Voorwerp (V)',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Ontvang die handeling','Vra: WAT of VIR WIE?','die bal, die boek, n lied']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Drie vrae vir drie sinsdele',d:'Gebruik drie vrae om onderwerp, gesegde en voorwerp te vind.',eg:[{lbl:'ONDERWERP',txt:'Vra: WIE of WAT doen die handeling?'},{lbl:'GESEGDE',txt:'Vra: WAT DOEN die onderwerp? (dit is die werkwoord)'},{lbl:'VOORWERP',txt:'Vra: WAT of VIR WIE word die handeling gedoen?'}]},
+{n:'2',c:'#F59E0B',t:'Orde in n Afrikaanse sin',d:'Die tipiese volgorde van sinsdele in Afrikaans is O-G-V.',eg:[{lbl:'O - G - V',txt:'Die seun | gooi | die bal. (Onderwerp - Gesegde - Voorwerp)'},{lbl:'VOORBEELD',txt:'Die meisie | lees | n boek. O=meisie, G=lees, V=n boek.'}]}
+],tip:{t:'Vind eers die werkwoord (gesegde). Dan vra: WIE of WAT doen dit? = onderwerp. Dan vra: WAT of VIR WIE? = voorwerp. Hierdie volgorde werk altyd.',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}},
+
+{id:'aht_homonieme',sec:'Woordeskat',icon:'👂',ttl:'Homonieme en Homofone',sub:'Woorde met dieselfde klank of spelling maar verskillende betekenisse',fc:[
+{type:'mc',q:'Wat is HOMONIEME in Afrikaans?',a:'Woorde wat dieselfde gespel word maar verskillende betekenisse het',eg:'bank (sitplek) en bank (finansiele instelling). Dieselfde spelling, verskillende betekenis.',w:['Woorde wat dieselfde klink maar verskillend gespel word','Woorde met teenoorgestelde betekenisse','Woorde wat saamgestel is']},
+{type:'mc',q:'Wat is HOMOFONE in Afrikaans?',a:'Woorde wat dieselfde klink maar verskillend gespel word en verskillende betekenisse het',eg:'bier (die drankie) en bier (om te dra, soos n baar). Dieselfde klank, verskillende spelling.',w:['Woorde wat dieselfde gespel word','Woorde met dieselfde betekenis','Saamgestelde woorde']},
+{type:'mc',q:'Watter stel is n voorbeeld van HOMONIEME?',a:'bank (sitplek) en bank (finansieel)',eg:'Dieselfde spelling, verskillende betekenis = homoniem.',w:['been (bene) en baan (loopbaan)','groot en klein','leer en leer (dieselfde woord)']},
+{type:'fill',q:'Kies die korrekte homofoon.',pass:'Sy het die kis gedra op haar ___.',blanks:['baar'],opts:['baar','bier','beer','baer'],eg:'baar = draagbaar/baar om op te dra. bier = die drankie.'},
+{type:'tf',q:'Homonieme het dieselfde spelling maar verskillende betekenisse.',a:'true',explanation:'Ja! bank (sitplek) = bank (finansieel). Dieselfde spelling, maar die betekenis hang af van die konteks.'},
+{type:'tf',q:'Homofone klink dieselfde maar word verskillend gespel.',a:'true',explanation:'Ja! bier (drank) en baar (draagbaar) klink amper dieselfde maar het verskillende spellings en betekenisse. Konteks bepaal watter een jy bedoel.'},
+{type:'tf',q:'Jy kan altyd die konteks gebruik om die regte homofoon of homoniem te kies.',a:'true',explanation:'Ja! Lees die sin rondom die woord. "Ek sit op die bank" — bank = sitplek. "Ek gaan geld uit die bank haal" — bank = finansieel.'}
+],mm:{c:'Homonieme en Homofone',cc:'#F97316',b:[
+{l:'Homonieme',bg:'#1A0D05',bd:'#F97316',tc:'#FED7AA',i:['Dieselfde SPELLING','Verskillende BETEKENIS','bank, veer, maat, rug']},
+{l:'Homofone',bg:'#1A0D05',bd:'#F59E0B',tc:'#FDE68A',i:['Dieselfde KLANK','Verskillende SPELLING en BETEKENIS','bier/baar, wees/waas']}
+]},rules:[
+{n:'1',c:'#F97316',t:'Homonieme herken',d:'Dieselfde woord, twee verskillende betekenisse. Konteks bepaal die betekenis.',eg:[{lbl:'BANK',txt:'Sit op die bank. (meubel) vs Geld by die bank stoor. (instelling)'},{lbl:'VEER',txt:'Die voels veer is pienk. (plume) vs Die veer span. (sprong-ding)'}]},
+{n:'2',c:'#F59E0B',t:'Homofone onderskei',d:'Klink dieselfde, word verskillend gespel. Leer die paar en hul betekenisse.',eg:[{lbl:'KONTEKS',txt:'Lees die sin rondom die woord om te bepaal watter spelling korrek is.'},{lbl:'WOORDEBOEK',txt:'As jy onseker is, soek die woord in n woordeboek.'}]}
+],tip:{t:'Homoniem = HO-mo (dieselfde) + niem (naam) = dieselfde naam (spelling). Homofoon = HO-mo (dieselfde) + foon (klank) = dieselfde klank. Die naam verklap die betekenis!',c:'#1A0D05',b:'#F97316',tc:'#FED7AA'}}
 ]}};
 
 // ── Afrikaans EAT (Eerste Addisionele Taal) — Coming soon ──────
@@ -2149,8 +2426,163 @@ SUBJECTS.afrikaans_eat={
 {n:'2',c:'#34D399',t:'Kennisgewing formaat',d:'n Kennisgewing moet die basiese inligting gee.',eg:[{lbl:'FORMAAT',txt:'KENNISGEWING → Datum → Aan: [groep] → Inligting → Kontak'}]}
 ],tip:{t:'Formaat-punte is gratis! Skryf die datum, aanspreek-vorm en afsluiting eerste — dit kos geen kreatiwiteit nie.',c:'#052E16',b:'#10B981',tc:'#6EE7B7'}}
 
-  ]}};
+  ,
 
+{id:'eat_alfa',sec:'Taalstrukture',icon:'🔡',ttl:'Alfabetiese Volgorde',sub:'Woorde alfabeties rangskik',fc:[
+{type:'mc',q:'Watter reeks is in die korrekte alfabetiese volgorde?',a:'appel, boom, dag, eend',eg:'a (appel) kom voor b (boom) voor d (dag) voor e (eend) in die alfabet.',w:['boom, appel, eend, dag','dag, boom, appel, eend','eend, dag, boom, appel']},
+{type:'mc',q:'Hoe rangskik jy woorde wat dieselfde eerste letter het?',a:'Kyk na die tweede letter van elke woord',eg:'bal, bad, berg — b is dieselfde. Kyk na die tweede letter: a (bal/bad) dan e (berg).',w:['Rangskik op lengte','Kyk na die laaste letter','Die volgorde maak nie saak']},
+{type:'mc',q:'Watter woord kom eerste alfabeties? skool, skoene, stoel',a:'skoene',eg:'sk-o-e vs sk-o-o vs st. sk voor st. skoene voor skool: sko-e voor sko-o.',w:['stoel','skool','almal is dieselfde']},
+{type:'fill',q:'Rangskik: kat, appel, boom — die eerste woord is ___.',pass:'Eerste woord: ___.',blanks:['appel'],opts:['appel','kat','boom','seun'],eg:'a (appel) kom voor b (boom) en k (kat).'},
+{type:'tf',q:'Die alfabet begin met a en eindig met z.',a:'true',explanation:'Ja! a b c d e f g h i j k l m n o p q r s t u v w x y z — 26 letters, begin by a en eindig by z.'},
+{type:'tf',q:'As twee woorde dieselfde eerste letter het, kan hulle in enige volgorde wees.',a:'false',explanation:'Nee! Kyk dan na die tweede letter. Dan die derde. Gaan voort tot jy n verskil vind.'},
+{type:'tf',q:'Woordeboeke gebruik alfabetiese volgorde.',a:'true',explanation:'Ja! Woordeboeke, ensiklopediee en naamlyste gebruik alfabetiese volgorde sodat jy woorde vinnig kan vind.'}
+],mm:{c:'Alfabetiese Volgorde',cc:'#10B981',b:[
+{l:'Die alfabet',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['a b c d e f g h i j k l m','n o p q r s t u v w x y z','26 letters']},
+{l:'Hoe rangskik?',bg:'#052E16',bd:'#34D399',tc:'#A7F3D0',i:['Kyk na die eerste letter','Dieselfde? Kyk na die tweede','Gaan voort tot jy n verskil vind']}
+]},rules:[
+{n:'1',c:'#10B981',t:'Letter vir letter',d:'Vergelyk een letter op n slag, van links na regs.',eg:[{lbl:'STAP 1',txt:'Kyk na die eerste letter. Watter een kom eerder?'},{lbl:'STAP 2',txt:'As eerste letters dieselfde is, kyk na die tweede.'},{lbl:'STAP 3',txt:'Gaan voort tot jy n verskil vind.'}]},
+{n:'2',c:'#34D399',t:'Alfabet in vier dele',d:'Verdeel die alfabet om vinniger te werk.',eg:[{lbl:'DEEL 1',txt:'a b c d e f'},{lbl:'DEEL 2',txt:'g h i j k l m'},{lbl:'DELE 3 en 4',txt:'n o p q r s / t u v w x y z'}]}
+],tip:{t:'Oefen daagliks deur vyf woorde alfabeties te rangskik. Vinnige alfabet-kennis help jou tydens woordeboekgebruik en taaltoetse.',c:'#052E16',b:'#10B981',tc:'#6EE7B7'}},
+
+{id:'eat_voorvoegsels',sec:'Taalstrukture',icon:'🔧',ttl:'Voorvoegsels en Agtervoegsels',sub:'Woorddele wat voor of agter n basisvorm gevoeg word',fc:[
+{type:'mc',q:'Wat is n VOORVOEGSEL?',a:'n Lettergroep wat VOOR n basisvorm gevoeg word om n nuwe woord te maak',eg:'on- + gelukkig = ongelukkig. ver- + koop = verkoop.',w:['n Lettergroep AGTER n woord','n Los woord wat sinne verbind','n Uitgang wat meervoud vorm']},
+{type:'mc',q:'Watter voorvoegsel maak n woord se betekenis teenoor?',a:'on-',eg:'on- + eerlik = oneerlik. on- + moontlik = onmoontlik.',w:['ver-','be-','ge-']},
+{type:'mc',q:'Watter agtervoegsel verander n byvoeglike naamwoord na n naamwoord?',a:'-heid',eg:'gelukkig + -heid = gelukKIGHEID. eerlik + -heid = eerlikheid.',w:['-ing','-er','-like']},
+{type:'fill',q:'Kies die korrekte voorvoegsel vir die teenoorgestelde van "eerlik".',pass:'Die persoon was ___ eerlik met ons.',blanks:['on'],opts:['on','ver','be','ge'],eg:'on- + eerlik = oneerlik'},
+{type:'tf',q:'n Basisvorm is die eenvoudigste vorm van n woord.',a:'true',explanation:'Ja! Basisvorm = die kern. loop is die basisvorm. Geloop, rondloop, loper — almal bou op die basisvorm.'},
+{type:'tf',q:'"Gelukkigheid" het die agtervoegsel "-heid".',a:'true',explanation:'Ja! Gelukkig (basisvorm) + -heid (agtervoegsel) = gelukKIGHEID. Die agtervoegsel verander die byvoeglike naamwoord na n naamwoord.'},
+{type:'tf',q:'Agtervoegsels word VOOR die basisvorm gevoeg.',a:'false',explanation:'Nee! AGTER-voegsels kom AGTER die basisvorm: gelukkig+HEID. VOOR-voegsels kom voor: ON+eerlik.'}
+],mm:{c:'Voorvoegsels en Agtervoegsels',cc:'#10B981',b:[
+{l:'Voorvoegsels',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Kom VOOR die basisvorm','on- (oneerlik), ver-, be-, ge-','Verander die betekenis']},
+{l:'Agtervoegsels',bg:'#052E16',bd:'#34D399',tc:'#A7F3D0',i:['Kom AGTER die basisvorm','-heid, -ing, -er, -lik','-heid: gelukkig → gelukKIGHEID']}
+]},rules:[
+{n:'1',c:'#10B981',t:'on- keer die betekenis',d:'Die voorvoegsel on- maak die teenoorgestelde van n woord.',eg:[{lbl:'VOORBEELDE',txt:'on+eerlik=oneerlik, on+gelukkig=ongelukkig'},{lbl:'REELS',txt:'on+moontlik=onmoontlik, on+hoorbaar=onhoorbaar'}]},
+{n:'2',c:'#34D399',t:'-heid verander woordsoort',d:'-heid verander n byvoeglike naamwoord na n naamwoord.',eg:[{lbl:'ADJ→NAAMWOORD',txt:'eerlik→eerlikheid, slim→slimheid, vry→vryheid'},{lbl:'GEBRUIK',txt:'Die eerlikheid van die kind was mooi. (naamwoord)'}]}
+],tip:{t:'Onthou: VoorVOEGSEL = VOOR die woord. AgterVOEGSEL = AGTER die woord. Die naam se self waar dit gevoeg word!',c:'#052E16',b:'#10B981',tc:'#6EE7B7'}},
+
+{id:'eat_sinsontleding',sec:'Taalstrukture',icon:'⚖️',ttl:'Sinsontleding',sub:'Onderwerp, gesegde en voorwerp',fc:[
+{type:'mc',q:'Wat is die ONDERWERP van n sin?',a:'Die persoon of ding wat die handeling verrig',eg:'"Die hond blaf." — Die hond = onderwerp. Hy verrig die handeling.',w:['Die werkwoord in die sin','Die beskrywende woord','Die voorwerp van die sin']},
+{type:'mc',q:'Wat is die GESEGDE?',a:'Die werkwoord wat wys wat die onderwerp doen',eg:'"Die hond blaf luid." — blaf = gesegde.',w:['Die naamwoord in die sin','Die onderwerp van die sin','Die bywoord in die sin']},
+{type:'mc',q:'Wat is die VOORWERP?',a:'Die persoon of ding wat die handeling ontvang',eg:'"Die seun gooi die bal." — die bal = voorwerp. Dit ontvang die handeling.',w:['Die persoon wat die handeling verrig','Die werkwoord','Die bywoord']},
+{type:'fill',q:'Identifiseer die voorwerp.',pass:'In "Die meisie lees n boek" is die voorwerp ___.',blanks:['n boek'],opts:['n boek','die meisie','lees','die'],eg:'Vra: wat lees die meisie? n boek = voorwerp.'},
+{type:'tf',q:'Die onderwerp verrig die handeling.',a:'true',explanation:'Ja! Vra WIE of WAT doen dit? Die antwoord is die onderwerp.'},
+{type:'tf',q:'Elke sin het n voorwerp.',a:'false',explanation:'Nee! Sommige sinne het geen voorwerp nie. "Die hond blaf." — blaf wat? Niks. Geen voorwerp.'},
+{type:'tf',q:'"sokker" is die voorwerp in "Die kinders speel sokker".',a:'true',explanation:'Ja! Vra: wat speel die kinders? Sokker. Sokker ontvang die handeling = voorwerp.'}
+],mm:{c:'Sinsontleding',cc:'#10B981',b:[
+{l:'Onderwerp (O)',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Verrig die handeling','Vra: WIE of WAT?','Die hond, Die kinders']},
+{l:'Gesegde (G)',bg:'#052E16',bd:'#34D399',tc:'#A7F3D0',i:['Wys wat die onderwerp doen','Vra: WAT DOEN dit?','blaf, speel, loop, lees']},
+{l:'Voorwerp (V)',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Ontvang die handeling','Vra: WAT of VIR WIE?','die bal, n boek, n lied']}
+]},rules:[
+{n:'1',c:'#10B981',t:'Drie vrae vir drie sinsdele',d:'Gebruik drie vrae om onderwerp, gesegde en voorwerp te vind.',eg:[{lbl:'ONDERWERP',txt:'WIE of WAT doen die handeling?'},{lbl:'GESEGDE',txt:'WAT DOEN die onderwerp? (die werkwoord)'},{lbl:'VOORWERP',txt:'WAT of VIR WIE word dit gedoen?'}]},
+{n:'2',c:'#34D399',t:'Volgorde: O - G - V',d:'Tipies: Onderwerp, dan Gesegde, dan Voorwerp.',eg:[{lbl:'VOORBEELD',txt:'Die seun | gooi | die bal.'},{lbl:'O-G-V',txt:'O=seun, G=gooi, V=die bal'}]}
+],tip:{t:'Vind eers die werkwoord (gesegde). Dan: WIE doen dit? = onderwerp. WAT? = voorwerp. Werkwoord eerste, dan die ander twee.',c:'#052E16',b:'#10B981',tc:'#6EE7B7'}},
+
+{id:'eat_homonieme',sec:'Woordeskat',icon:'👂',ttl:'Homonieme en Homofone',sub:'Woorde met dieselfde klank of spelling maar verskillende betekenisse',fc:[
+{type:'mc',q:'Wat is HOMONIEME?',a:'Woorde met dieselfde spelling maar verskillende betekenisse',eg:'bank (sitplek) en bank (finansieel). Dieselfde spelling, verskillende betekenis.',w:['Woorde wat dieselfde klink maar verskillend gespel word','Woorde met teenoorgestelde betekenis','Saamgestelde woorde']},
+{type:'mc',q:'Wat is HOMOFONE?',a:'Woorde wat dieselfde klink maar verskillend gespel word',eg:'meer (meer water) en meer (nog meer). Klink dieselfde, verskillende spelling.',w:['Woorde met dieselfde spelling','Woorde met dieselfde betekenis','Verkleinwoorde']},
+{type:'mc',q:'Watter stel is HOMONIEME?',a:'bank (sitplek) en bank (geld)',eg:'Dieselfde spelling, verskillende betekenis = homoniem.',w:['groot en klein','vinnig en gou','hond en honde']},
+{type:'fill',q:'Watter woord is die korrekte HOMOFOON?',pass:'Sy het die lang pad langs die ___ gestap.',blanks:['meer'],opts:['meer','mêr','mer','mear'],eg:'meer (die watermassa) vs meer (nog meer) — homofone'},
+{type:'tf',q:'Homonieme word dieselfde gespel maar beteken iets anders.',a:'true',explanation:'Ja! bank (meubel) = bank (finansieel). Dieselfde spelling, konteks bepaal die betekenis.'},
+{type:'tf',q:'Homofone klink dieselfde maar word verskillend gespel.',a:'true',explanation:'Ja! Homofone klink dieselfde maar het verskillende spellings en betekenisse.'},
+{type:'tf',q:'Konteks help jou om die regte homoniem of homofoon te kies.',a:'true',explanation:'Ja! Lees die hele sin. Die ander woorde wys jou watter betekenis bedoel word.'}
+],mm:{c:'Homonieme en Homofone',cc:'#10B981',b:[
+{l:'Homonieme',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Dieselfde SPELLING','Verskillende BETEKENIS','bank, veer, maat']},
+{l:'Homofone',bg:'#052E16',bd:'#34D399',tc:'#A7F3D0',i:['Dieselfde KLANK','Verskillende SPELLING','meer/mêr, wees/waas']}
+]},rules:[
+{n:'1',c:'#10B981',t:'Homonieme — konteks is sleutel',d:'Lees die sin. Die ander woorde wys jou watter betekenis korrek is.',eg:[{lbl:'BANK',txt:'Sit op die bank. (meubel) vs Geld by die bank. (instelling)'},{lbl:'VEER',txt:'Die voel se veer. (plume) vs Die veer span. (spring-ding)'}]},
+{n:'2',c:'#34D399',t:'Homofoon = selfde klank',d:'Homofone klink dieselfde maar word verskillend gespel.',eg:[{lbl:'KLANK DIESELFDE',txt:'meer (water) en meer (nog meer) klink dieselfde'},{lbl:'SPELLING VERSKIL',txt:'maar die spelling is verskillend — konteks bepaal watter een'}]}
+],tip:{t:'Homoniem = HO-mo (dieselfde) + niem (naam/spelling). Homofoon = HO-mo (dieselfde) + foon (klank). Die naam verklap alles!',c:'#052E16',b:'#10B981',tc:'#6EE7B7'}},
+
+{id:'eat_idiome',sec:'Woordeskat',icon:'💬',ttl:'Idiome',sub:'Uitdrukkings met n figuurlike betekenis',fc:[
+{type:'mc',q:'Wat is n idioom?',a:'n Uitdrukking met n figuurlike betekenis wat nie letterlik verstaan kan word nie',eg:'"koue voete kry" beteken bang word, nie letterlik koue voete he nie.',w:['n Woord met n teenoorgestelde betekenis','n Lang woord met n voorvoegsel','n Woord wat na n plek verwys']},
+{type:'mc',q:'Wat beteken "hy is onder die grond in"?',a:'Hy weet meer as wat hy wys',eg:'Figuurlike betekenis — nie letterlik ondergronds nie.',w:['Hy is begrawe','Hy gaan grawe','Hy is verward']},
+{type:'mc',q:'Wat beteken "koue voete kry"?',a:'Bang word op die laaste oomblik',eg:'Koue voete kry = terugdeins, nie n plan deurvoer nie.',w:['Jou voete word letterlik koud','Nuwe skoene kry','Siek word']},
+{type:'id',q:'Verduidelik die idioom "om die bos lei" in jou eie woorde.',a:'Om iemand om die bos te lei beteken om hulle te mislei of te bedrieg — hulle kry nie die regte inligting nie.',hint:'Dink figuurlik — nie letterlik in n bos nie.',eg:'Die skelm het die polisie om die bos gelei.'},
+{type:'tf',q:'n Idioom moet letterlik verstaan word.',a:'false',explanation:'Nee! n Idioom moet FIGUURLIK verstaan word. "Koue voete kry" beteken nie jou voete is koud nie — dit beteken jy word bang.'},
+{type:'tf',q:'"Boontjie kry sy loontjie" is n spreekwoord, nie n idioom nie.',a:'true',explanation:'Ja! Dit is n SPREEKWOORD — n volsin met lewensadvies (jy kry wat jy verdien). n Idioom is n korter frase soos "koue voete kry".'},
+{type:'tf',q:'Idiome kan nie direk van een taal na n ander vertaal word nie.',a:'true',explanation:'Ja! Idiome is taaleie. "Koue voete kry" in Afrikaans is "to get cold feet" in Engels — dieselfde idee, maar verskillende woorde.'}
+],mm:{c:'Idiome',cc:'#10B981',b:[
+{l:'Wat is n idioom?',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Figuurlike uitdrukking','Letterlik maak dit nie sin','Leer die betekenis uit die kop']},
+{l:'Algemene idiome',bg:'#052E16',bd:'#34D399',tc:'#A7F3D0',i:['Koue voete kry = bang word','Om die bos lei = mislei','In die wolke wees = baie bly']}
+]},rules:[
+{n:'1',c:'#10B981',t:'Figuurlike toets',d:'Lees die idioom letterlik. Maak dit geen sin? Dan is dit figuurlik.',eg:[{lbl:'LETTERLIK',txt:'"Koue voete kry" — kan jy letterlik koue voete kry? Ja, maar...'},{lbl:'KONTEKS',txt:'As iemand "koue voete kry" voor n toets, beteken dit hy word bang, nie koud.'}]},
+{n:'2',c:'#34D399',t:'Idioom vs spreekwoord',d:'Idioom = frase. Spreekwoord = volsin met lewensadvies.',eg:[{lbl:'IDIOOM (frase)',txt:'koue voete kry, in die wolke wees'},{lbl:'SPREEKWOORD (volsin)',txt:'Alle baat help. n Mens leer solank jy leef.'}]}
+],tip:{t:'Maak jou eie idioom-lys! Skryf elke nuwe idioom neer met sy figuurlike betekenis. Toets jouself deur die betekenis te verduidelik sonder die woorde te gebruik.',c:'#052E16',b:'#10B981',tc:'#6EE7B7'}},
+
+{id:'eat_leestekens',sec:'Taalstrukture',icon:'✍️',ttl:'Leestekens en Skryftekens',sub:'Punt, vraagteken, uitroepteken, komma, aanhalingstekens',fc:[
+{type:'mc',q:'Watter leesteken gebruik jy aan die einde van n vraagsin?',a:'Vraagteken (?)',eg:'Waar is my boek? — Die vraagsin eindig altyd met n vraagteken.',w:['Punt (.)','Uitroepteken (!)','Komma (,)']},
+{type:'mc',q:'Wanneer gebruik jy n AANHALINGSTEKEN?',a:'Wanneer jy die presiese woorde van iemand aanhaal (direkte rede)',eg:'"Ek gaan more kom," het hy gese. Die presiese woorde staan tussen aanhalingstekens.',w:['Wanneer jy n lys maak','Wanneer jy n sin begin','Wanneer jy n vraag stel']},
+{type:'mc',q:'Watter leesteken skei items in n lys?',a:'Komma (,)',eg:'Ek het appels, pere, piesangs en lemoene gekoop.',w:['Koppelteken (-)','Dubbelpunt (:)','Vraagteken (?)']},
+{type:'fill',q:'Kies die korrekte leesteken.',pass:'"Kom hier___ roepe die onderwyseres.',blanks:['!'],opts:['!','?','.','...'],eg:'n Sterk bevel of uitroep gebruik n uitroepteken'},
+{type:'tf',q:'n Punt word gebruik aan die einde van n stellingsin.',a:'true',explanation:'Ja! n Stellingsin maak n bewering en eindig met n punt. Die son skyn. Ons gaan more skool toe.'},
+{type:'tf',q:'Aanhalingstekens word gebruik om n lys in te lei.',a:'false',explanation:'Nee! Aanhalingstekens omring die presiese woorde wat iemand gese het. n Dubbelpunt (:) word gebruik om n lys in te lei.'},
+{type:'tf',q:'n Komma word gebruik om pouses in n sin aan te dui.',a:'true',explanation:'Ja! Kommas wys klein pouses: in lyste, na inleidende frases, voor verbindingswoorde soos "maar".'}
+],mm:{c:'Leestekens',cc:'#10B981',b:[
+{l:'Einde van sin',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Punt (.) — stelling','Vraagteken (?) — vraag','Uitroepteken (!) — uitroep of bevel']},
+{l:'Binne die sin',bg:'#052E16',bd:'#34D399',tc:'#A7F3D0',i:['Komma (,) — pouse of lys','Aanhalingstekens "" — direkte rede','Koppelteken (-) — woordverbinding']}
+]},rules:[
+{n:'1',c:'#10B981',t:'Vier sinseinde leestekens',d:'Elke sinsoort het sy eie leesteken aan die einde.',eg:[{lbl:'STELLING (.)',txt:'Die kinders speel buite.'},{lbl:'VRAAG (?)',txt:'Speel die kinders buite?'},{lbl:'BEVEL / UITROEP (!)',txt:'Speel buite! Watse pret!'},{lbl:'TIP',txt:'Lees jou sin hardop — die toon vertel jou watter leesteken.'}]},
+{n:'2',c:'#34D399',t:'Aanhalingstekens — direkte rede',d:'Gebruik aanhalingstekens om presiese woorde van iemand te omring.',eg:[{lbl:'FORMAAT',txt:'"Presiese woorde," het hy gese.'},{lbl:'VOORBEELD',txt:'"Ek is honger," se die seun.'}]}
+],tip:{t:'Leestekens is soos verkeerstekens — hulle vertel die leser wanneer om te stop (.), te verlangsaam (,), of te vra (?). Gebruik hulle korrek vir duidelike skryfwerk.',c:'#052E16',b:'#10B981',tc:'#6EE7B7'}},
+
+{id:'eat_afkortings',sec:'Taalstrukture',icon:'📝',ttl:'Afkortings en Akronieme',sub:'Verkorte vorms van woorde en frases',fc:[
+{type:'mc',q:'Wat is n AFKORTING?',a:'n Verkorte skryfvorm van n woord, gewoonlik gevolg deur n punt',eg:'Dr. (Doktor), Mnr. (Meneer), bl. (bladsy), ens. (ensovoorts)',w:['n Nuwe woord gevorm uit begin-letters','n Lang saamgestelde woord','n Woord met n voorvoegsel']},
+{type:'mc',q:'Wat is n AKRONIEM?',a:'n Woord gevorm uit die begin-letters van n frase, uitgespreek as n woord',eg:'NASA, SARS, SANDF — begin-letters van n langer naam, uitgespreek as n woord.',w:['n Verkorte vorm met n punt','n Saamgestelde woord','n Woord met n agtervoegsel']},
+{type:'mc',q:'Watter opsie is n afkorting vir "ensovoorts"?',a:'ens.',eg:'ens. = ensovoorts. Die punt wys dit is n afkorting.',w:['ens','ENS','ensv']},
+{type:'fill',q:'Kies die korrekte afkorting vir Meneer.',pass:'___ Pieterse kom more.',blanks:['Mnr.'],opts:['Mnr.','Mev.','Dr.','Prof.'],eg:'Mnr. = Meneer. Die punt is deel van die afkorting.'},
+{type:'tf',q:'Afkortings word gewoonlik gevolg deur n punt.',a:'true',explanation:'Ja! Dr. Mnr. bl. ens. — die punt wys dit is n afkorting.'},
+{type:'tf',q:'SARS is n afkorting wat letter-vir-letter uitgespreek word.',a:'false',explanation:'Nee! SARS is n AKRONIEM — dit word as n woord uitgespreek (sars), nie as S-A-R-S nie.'},
+{type:'tf',q:'n Akroniem word as n woord uitgespreek.',a:'true',explanation:'Ja! NASA (naa-sa), SARS (sars), SANDF (sand-ef) — almal word as woorde uitgespreek = akronieme.'}
+],mm:{c:'Afkortings en Akronieme',cc:'#10B981',b:[
+{l:'Afkortings',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Verkorte vorm + punt','Dr. Mnr. Mev. bl. ens.','Jy se die volledige woord']},
+{l:'Akronieme',bg:'#052E16',bd:'#34D399',tc:'#A7F3D0',i:['Begin-letters van n frase','Uitgespreek as n woord','NASA SARS SANDF']}
+]},rules:[
+{n:'1',c:'#10B981',t:'Verskil: afkorting vs akroniem',d:'Vra: word dit as n woord uitgespreek?',eg:[{lbl:'AFKORTING',txt:'Dr. — jy se Doktor, nie D-R'},{lbl:'AKRONIEM',txt:'NASA — jy se NAA-SA, as n woord'},{lbl:'TOETS',txt:'As jy dit as n woord kan se, is dit n akroniem.'}]},
+{n:'2',c:'#34D399',t:'Algemene afkortings',d:'Leer hierdie afkortings wat gereeld gebruik word.',eg:[{lbl:'TITELS',txt:'Mnr. Mev. Dr. Prof.'},{lbl:'ALGEMEEN',txt:'bl. (bladsy), ens. (ensovoorts), d.w.s. (dit wil se)'}]}
+],tip:{t:'Akroniem = as n WOORD (NASA, SARS). Afkorting = jy se die volledige woord of letters apart (Dr. = Doktor). Akronieme het gewoonlik geen punt; afkortings het n punt.',c:'#052E16',b:'#10B981',tc:'#6EE7B7'}},
+
+{id:'eat_direkte_rede',sec:'Taalstrukture',icon:'💬',ttl:'Direkte en Indirekte Rede',sub:'Aanhaling van woorde en die omskakeling na indirekte rede',fc:[
+{type:'mc',q:'Watter sin is in DIREKTE REDE?',a:'"Ek is honger," se die seun.',eg:'Direkte rede: aanhalingstekens rondom die presiese woorde.',w:['Die seun se hy is honger.','Die seun het honger geword.','Die seun se van honger.']},
+{type:'mc',q:'Watter sin is in INDIREKTE REDE?',a:'Die seun se dat hy honger is.',eg:'Indirekte rede: geen aanhalingstekens, tydsvorm verander, voornaamwoord verander.',w:['"Ek is honger," se die seun.','Die seun is honger.','Honger is die seun.']},
+{type:'mc',q:'Wat verander wanneer jy direkte na indirekte rede omskakel?',a:'Aanhalingstekens weg, tydsvorm en voornaamwoord verander',eg:'"Ek loop." → Hy het gese hy loop. (ek→hy, aanhalingstekens weg)',w:['Net die aanhalingstekens','Net die tydsvorm','Niks verander nie']},
+{type:'fix',q:'Skakel om na indirekte rede.',pass:'"Ek gaan more kom," het sy gese.',a:'Sy het gese sy gaan more kom.',hint:'Verwyder aanhalingstekens. Verander Ek → sy.',eg:'Ek → sy. Aanhalingstekens weg. Voeg dat in as nodig.'},
+{type:'tf',q:'Direkte rede gebruik aanhalingstekens.',a:'true',explanation:'Ja! Die presiese woorde staan tussen aanhalingstekens: "Ek is moeg," het hy gese.'},
+{type:'tf',q:'In indirekte rede bly die aanhalingstekens.',a:'false',explanation:'Nee! In indirekte rede verwyder jy die aanhalingstekens: Hy het gese hy is moeg.'},
+{type:'tf',q:'"Ek" verander na "hy" of "sy" in indirekte rede.',a:'true',explanation:'Ja! Die voornaamwoord verander: Ek (spreker) → hy/sy (derde persoon): "Ek is moeg" → Sy het gese sy is moeg.'}
+],mm:{c:'Direkte en Indirekte Rede',cc:'#10B981',b:[
+{l:'Direkte Rede',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Presiese woorde aangehaal','Aanhalingstekens gebruik','Komma voor sluitingsteken']},
+{l:'Indirekte Rede',bg:'#052E16',bd:'#34D399',tc:'#A7F3D0',i:['Geen aanhalingstekens','Ek → hy/sy','Is → was (tydsvorm)']},
+{l:'Stappe',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['1. Verwyder aanhalingstekens','2. Verander ek → hy/sy','3. Voeg dat in indien nodig']}
+]},rules:[
+{n:'1',c:'#10B981',t:'Drie stappe vir omskakeling',d:'Volg hierdie drie stappe elke keer.',eg:[{lbl:'STAP 1',txt:'Verwyder die aanhalingstekens.'},{lbl:'STAP 2',txt:'Verander die voornaamwoord: ek → hy/sy.'},{lbl:'STAP 3',txt:'Verander die tydsvorm een stap terug: is → was.'}]},
+{n:'2',c:'#34D399',t:'Voornaamwoord en tydsvorm',d:'Twee dinge verander altyd in indirekte rede.',eg:[{lbl:'VOORNAAMWOORD',txt:'ek → hy of sy | ons → hulle'},{lbl:'TYDSVORM',txt:'is → was | sal → sou | loop → geloop het'}]}
+],tip:{t:'Onthou die drie stappe: 1) Aanhalingstekens weg. 2) Ek → hy/sy. 3) Tyd een stap terug. As jy hierdie drie doen, is jy reg!',c:'#052E16',b:'#10B981',tc:'#6EE7B7'}},
+
+{id:'eat_lidwoorde',sec:'Taalstrukture',icon:'🔍',ttl:'Lidwoorde',sub:'Bepaalde en onbepaalde lidwoorde in Afrikaans',fc:[
+{type:'mc',q:'Watter is die BEPAALDE LIDWOORD in Afrikaans?',a:'die',eg:'"die hond" — die wys na n spesifieke, bekende hond. die = bepaald (definite).',w:['n','een','wat']},
+{type:'mc',q:'Watter is die ONBEPAALDE LIDWOORD in Afrikaans?',a:"'n",eg:'"n hond" — n wys na enige hond, nie n spesifieke een nie. n = onbepaald (indefinite).',w:['die','wat','een']},
+{type:'mc',q:'Wanneer gebruik jy "die"?',a:'Wanneer jy verwys na n spesifieke, bekende persoon of ding',eg:'Gee my die boek. (jy weet watter boek — n spesifieke een)',w:['Wanneer iets eerste genoem word','Vir enige naamwoord','Net vir meervoud']},
+{type:'fill',q:'Kies die korrekte lidwoord.',pass:'Ek wil ___ appel he, asseblief.',blanks:["'n"],opts:["'n",'die','een','wat'],eg:"'n appel = enige appel, nie n spesifieke een nie = onbepaald"},
+{type:'tf',q:'"Die" is die bepaalde lidwoord in Afrikaans.',a:'true',explanation:'Ja! Die = bepaald (the in Engels). Dit verwys na n spesifieke, bekende ding: die boek, die hond.'},
+{type:'tf',q:'"n" word gebruik vir n spesifieke, bekende ding.',a:'false',explanation:'Nee! n = ONBEPAALD. Dit verwys na enige een van sy soort: n hond (enige hond). DIE = bepaald (n spesifieke hond wat jy ken).'},
+{type:'tf',q:'In Afrikaans het jy twee lidwoorde: "die" en "n".',a:'true',explanation:'Ja! Die = bepaald (the). n = onbepaald (a/an). Dit is die twee lidwoorde in Afrikaans.'}
+],mm:{c:'Lidwoorde',cc:'#10B981',b:[
+{l:'Bepaalde lidwoord: die',bg:'#0A1F1A',bd:'#10B981',tc:'#6EE7B7',i:['Spesifiek, bekend','die hond, die boek','= the in Engels']},
+{l:"Onbepaalde lidwoord: 'n",bg:'#052E16',bd:'#34D399',tc:'#A7F3D0',i:["Enige een, nie spesifiek","'n hond, 'n boek","= a/an in Engels"]}
+]},rules:[
+{n:'1',c:'#10B981',t:'die vs n — spesifiek of algemeen?',d:'die = spesifiek (jy weet watter een). n = enige een.',eg:[{lbl:'DIE (spesifiek)',txt:'Gee my die boek. (n spesifieke boek wat ons ken)'},{lbl:"'N (enige een)",txt:"Ek wil 'n boek he. (enige boek, nie spesifiek nie)"}]},
+{n:'2',c:'#34D399',t:'Eerste vermelding vs bekende ding',d:'Eerste keer genoem = n. Daarna verwys jy daarna = die.',eg:[{lbl:'EERSTE KEER',txt:"Ek het 'n kat gesien. (nuwe inligting)"},{lbl:'DAARNA',txt:'Die kat was groot. (ons ken nou die kat)'}]}
+],tip:{t:'Stelreel: eerste keer genoem = n. Tweedie keer genoem = die. n = enige een. die = jy weet presies watter een.',c:'#052E16',b:'#10B981',tc:'#6EE7B7'}}
+]}};
+
+
+// ── Mathematics (separate file) ───────────────────────────────
+SUBJECTS.maths={
+  id:'maths',name:'Mathematics',subtitle:'Grade 6 CAPS',
+  icon:'🔢',color:'#3B82F6',bg:'#0A0F1A',grade:6,
+  external:true,url:'maths.html',
+  terms:{1:[],2:[]}
+};
 
 var cSubject='english';
 var T=SUBJECTS[cSubject].terms;
@@ -2315,7 +2747,7 @@ function renderFC(t,tc){
     ? {mc:'Meervoudige keuse',fill:'Vul in die spasie',fix:'Korrigeer die sin',id:'Identifiseer en verduidelik',tf:'Waar of onwaar'}
     : {mc:'Multiple choice',fill:'Fill in the blank',fix:'Correct the sentence',id:'Identify and explain',tf:'True or false'};
   var qBadge=qBadgeMap[card.type]||'mc',qLabel=qLabelMap[card.type]||'';
-  // For fill questions, passage is rendered inside fill-sent - don't show it twice
+  // For fill questions, passage is rendered inside fill-sent - do not show it twice
   var passHTML=(card.pass&&card.type!=='fill')?'<div class="passage">'+(card.highlights?applyHighlights(card.pass,card.highlights):esc(card.pass))+'</div>':'';
   var ccHTML=card.tokens?renderCCSent(card.tokens):'';
   return hdr+

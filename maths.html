@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>Mathematics — Grade 6</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:#0F0F1A;min-height:100vh}
+#R{font-family:'Lexend',sans-serif;background:#0F0F1A;color:#fff;max-width:430px;margin:0 auto;min-height:100vh}
+
+/* ── Home ── */
+.home-bg{background:linear-gradient(160deg,#1A1032 0%,#0F0F1A 60%)}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 8px}
+.avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#2563EB);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.xp-wrap{flex:1;margin:0 12px}
+.xp-lbl{font-size:11px;color:#A78BFA;font-weight:500;margin-bottom:3px;letter-spacing:.05em}
+.xp-track{height:7px;background:#1E1B3A;border-radius:4px;overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,#7C3AED,#38BDF8);border-radius:4px;transition:width .4s}
+.streak-pill{background:#1E1B3A;border-radius:20px;padding:6px 10px;display:flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:#FB923C;flex-shrink:0}
+.hero{padding:20px 16px 10px}
+.hero-hi{font-size:13px;color:#A78BFA;font-weight:500;letter-spacing:.04em}
+.hero-ttl{font-size:26px;font-weight:700;color:#fff;line-height:1.2;margin-top:4px}
+.hero-ttl span{background:linear-gradient(90deg,#A78BFA,#38BDF8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ── Term buttons — fully explicit, no system override ── */
+.term-row{display:flex;gap:10px;padding:12px 16px}
+.term-btn{
+  flex:1;padding:11px 0;border-radius:12px;
+  font-family:'Lexend',sans-serif;font-size:14px;font-weight:600;
+  cursor:pointer;border:2px solid transparent;
+  transition:all .15s;
+  /* kill ALL system button styling */
+  -webkit-appearance:none;appearance:none;outline:none;
+}
+.term-btn.on{
+  background:linear-gradient(135deg,#7C3AED,#4F46E5) !important;
+  color:#fff !important;
+  border-color:transparent !important;
+}
+.term-btn.off{
+  background:#1E1B3A !important;
+  color:#A78BFA !important;
+  border-color:#312E5A !important;
+}
+
+.prog-box{margin:0 16px 8px;background:#1A1032;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:14px}
+.prog-pct{font-size:28px;font-weight:700;color:#A78BFA;line-height:1}
+.prog-sub{font-size:13px;color:#6B7280;margin-top:3px}
+.sec-lbl{font-size:12px;font-weight:600;color:#6B7280;letter-spacing:.08em;padding:10px 16px 6px;text-transform:uppercase}
+.topic-grid{display:flex;flex-direction:column;gap:10px;padding:0 16px 24px}
+.tc{border-radius:16px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;border:1.5px solid transparent;transition:transform .12s,border-color .12s}
+.tc:active{transform:scale(.97)}
+.tc.done{border-color:#10B981 !important}
+.tc-ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.tc-title{font-size:15px;font-weight:600;color:#fff;line-height:1.3}
+.tc-sub{font-size:12px;color:#9CA3AF;margin-top:2px}
+
+/* ── Topic screen ── */
+.topic-hdr{padding:16px}
+#TV{display:flex;flex-direction:column}
+.tv-sticky{position:sticky;top:0;z-index:50;background:#0F0F1A}
+.tv-scroll{flex:1;overflow-y:auto}
+.back-row{display:flex;align-items:center;gap:10px;cursor:pointer;margin-bottom:14px}
+.back-lbl{font-size:14px;font-weight:600;color:#A78BFA}
+.back-row:hover .back-lbl{color:#C4B5FD}
+.th-ico{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:10px}
+.th-title{font-size:22px;font-weight:700;color:#fff;line-height:1.3}
+.th-sub{font-size:13px;color:#9CA3AF;margin-top:4px}
+.mode-pills{display:flex;gap:8px;padding:12px 16px;background:#0A0A14;border-bottom:1px solid #1E1B3A}
+.mp{
+  flex:1;padding:9px 6px;border-radius:10px;
+  font-family:'Lexend',sans-serif;font-size:12px;font-weight:600;
+  cursor:pointer;border:1.5px solid #1E1B3A;background:#131320;color:#6B7280;
+  text-align:center;transition:all .15s;
+  -webkit-appearance:none;appearance:none;outline:none;
+}
+.mp.on{background:linear-gradient(135deg,#7C3AED,#4F46E5) !important;color:#fff !important;border-color:transparent !important}
+.study-area{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+
+/* ── Card header ── */
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.card-num{font-size:13px;font-weight:600;color:#7C3AED}
+.card-bar{height:4px;background:#1E1B3A;border-radius:2px;overflow:hidden;flex:1;margin:0 10px}
+.card-bar-fill{height:100%;background:linear-gradient(90deg,#7C3AED,#38BDF8);border-radius:2px;transition:width .3s}
+.card-pts{font-size:12px;font-weight:600;color:#FB923C}
+
+/* ── Question box ── */
+.q-box{background:#1A1032;border:1.5px solid #312E5A;border-radius:16px;padding:18px 16px}
+.q-badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:8px;margin-bottom:10px;letter-spacing:.04em}
+.q-badge.mc{background:#1E1B3A;color:#A78BFA}
+.q-badge.tf{background:#0D1A1A;color:#34D399}
+.tf-row{display:flex;gap:12px;margin-top:4px}
+.tf-btn{flex:1;padding:20px 10px;border-radius:14px;font-family:'Lexend',sans-serif;font-size:17px;font-weight:700;cursor:pointer;border:2px solid;display:flex;flex-direction:column;align-items:center;gap:8px;transition:all .15s;-webkit-appearance:none;outline:none;}
+.tf-btn.true-btn{background:#0A1F1A;border-color:#10B981;color:#6EE7B7}
+.tf-btn.false-btn{background:#1A0A0A;border-color:#EF4444;color:#FCA5A5}
+.tf-btn:not([disabled]):hover{transform:scale(1.03);filter:brightness(1.2)}
+.tf-btn.sel-cor{background:#052E16 !important;border-color:#10B981 !important;color:#6EE7B7 !important;box-shadow:0 0 14px rgba(16,185,129,0.4)}
+.tf-btn.sel-wrg{background:#450A0A !important;border-color:#EF4444 !important;color:#FCA5A5 !important;box-shadow:0 0 14px rgba(239,68,68,0.4)}
+.tf-btn.dim{opacity:0.3;cursor:default}
+.tf-btn[disabled]{cursor:default}
+.q-badge.fill{background:#0A1F1A;color:#6EE7B7}
+.q-badge.fix{background:#1C0A00;color:#FDBA74}
+.q-badge.id{background:#0A1628;color:#93C5FD}
+.q-text{font-size:16px;font-weight:600;color:#fff;line-height:1.7}
+.passage{font-size:14px;color:#CBD5E1;line-height:1.9;margin:10px 0;padding:12px;background:#0F0F1A;border-radius:10px;border-left:3px solid #7C3AED;white-space:pre-wrap}
+.hint-box{font-size:12px;color:#6B7280;margin-top:8px;padding:8px 10px;background:#131320;border-radius:8px;border-left:2px solid #312E5A;line-height:1.6}
+
+/* ── Choice buttons ── */
+.choices{display:flex;flex-direction:column;gap:8px}
+.choice{
+  width:100%;padding:13px 14px;
+  border-radius:12px;
+  border:2px solid #1E1B3A !important;
+  background:#1A1032 !important;
+  color:#E2E8F0 !important;
+  font-family:'Lexend',sans-serif;font-size:14px;font-weight:500;
+  cursor:pointer;text-align:left;
+  display:flex;align-items:center;gap:10px;
+  -webkit-appearance:none;appearance:none;outline:none;
+  transition:border-color .12s,background .12s;
+}
+.choice:not([disabled]):not(.cor):not(.wrg):hover{
+  border-color:#7C3AED !important;
+  background:#221B42 !important;
+  color:#E2E8F0 !important;
+}
+.choice.cor{background:#052E16 !important;border-color:#10B981 !important;color:#6EE7B7 !important;box-shadow:0 0 0 3px rgba(16,185,129,0.4)}
+.choice.wrg{background:#450A0A !important;border-color:#EF4444 !important;color:#FCA5A5 !important}
+.choice.dim{background:#0F0F1A !important;color:#374151 !important;border-color:#1E1B3A !important}
+.choice[disabled]{cursor:default}
+.clbl{width:28px;height:28px;min-width:28px;border-radius:8px;border:1.5px solid #4B3E7A;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;background:#231B4A;color:#A78BFA}
+.choice:not([disabled]):not(.cor):not(.wrg):hover .clbl{border-color:#7C3AED;color:#C4B5FD;background:#3D2D8A}
+.choice.cor .clbl{background:#10B981;border-color:#10B981;color:#fff}
+.choice.wrg .clbl{background:#EF4444;border-color:#EF4444;color:#fff}
+.choice.dim .clbl{background:#1E1B3A;border-color:#1E1B3A;color:#374151}
+.ctxt{flex:1;color:inherit}
+.cico{margin-left:auto;font-size:18px;flex-shrink:0;color:inherit}
+
+/* ── Fill in blank ── */
+.fill-sent{font-size:16px;color:#fff;line-height:2.2;font-weight:500}
+.blank{display:inline-block;min-width:100px;padding:2px 10px;border-bottom:2px solid #7C3AED;color:#A78BFA;font-weight:600;text-align:center;vertical-align:bottom}
+.blank.ok{color:#6EE7B7;border-color:#10B981}
+.blank.ko{color:#FCA5A5;border-color:#EF4444}
+.bopts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.bopt{
+  padding:9px 18px;border-radius:10px;
+  border:2px solid #312E5A;background:#1A1032;color:#A78BFA;
+  font-family:'Lexend',sans-serif;font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .15s;
+  -webkit-appearance:none;appearance:none;outline:none;
+}
+.bopt:not([disabled]):hover{border-color:#7C3AED;background:#221B42;color:#C4B5FD}
+.bopt.sel{border-color:#7C3AED;background:#2D1B69;color:#C4B5FD}
+.bopt.ok{border-color:#10B981 !important;background:#052E16 !important;color:#6EE7B7 !important;box-shadow:0 0 0 2px rgba(16,185,129,0.4) !important}
+.bopt.ko{border-color:#EF4444;background:#450A0A;color:#FCA5A5}
+.bopt[disabled]{cursor:default}
+
+/* ── Type/correct input ── */
+.err-box{background:#0F0F1A;border:1.5px solid #312E5A;border-radius:12px;padding:14px;margin-bottom:10px}
+.err-lbl{font-size:11px;font-weight:600;color:#6B7280;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.err-txt{font-size:14px;color:#FCA5A5;line-height:1.8;font-style:italic}
+.type-in{
+  width:100%;padding:12px 14px;border-radius:10px;
+  border:2px solid #312E5A;background:#131320;color:#E2E8F0;
+  font-family:'Lexend',sans-serif;font-size:14px;outline:none;
+  margin-top:10px;transition:border-color .15s;
+  resize:vertical;min-height:52px;
+  -webkit-appearance:none;
+}
+.type-in:focus{border-color:#7C3AED}
+.type-in.ok{border-color:#10B981;background:#052E16;color:#6EE7B7}
+.type-in.ko{border-color:#EF4444;background:#450A0A;color:#FCA5A5}
+.chk-btn{
+  width:100%;padding:13px;border:none;border-radius:12px;
+  font-family:'Lexend',sans-serif;font-size:14px;font-weight:600;
+  cursor:pointer;background:linear-gradient(135deg,#7C3AED,#4F46E5);color:#fff;
+  margin-top:8px;transition:opacity .15s;
+  -webkit-appearance:none;
+}
+.chk-btn:disabled{opacity:.4;cursor:default}
+
+/* ── Attempts / reveal ── */
+.att-row{display:flex;gap:6px;align-items:center;justify-content:center;padding:4px 0}
+.adot{width:10px;height:10px;border-radius:50%;border:2px solid #312E5A;background:#1E1B3A}
+.adot.red{background:#EF4444;border-color:#EF4444}
+.reveal{padding:14px;border-radius:14px;border:1.5px solid}
+.reveal.ok{background:#022C22;border-color:#10B981;animation:slideUp .3s ease}
+.reveal.ko{background:#1C0A00;border-color:#FB923C}
+.rv-ttl{font-size:14px;font-weight:700;margin-bottom:5px}
+.reveal.ok .rv-ttl{color:#34D399}
+.reveal.ko .rv-ttl{color:#FDBA74}
+.rv-ans{font-size:14px;color:#E2E8F0;margin-bottom:4px;line-height:1.7}
+.rv-eg{font-size:13px;color:#9CA3AF;line-height:1.6}
+.xp-burst{background:#1A1032;border:1.5px solid #312E5A;border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;color:#A78BFA}
+
+/* ── Nav ── */
+.nav-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.nbtn{
+  padding:12px 24px;border-radius:12px;
+  font-family:'Lexend',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;border:2px solid #A78BFA;background:#1E1B3A;color:#A78BFA;
+  display:flex;align-items:center;gap:8px;transition:all .15s;
+  -webkit-appearance:none;
+}
+.nbtn:not(:disabled):hover{background:#2D2A4A;border-color:#C4B5FD}
+.nbtn.pri{background:linear-gradient(135deg,#7C3AED,#4F46E5);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(124,58,237,0.4)}
+.nbtn:disabled{opacity:.2;cursor:default;border-color:#312E5A}
+.spk-btn{
+  width:100%;padding:13px;border:1.5px solid #312E5A;border-radius:12px;
+  font-family:'Lexend',sans-serif;font-size:14px;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+  background:#1A1032;color:#A78BFA;transition:all .15s;
+  -webkit-appearance:none;
+}
+
+/* Fix/ID input */
+.err-box{background:#0F0F1A;border:1.5px solid #312E5A;border-radius:12px;padding:14px;margin-bottom:10px}
+.err-lbl{font-size:11px;font-weight:600;color:#6B7280;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.err-txt{font-size:14px;color:#FCA5A5;line-height:1.8;font-style:italic}
+.hint-box{font-size:12px;color:#6B7280;margin-top:8px;padding:8px 10px;background:#131320;border-radius:8px;border-left:2px solid #312E5A;line-height:1.6}
+.type-in{width:100%;padding:12px 14px;border-radius:10px;border:2px solid #312E5A;background:#131320;color:#E2E8F0;font-family:'Lexend',sans-serif;font-size:14px;outline:none;margin-top:10px;transition:border-color .15s;resize:vertical;min-height:52px;-webkit-appearance:none;}
+.type-in:focus{border-color:#7C3AED}
+.type-in.ok{border-color:#10B981;background:#052E16;color:#6EE7B7}
+.type-in.ko{border-color:#EF4444;background:#450A0A;color:#FCA5A5}
+.chk-btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Lexend',sans-serif;font-size:14px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#7C3AED,#4F46E5);color:#fff;margin-top:8px;-webkit-appearance:none;}
+.chk-btn:disabled{opacity:.4;cursor:default}
+.passage{font-size:14px;color:#CBD5E1;line-height:1.9;margin:10px 0;padding:12px;background:#0F0F1A;border-radius:10px;border-left:3px solid #7C3AED;white-space:pre-wrap}
+.spk-btn.on{background:linear-gradient(135deg,#0F6E56,#10B981);color:#fff;border-color:transparent}
+.mute-btn{width:40px;height:40px;border-radius:50%;flex-shrink:0;border:2px solid #A78BFA;background:#1E1B3A;color:#A78BFA;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;-webkit-appearance:none;outline:none;}
+.mute-btn:hover{background:#2D2A4A;border-color:#C4B5FD}
+.mute-btn:active{transform:scale(0.92)}
+.mute-btn.muted{background:#450A0A;border-color:#EF4444;color:#FCA5A5;box-shadow:0 0 8px rgba(239,68,68,0.3)}
+
+/* ── Mind map ── */
+.mm-wrap{border-radius:16px;overflow:hidden;border:1.5px solid #1E1B3A}
+.mm-cw{padding:14px;text-align:center;background:#0A0A14}
+.mm-ctr{padding:12px 20px;border-radius:12px;display:inline-block;font-size:16px;font-weight:700;color:#fff}
+.mm-br{margin:0 12px 10px;padding:12px;border-radius:12px;border-left:3px solid}
+.mm-brtl{font-size:14px;font-weight:700;margin-bottom:5px}
+.mm-it{font-size:13px;padding:2px 0 2px 10px;display:flex;gap:5px;line-height:1.7}
+.mm-it::before{content:"→";flex-shrink:0;opacity:.6}
+
+/* ── Rules ── */
+.rule-card{background:#131320;border:1.5px solid #1E1B3A;border-radius:14px;padding:13px;display:flex;gap:11px;align-items:flex-start;margin-bottom:10px}
+.rnm{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;color:#fff}
+.rt{font-size:14px;font-weight:600;margin-bottom:3px}
+.rd{font-size:13px;color:#9CA3AF;line-height:1.8}
+.rule-eg{margin-top:8px;padding:9px 11px;background:#0A0A14;border-radius:8px;border-left:2px solid #312E5A}
+.rule-eg-row{display:flex;align-items:flex-start;gap:8px;padding:3px 0;font-size:13px;line-height:1.7}
+.rule-eg-lbl{font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;flex-shrink:0;margin-top:1px;letter-spacing:.04em}
+.rule-eg-txt{color:#CBD5E1;flex:1}
+.tip-card{border-radius:14px;padding:13px;border-left:3px solid;display:flex;gap:9px;align-items:flex-start}
+.tip-txt{font-size:13px;line-height:1.8;font-weight:500}
+
+/* ── CONFETTI ──────────────────────────────────────────────── */
+#confetti-stage{
+  position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden;
+}
+.cf{
+  position:absolute;top:-12px;width:10px;height:10px;
+  border-radius:2px;opacity:1;
+  animation:cf-fall linear forwards;
+}
+@keyframes cf-fall{
+  0%{transform:translateY(0) rotate(0deg);opacity:1}
+  80%{opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+
+/* ── XP PULSE ──────────────────────────────────────────────── */
+@keyframes xp-ping{
+  0%{transform:scale(1)}
+  40%{transform:scale(1.35)}
+  70%{transform:scale(0.95)}
+  100%{transform:scale(1)}
+}
+.xp-ping{animation:xp-ping .5s ease;}
+
+/* ── WORD HIGHLIGHT (figures of speech) ────────────────────── */
+.hl-simile{
+  background:#0A2E1A;color:#6EE7B7;
+  padding:1px 5px;border-radius:5px;
+  border-bottom:2px solid #10B981;font-weight:700;
+}
+.hl-metaphor{
+  background:#0A1628;color:#93C5FD;
+  padding:1px 5px;border-radius:5px;
+  border-bottom:2px solid #2563EB;font-weight:700;
+}
+.hl-person{
+  background:#1A0A1A;color:#D8B4FE;
+  padding:1px 5px;border-radius:5px;
+  border-bottom:2px solid #A855F7;font-weight:700;
+}
+.hl-alliteration{
+  background:#1A1A0A;color:#FDE68A;
+  padding:1px 5px;border-radius:5px;
+  border-bottom:2px solid #EAB308;font-weight:700;
+}
+.hl-key{
+  background:#1C0A00;color:#FED7AA;
+  padding:1px 5px;border-radius:5px;
+  border-bottom:2px solid #FB923C;font-weight:700;
+}
+.hl-label{
+  font-size:11px;font-weight:600;letter-spacing:.05em;
+  padding:2px 8px;border-radius:6px;display:inline-block;margin-bottom:6px;
+}
+
+/* ── COLOUR-CODED SENTENCE BLOCKS ──────────────────────────── */
+.cc-sent{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.cc-word{
+  padding:7px 13px;border-radius:10px;
+  font-size:14px;font-weight:600;border:2px solid transparent;
+}
+.cc-subj{background:#1A1032;border-color:#7C3AED;color:#A78BFA}
+.cc-verb{background:#0A1F1A;border-color:#10B981;color:#6EE7B7}
+.cc-obj {background:#1C1005;border-color:#FB923C;color:#FED7AA}
+.cc-conj{background:#1A0A1A;border-color:#A855F7;color:#D8B4FE}
+.cc-prep{background:#0A1A1A;border-color:#06B6D4;color:#67E8F9}
+.cc-adj {background:#1A0A0A;border-color:#EF4444;color:#FCA5A5}
+.cc-adv {background:#1A1A0A;border-color:#EAB308;color:#FDE68A}
+.cc-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.cc-leg{display:flex;align-items:center;gap:5px;font-size:11px;color:#9CA3AF}
+.cc-dot{width:8px;height:8px;border-radius:2px}
+
+/* ── CORRECT ANSWER GLOW ────────────────────────────────────── */
+@keyframes slideUp{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes correct-glow{
+  0%{box-shadow:0 0 0 0 rgba(16,185,129,0)}
+  30%{box-shadow:0 0 0 8px rgba(16,185,129,0.3)}
+  100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}
+}
+.correct-glow{animation:correct-glow .6s ease;}
+
+/* ── STREAK FLAME PULSE ─────────────────────────────────────── */
+@keyframes flame-pulse{
+  0%,100%{transform:scale(1) rotate(-2deg)}
+  50%{transform:scale(1.2) rotate(2deg)}
+}
+.flame-active{display:inline-block;animation:flame-pulse .7s ease-in-out infinite;}
+
+
+/* ── Name setup screen ─────────────────────────────────────── */
+#NAME-SCREEN{
+  position:fixed;inset:0;background:#0F0F1A;z-index:1000;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+}
+.ns-card{
+  background:#1A1032;border:1.5px solid #312E5A;border-radius:24px;
+  padding:32px 22px;width:100%;max-width:360px;text-align:center;
+}
+.ns-icon{font-size:52px;margin-bottom:12px}
+.ns-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:6px}
+.ns-sub{font-size:14px;color:#6B7280;margin-bottom:24px;line-height:1.6}
+.ns-input{
+  width:100%;padding:14px 16px;border-radius:12px;
+  border:2px solid #312E5A;background:#131320;
+  color:#E2E8F0;font-family:'Lexend',sans-serif;font-size:16px;
+  outline:none;transition:border-color .15s;-webkit-appearance:none;
+  text-align:center;
+}
+.ns-input:focus{border-color:#7C3AED}
+.ns-btn{
+  width:100%;padding:15px;border:none;border-radius:12px;
+  font-family:'Lexend',sans-serif;font-size:15px;font-weight:700;
+  cursor:pointer;background:linear-gradient(135deg,#7C3AED,#4F46E5);
+  color:#fff;margin-top:12px;-webkit-appearance:none;
+}
+.ns-btn:disabled{opacity:.4;cursor:default}
+.ns-greeting{
+  position:fixed;top:0;left:0;right:0;
+  background:#1A1032;border-bottom:1.5px solid #312E5A;
+  padding:8px 16px;display:flex;align-items:center;
+  justify-content:space-between;z-index:50;
+}
+.ns-user{font-size:13px;color:#A78BFA;font-weight:600}
+.ns-switch{font-size:12px;color:#6B7280;cursor:pointer;padding:4px 8px;
+  border:1px solid #312E5A;border-radius:8px;background:none;
+  font-family:'Lexend',sans-serif;-webkit-appearance:none;}
+
+
+/* ── Subject selector ─────────────────────────────────────── */
+#SUBJ-SCREEN{position:fixed;inset:0;background:#0F0F1A;z-index:900;overflow-y:auto;padding:24px 16px}
+.subj-header{text-align:center;margin-bottom:28px}
+.subj-header h1{font-size:22px;font-weight:700;color:#fff;margin-bottom:6px}
+.subj-header p{font-size:14px;color:#6B7280}
+.subj-grid{display:flex;flex-direction:column;gap:14px;max-width:400px;margin:0 auto}
+.subj-card{
+  border-radius:18px;padding:20px;border:2px solid;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:16px;
+}
+.subj-card:hover{transform:translateY(-2px);filter:brightness(1.15)}
+.subj-icon{font-size:36px;flex-shrink:0;width:56px;height:56px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center}
+.subj-info h2{font-size:17px;font-weight:700;color:#fff;margin-bottom:3px}
+.subj-info p{font-size:13px;line-height:1.5}
+.subj-info .subj-progress{font-size:11px;margin-top:5px;font-weight:600;letter-spacing:.04em}
+.subj-back{display:flex;align-items:center;gap:8px;cursor:pointer;color:#A78BFA;
+  font-size:14px;font-weight:600;margin-bottom:20px;max-width:400px;margin-left:auto;margin-right:auto}
+
+
+/* ── Maths specific ──────────────────────────────────── */
+.diag-wrap{background:#0A0F1A;border:1px solid #1E3A5F;border-radius:12px;padding:12px;margin-bottom:12px;overflow-x:auto}
+.pvt{border-collapse:collapse;width:100%;font-size:12px;font-family:'Lexend',sans-serif}
+.pvt th{background:#1E3A5F;color:#93C5FD;padding:5px 3px;border:1px solid #0F2544;text-align:center;font-size:10px;font-weight:700}
+.pvt td{background:#0F1E38;color:#E2E8F0;padding:7px 3px;border:1px solid #0F2544;text-align:center;font-size:15px;font-weight:700}
+.pvt td.pv-hi{background:#1D4ED8;color:#fff}
+.patt-box{display:flex;align-items:center;justify-content:center;background:#1E3A5F;color:#93C5FD;border-radius:8px;width:48px;height:48px;font-size:18px;font-weight:700}
+.patt-next{border:2px dashed #3B82F6;background:transparent;color:#3B82F6}
+.maths-back{display:flex;align-items:center;gap:8px;color:#93C5FD;font-weight:600;font-size:14px;cursor:pointer;background:none;border:none;font-family:'Lexend',sans-serif;padding:0}
+
+</style>
+</head>
+<body>
+<div id="confetti-stage"></div>
+<div id="R">
+<div class="home-bg">
+  <div class="top-bar">
+    <button class="maths-back" onclick="goBack()">← All subjects</button>
+    <div class="avatar" id="avatarBadge" style="cursor:default">G6</div>
+    <div class="xp-wrap">
+      <div class="xp-lbl">LEVEL 3 — <span id="xpVal">0</span> / 500 XP</div>
+      <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+    </div>
+    <div class="streak-pill">🔥<span id="strVal">0</span></div>
+    <button class="mute-btn" id="muteBtn" onclick="toggleMute()" title="Mute/unmute"><span id="muteIcon">🔊</span></button>
+  </div>
+  <div class="hero">
+    <div class="hero-hi">MATHEMATICS</div>
+    <div class="hero-ttl">Grade 6<br><span>CAPS Aligned</span></div>
+  </div>
+</div>
+<div class="term-row">
+  <button class="term-btn on" id="tb1" onclick="swTab(1)">Term 1</button>
+  <button class="term-btn off" id="tb2" onclick="swTab(2)">Term 2</button>
+</div>
+<div class="prog-box">
+  <svg width="60" height="60" viewBox="0 0 60 60" style="transform:rotate(-90deg);flex-shrink:0">
+    <circle cx="30" cy="30" r="24" fill="none" stroke="#1E3A5F" stroke-width="6"/>
+    <circle cx="30" cy="30" r="24" fill="none" stroke="#3B82F6" stroke-width="6" stroke-linecap="round" stroke-dasharray="150.8" id="ringFill" stroke-dashoffset="150.8"/>
+  </svg>
+  <div><div class="prog-pct" id="pctLbl">0%</div><div class="prog-sub" id="doneLbl">0 of 14 topics done</div></div>
+  <div style="margin-left:auto;text-align:right">
+    <div style="font-size:12px;color:#6B7280">Best streak</div>
+    <div style="font-size:20px;font-weight:700;color:#3B82F6;margin-top:2px">🔢 Math</div>
+  </div>
+</div>
+<div id="TGRID"></div>
+</div>
+<div id="TV" style="display:none;min-height:100vh"></div>
+<script>
+
+var TERMS = {
+  1:[
+
+/* ─── PLACE VALUE ───────────────────────────────────────── */
+{id:'m_placevalue',sec:'Numbers',icon:'🔢',ttl:'Place Value',sub:'Reading and writing numbers up to 9 digits',fc:[
+{type:'mc',q:'What is the place value of 9 in 239 304 703?',
+ diag:{t:'pv',n:'239304703',h:6},
+ a:'Millions',eg:'2=H.Mil, 3=T.Mil, 9=Millions, 3=H.Thou, 0=T.Thou, 4=Thou, 7=Hund, 0=Tens, 3=Units',
+ w:['Ten millions','Hundred thousands','Thousands']},
+{type:'mc',q:'Which number is represented by this expanded notation? (5×10) + (6×1 000 000) + (2×1 000) + (8×1) + (4×10 000) + (7×100) + (3×100 000)',
+ a:'6 342 758',eg:'Add each term: 50+6000000+2000+8+40000+700+300000 = 6 342 758',
+ w:['3 748 265','5 628 473','6 342 759']},
+{type:'mc',q:'What is the value of the underlined digit in 6 423 807? (The 6 is underlined)',
+ diag:{t:'pv',n:'6423807',h:6},
+ a:'6 000 000',eg:'The 6 is in the millions place. Value = 6 × 1 000 000 = 6 000 000',
+ w:['60 000','600 000','60 000 000']},
+{type:'fill',q:'Write five million two hundred and thirty-four thousand two hundred and fifty-three in digits.',
+ pass:'5 ___ 253',blanks:['234 200'],
+ opts:['234 200','324 200','243 200','234 020'],eg:'5 234 253 — five million is 5 000 000, then 234 253'},
+{type:'mc',q:'Arrange from smallest to largest: 3 024 810;  3 204 180;  3 024 018;  3 024 180',
+ a:'3 024 018 < 3 024 180 < 3 024 810 < 3 204 180',
+ eg:'Compare digit by digit from left. All start 3 024... so compare 4th digit: 0,1,8. Then 3 204 180 is biggest.',
+ w:['3 024 180 < 3 024 018 < 3 024 810 < 3 204 180','3 204 180 < 3 024 810 < 3 024 180 < 3 024 018','3 024 018 < 3 024 810 < 3 024 180 < 3 204 180']},
+{type:'tf',q:'The place value of the 7 in 47 382 is 7 000.',
+ a:'false',explanation:'The 7 is in the thousands place. Place value = 7 × 1 000 = 7 000. But the statement says 7 000 which is actually CORRECT! Wait — 47382: 4=T.thou, 7=thou, 3=hund, 8=tens, 2=units. So 7×1000=7000. Answer is TRUE.'},
+{type:'tf',q:'In the number 85 906 321, the digit 5 is in the millions place.',
+ a:'false',explanation:'85 906 321: 8=T.Mil, 5=Millions, 9=H.Thou, 0=T.Thou, 6=Thou, 3=Hund, 2=Tens, 1=Units. The 5 IS in the millions place. So this is TRUE.'},
+{type:'id',q:'Write the number 4 527 063 in expanded notation. Show each digit multiplied by its place value.',
+ a:'(4×1 000 000) + (5×100 000) + (2×10 000) + (7×1 000) + (0×100) + (6×10) + (3×1)',
+ hint:'Start from the largest place value (millions) and work right',
+ eg:'4 527 063: 4 millions, 5 hundred thousands, 2 ten thousands, 7 thousands, 0 hundreds, 6 tens, 3 units'}
+],mm:{c:'Place Value',cc:'#3B82F6',b:[
+{l:'9-Digit Place Value',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['H.Millions | T.Millions | Millions','H.Thousands | T.Thousands | Thousands','Hundreds | Tens | Units']},
+{l:'Value vs Face Value',bg:'#0A0F1A',bd:'#2563EB',tc:'#BFDBFE',i:['Face value = the digit itself (e.g. 7)','Place value = digit × position (e.g. 7 000)','Example: 47 382 — face value of 7 is 7, place value is 7 000']},
+{l:'Expanded Notation',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['Each digit × its place value','4 527 = (4×1000)+(5×100)+(2×10)+(7×1)','Add all terms to get original number']}
+]},rules:[
+{n:'1',c:'#3B82F6',t:'Place value position names',d:'Learn the 9 position names from right to left.',eg:[{lbl:'RIGHT TO LEFT',txt:'Units, Tens, Hundreds, Thousands, T.Thousands, H.Thousands, Millions, T.Millions, H.Millions'},{lbl:'EXAMPLE',txt:'In 239 304 703: 9 is in the Millions place (position 7 from right)'}]},
+{n:'2',c:'#2563EB',t:'Value = digit × position value',d:'The value of a digit is the digit multiplied by its position value.',eg:[{lbl:'FORMULA',txt:'Value = digit × position value'},{lbl:'EXAMPLE',txt:'The 4 in 47 382: position = thousands = 1 000. Value = 4 × 1 000 = 4 000'}]},
+{n:'3',c:'#3B82F6',t:'Comparing numbers',d:'Compare digit by digit from the left. Stop when digits differ.',eg:[{lbl:'STEP 1',txt:'Start at the highest place value (leftmost digit)'},{lbl:'STEP 2',txt:'If equal, move to the next digit to the right'},{lbl:'STEP 3',txt:'The number with the larger digit at the first point of difference is bigger'}]}
+],tip:{t:'To find place value: count positions from the right. Units=1st, Tens=2nd, Hundreds=3rd, Thousands=4th, T.Thousands=5th, H.Thousands=6th, Millions=7th.',c:'#030712',b:'#3B82F6',tc:'#BFDBFE'}},
+
+/* ─── ROUNDING OFF ────────────────────────────────────────── */
+{id:'m_rounding',sec:'Numbers',icon:'🎯',ttl:'Rounding Off',sub:'Rounding to nearest 5, 10, 100, 1 000 and estimating',fc:[
+{type:'mc',q:'Round off 395 362 to the nearest 5.',
+ a:'395 360',eg:'Look at the units digit: 2. Nearest multiples of 5 are 360 and 365. 2 is closer to 0, so round DOWN to 395 360.',
+ w:['395 365','395 370','395 375']},
+{type:'mc',q:'Round off 7 864 to the nearest 1 000.',
+ a:'8 000',eg:'Look at the hundreds digit: 8. Since 8 ≥ 5, round UP. 7 864 → 8 000',
+ w:['7 000','7 900','7 800']},
+{type:'mc',q:'Round off 43 256 to the nearest 100.',
+ a:'43 300',eg:'Look at the tens digit: 5. Since 5 ≥ 5, round UP. 43 256 → 43 300',
+ w:['43 200','43 250','43 260']},
+{type:'mc',q:'Estimate the answer: 4 872 + 3 156. Round each number to the nearest 1 000 first.',
+ a:'8 000',eg:'4 872 ≈ 5 000 (8 ≥ 5, round up). 3 156 ≈ 3 000 (1 < 5, round down). Estimate = 5 000 + 3 000 = 8 000',
+ w:['7 000','9 000','7 500']},
+{type:'fill',q:'Complete: Round 263 847 to the nearest 10 000.',
+ pass:'263 847 ≈ ___',blanks:['260 000'],
+ opts:['260 000','270 000','263 000','264 000'],eg:'Look at the thousands digit: 3. Since 3 < 5, round DOWN. 263 847 → 260 000'},
+{type:'tf',q:'When rounding to the nearest 100, you look at the TENS digit to decide whether to round up or down.',
+ a:'true',explanation:'Yes! To round to the nearest 100, look at the TENS digit. If the tens digit is 5 or more, round up. If it is less than 5, round down. Example: 4 853 → look at tens digit 5 → round up → 4 900.'},
+{type:'tf',q:'5 499 rounded to the nearest 1 000 is 6 000.',
+ a:'false',explanation:'No! Look at the hundreds digit: 4. Since 4 < 5, round DOWN. 5 499 → 5 000, not 6 000.'},
+{type:'fix',q:'Correct the rounding error.',
+ pass:'Round 6 748 to the nearest 100: 6 700',
+ a:'6 748 rounded to the nearest 100 = 6 700',
+ hint:'Look at the tens digit (4). Since 4 < 5, round down to 6 700. The original answer is actually CORRECT.',
+ eg:'6 748: tens digit = 4, which is less than 5, so round DOWN → 6 700. Actually this is correct! The error was if it said 6 800.'}
+],mm:{c:'Rounding Off',cc:'#3B82F6',b:[
+{l:'The Rounding Rule',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['Look at the NEXT digit to the RIGHT','5 or more → round UP','4 or less → round DOWN (keep same)']},
+{l:'Rounding to nearest...',bg:'#0A0F1A',bd:'#2563EB',tc:'#BFDBFE',i:['Nearest 10: look at UNITS digit','Nearest 100: look at TENS digit','Nearest 1 000: look at HUNDREDS digit','Nearest 10 000: look at THOUSANDS digit']}
+]},rules:[
+{n:'1',c:'#3B82F6',t:'One rule — look one place to the right',d:'To round to any place, look at the digit ONE place to the right.',eg:[{lbl:'NEAREST 10',txt:'Round 47: look at units (7). 7 ≥ 5 → round up → 50'},{lbl:'NEAREST 100',txt:'Round 463: look at tens (6). 6 ≥ 5 → round up → 500'},{lbl:'NEAREST 1000',txt:'Round 3 421: look at hundreds (4). 4 < 5 → round down → 3 000'}]},
+{n:'2',c:'#2563EB',t:'Estimation using rounding',d:'Round each number first, then calculate for a quick estimate.',eg:[{lbl:'EXAMPLE',txt:'Estimate 3 872 × 4: round 3 872 to 4 000. 4 000 × 4 = 16 000'},{lbl:'USE FOR',txt:'Checking if your exact answer is reasonable'}]}
+],tip:{t:'Memory trick: 0,1,2,3,4 = round DOWN (stay). 5,6,7,8,9 = round UP (go up). The digit 5 always rounds UP in South African curriculum.',c:'#030712',b:'#3B82F6',tc:'#BFDBFE'}},
+
+/* ─── ADDITION AND SUBTRACTION ───────────────────────────── */
+{id:'m_addsub',sec:'Numbers',icon:'➕',ttl:'Addition and Subtraction',sub:'Column method, problem solving and inverse operations',fc:[
+{type:'mc',q:'Calculate: 598 456 + 458 105',
+ a:'1 056 561',eg:'Column addition: 6+5=11 (write 1 carry 1), 5+0+1=6, 4+1=5, 8+8=16 (write 6 carry 1)... = 1 056 561',
+ w:['1 056 461','1 065 561','1 056 551']},
+{type:'mc',q:'Calculate: 956 250 − 689 231',
+ a:'267 019',eg:'956 250 − 689 231: use column subtraction or inverse check: 267 019 + 689 231 = 956 250',
+ w:['267 119','277 019','267 029']},
+{type:'mc',q:'Which calculation is the INVERSE of 425 + 386 = 811?',
+ a:'811 − 386 = 425',eg:'Addition and subtraction are inverse operations. If a + b = c, then c − b = a.',
+ w:['386 + 425 = 811','811 + 386 = 425','425 − 386 = 39']},
+{type:'fill',q:'A school has 3 456 learners. 1 289 are in the Intermediate Phase. How many learners are NOT in the Intermediate Phase?',
+ pass:'3 456 − 1 289 = ___',blanks:['2 167'],
+ opts:['2 167','2 267','2 157','2 177'],eg:'3 456 − 1 289 = 2 167 (column subtraction)'},
+{type:'mc',q:'A train starts with 635 passengers. At the first stop, 287 get off and 194 get on. How many passengers are on the train now?',
+ a:'542',eg:'635 − 287 = 348. Then 348 + 194 = 542 passengers.',
+ w:['716','444','448']},
+{type:'tf',q:'325 + 478 = 478 + 325. This shows the commutative property of addition.',
+ a:'true',explanation:'Yes! The commutative property states that you can add numbers in any order and get the same answer: a + b = b + a.'},
+{type:'tf',q:'Subtraction is commutative: 800 − 350 = 350 − 800.',
+ a:'false',explanation:'No! Subtraction is NOT commutative. 800 − 350 = 450, but 350 − 800 gives a negative number. Only addition and multiplication are commutative.'},
+{type:'fix',q:'Find and correct the error in this calculation.',
+ pass:'453 + 287 = 730',
+ a:'453 + 287 = 740',hint:'Check the units column: 3 + 7 = 10, write 0 carry 1. Tens: 5 + 8 + 1 = 14, write 4 carry 1. Hundreds: 4 + 2 + 1 = 7. Answer: 740',
+ eg:'The error was in the tens column: 5+8+1=14 (carry 1), giving 740 not 730.'}
+],mm:{c:'Addition and Subtraction',cc:'#3B82F6',b:[
+{l:'Column Method',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['Line up digits by place value','Start from the UNITS column (right)','Carry over when sum is 10 or more','Borrow when subtracting a larger digit']},
+{l:'Checking Answers',bg:'#0A0F1A',bd:'#2563EB',tc:'#BFDBFE',i:['Use inverse: if a+b=c, check c−b=a','Estimate first (round numbers)','Re-check your carrying/borrowing']}
+]},rules:[
+{n:'1',c:'#3B82F6',t:'Always line up by place value',d:'Line up Units under Units, Tens under Tens, etc.',eg:[{lbl:'RIGHT',txt:'  4 5 6 | + 2 8 3 | so units 6+3, tens 5+8, hundreds 4+2'},{lbl:'WRONG',txt:'Never line up numbers on the left without checking place value alignment'}]},
+{n:'2',c:'#2563EB',t:'Carrying and borrowing',d:'When a column adds to 10+, carry the tens digit. When subtracting a larger digit, borrow from the next column.',eg:[{lbl:'CARRY',txt:'7 + 8 = 15: write 5 in the column, carry 1 to the next column'},{lbl:'BORROW',txt:'32 − 8 in units: borrow 1 ten from tens, making it 12 − 8 = 4'}]},
+{n:'3',c:'#3B82F6',t:'Inverse operations check',d:'Use the inverse operation to verify your answer.',eg:[{lbl:'CHECK ADDITION',txt:'234 + 567 = 801. Check: 801 − 567 = 234 ✓'},{lbl:'CHECK SUBTRACTION',txt:'843 − 269 = 574. Check: 574 + 269 = 843 ✓'}]}
+],tip:{t:'Always estimate first by rounding. If your exact answer is very different from your estimate, you made an error somewhere. Go back and check each column.',c:'#030712',b:'#3B82F6',tc:'#BFDBFE'}},
+
+/* ─── MULTIPLICATION ─────────────────────────────────────── */
+{id:'m_multiply',sec:'Numbers',icon:'✖️',ttl:'Multiplication',sub:'Breaking up numbers, column method and word problems',fc:[
+{type:'mc',q:'Calculate: 3 590 × 621',
+ a:'2 229 390',eg:'3 590 × 621: use column method or break up: 3590×600=2154000, 3590×21=75390. Total = 2 229 390',
+ w:['2 239 390','2 229 490','2 229 380']},
+{type:'mc',q:'Calculate: 47 × 100',
+ a:'4 700',eg:'Multiplying by 100: move digits 2 places to the left (add 2 zeros). 47 × 100 = 4 700',
+ w:['470','47 000','4 700 000']},
+{type:'mc',q:'Which calculation uses the distributive law correctly to calculate 7 × 48?',
+ a:'(7 × 40) + (7 × 8)',eg:'Distributive law: a × (b + c) = (a × b) + (a × c). 48 = 40 + 8. So 7 × 48 = (7×40)+(7×8) = 280+56 = 336',
+ w:['(7 + 40) × (7 + 8)','7 × (40 × 8)','(7 × 4) + (7 × 8)']},
+{type:'fill',q:'Complete the number sentence using the distributive law.',
+ pass:'9 × 4 = (___ × 4) + (7 × 4)',blanks:['2'],
+ opts:['2','3','9','7'],eg:'9 = 2 + 7. So 9 × 4 = (2 × 4) + (7 × 4) = 8 + 28 = 36'},
+{type:'mc',q:'A factory produces 1 250 items per day. How many items are produced in 5 weeks (5 × 7 days)?',
+ a:'43 750',eg:'Days = 5 × 7 = 35 days. Items = 1 250 × 35 = 43 750',
+ w:['8 750','6 250','87 500']},
+{type:'tf',q:'Multiplication is commutative: 25 × 8 = 8 × 25.',
+ a:'true',explanation:'Yes! Multiplication is commutative: a × b = b × a. So 25 × 8 = 8 × 25 = 200.'},
+{type:'tf',q:'To multiply any number by 1 000, add three zeros to the end.',
+ a:'true',explanation:'Yes! Multiplying by 1 000 moves every digit 3 places to the left, which is the same as adding 3 zeros at the end. 45 × 1 000 = 45 000.'},
+{type:'fix',q:'Find and correct the error.',
+ pass:'A school orders 48 boxes of books. Each box has 24 books. Total = 48 × 24 = 862 books.',
+ a:'48 × 24 = 1 152 books',hint:'48 × 24: 48×20=960, 48×4=192. 960+192=1 152',
+ eg:'Correct: (48×20)+(48×4) = 960+192 = 1 152, not 862'}
+],mm:{c:'Multiplication',cc:'#3B82F6',b:[
+{l:'Key Methods',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['Break up: 47×8 = (40×8)+(7×8)','Column method for larger numbers','× by 10/100/1000: add zeros']},
+{l:'Laws',bg:'#0A0F1A',bd:'#2563EB',tc:'#BFDBFE',i:['Commutative: 6×8 = 8×6','Associative: (2×3)×4 = 2×(3×4)','Distributive: 7×48 = (7×40)+(7×8)']}
+]},rules:[
+{n:'1',c:'#3B82F6',t:'Break up numbers to multiply',d:'Split one number into parts and multiply each part separately.',eg:[{lbl:'EXAMPLE',txt:'34 × 7: break 34 into 30 + 4. (30×7)+(4×7) = 210+28 = 238'},{lbl:'CHOOSE THE SPLIT',txt:'Split at the tens/units or hundreds/tens boundary to make it easier.'}]},
+{n:'2',c:'#2563EB',t:'Multiplying by 10, 100, 1 000',d:'Each zero adds a place shift.',eg:[{lbl:'×10',txt:'Move digits 1 place left: 365 × 10 = 3 650'},{lbl:'×100',txt:'Move digits 2 places left: 47 × 100 = 4 700'},{lbl:'×1000',txt:'Move digits 3 places left: 8 × 1 000 = 8 000'}]},
+{n:'3',c:'#3B82F6',t:'Estimate first',d:'Round both numbers and multiply for a quick estimate. Use this to check your exact answer.',eg:[{lbl:'EXAMPLE',txt:'3 590 × 621 ≈ 3 600 × 600 = 2 160 000. Exact: 2 229 390. Close — looks right!'}]}
+],tip:{t:'For column multiplication: write the partial products carefully. Multiply the top number by each digit of the bottom number separately, shifting one place left each time.',c:'#030712',b:'#3B82F6',tc:'#BFDBFE'}},
+
+/* ─── DIVISION ──────────────────────────────────────────── */
+{id:'m_division',sec:'Numbers',icon:'➗',ttl:'Division',sub:'Long division, remainders and word problems',fc:[
+{type:'mc',q:'Calculate: 3 865 ÷ 120 (give the answer with remainder)',
+ a:'32 remainder 25',eg:'120 × 32 = 3 840. 3 865 − 3 840 = 25. Answer: 32 r 25',
+ w:['32 remainder 5','31 remainder 25','32 remainder 35']},
+{type:'mc',q:'Mr Maisa has 630 eggs. He packs them in trays of 48. How many COMPLETE trays can he fill?',
+ a:'13 trays',eg:'630 ÷ 48 = 13 remainder 6. He can fill 13 complete trays (6 eggs left over).',
+ w:['12 trays','14 trays','13 trays and 6 eggs']},
+{type:'mc',q:'Which is the correct first step in the long division 4 872 ÷ 6?',
+ a:'How many times does 6 go into 4? It does not go — so look at 48.',
+ eg:'In long division, start from the left. If the divisor does not fit, take one more digit.',
+ w:['Divide 6 into 2','Divide 6 into 4 872 all at once','Divide 6 into 7']},
+{type:'fill',q:'A train travels at 100 km per hour. It travels 950 km. How many hours does it take?',
+ pass:'950 ÷ 100 = ___ hours',blanks:['9.5'],
+ opts:['9.5','9','10','95'],eg:'950 ÷ 100 = 9.5 hours (9 hours 30 minutes)'},
+{type:'mc',q:'Insert brackets to make this number sentence true: 2 + 5 × 9 − 4 = 27',
+ a:'2 + (5 × (9 − 4)) = 27',eg:'Without brackets: 2+5×9−4 = 2+45−4 = 43. Try (5×(9−4)): 5×5=25. 2+25=27. ✓',
+ w:['(2 + 5) × 9 − 4 = 27','2 + 5 × (9 − 4) = 27','(2 + 5) × (9 − 4) = 27']},
+{type:'tf',q:'The remainder in a division problem is always less than the divisor.',
+ a:'true',explanation:'Yes! If the remainder were equal to or greater than the divisor, you could divide one more time. The remainder must always be smaller than the divisor.'},
+{type:'tf',q:'256 ÷ 8 = 8 ÷ 256. Division is commutative.',
+ a:'false',explanation:'No! Division is NOT commutative. 256 ÷ 8 = 32, but 8 ÷ 256 = 0.03125. You cannot swap the order in division.'},
+{type:'id',q:'A water tank holds 600 kl of water. The tank is 2/3 full. How much water is in the tank? Show your calculation.',
+ a:'2/3 of 600 = (600 ÷ 3) × 2 = 200 × 2 = 400 kl',
+ hint:'To find a fraction of a quantity: divide by the denominator, then multiply by the numerator.',
+ eg:'2/3 of 600: First find 1/3: 600÷3=200. Then multiply by 2: 200×2=400 kl'}
+],mm:{c:'Division',cc:'#3B82F6',b:[
+{l:'Long Division Steps',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['1. Divide — how many times does divisor fit?','2. Multiply — divisor × quotient digit','3. Subtract — find the remainder','4. Bring down — next digit','Repeat: D M S B']},
+{l:'Remainders',bg:'#0A0F1A',bd:'#2563EB',tc:'#BFDBFE',i:['Remainder < divisor always','Write as: 25 remainder 6 or 25 r 6','Or convert to decimal/fraction']}
+]},rules:[
+{n:'1',c:'#3B82F6',t:'DMSB — four steps of long division',d:'Repeat these four steps for each digit.',eg:[{lbl:'D — DIVIDE',txt:'How many times does 6 go into 48? 8 times.'},{lbl:'M — MULTIPLY',txt:'8 × 6 = 48'},{lbl:'S — SUBTRACT',txt:'48 − 48 = 0'},{lbl:'B — BRING DOWN',txt:'Bring down the next digit and repeat'}]},
+{n:'2',c:'#2563EB',t:'Word problems with remainders',d:'Read the question carefully — sometimes you round UP, sometimes you ignore the remainder.',eg:[{lbl:'ROUND UP',txt:'"How many buses needed for 47 people if each bus holds 15?" 47÷15=3r2. Need 4 buses (round UP to fit everyone).'},{lbl:'IGNORE',txt:'"How many complete bags?" — only count complete ones, ignore remainder.'}]}
+],tip:{t:'Memory trick for long division steps: Does McDonalds Sell Burgers? D=Divide, M=Multiply, S=Subtract, B=Bring down. Repeat until no digits left.',c:'#030712',b:'#3B82F6',tc:'#BFDBFE'}},
+
+/* ─── FACTORS, MULTIPLES, PRIMES ───────────────────────────── */
+{id:'m_factors',sec:'Numbers',icon:'🔑',ttl:'Factors, Multiples and Prime Numbers',sub:'Finding factors, listing multiples and identifying prime numbers',fc:[
+{type:'mc',q:'Which number is a FACTOR of 112?',
+ a:'7',eg:'112 ÷ 7 = 16 exactly (no remainder). So 7 is a factor. 112 ÷ 3 = 37.3... (not exact). 112 ÷ 5 = 22.4... (not exact). 112 ÷ 9 = 12.4... (not exact).',
+ w:['3','5','9']},
+{type:'mc',q:'Write down the multiples of 7 between 21 and 56.',
+ a:'28, 35, 42, 49',eg:'Multiples of 7: 7,14,21,28,35,42,49,56. Between 21 and 56 means NOT including 21 and 56.',
+ w:['21, 28, 35, 42, 49, 56','28, 35, 42','35, 42, 49, 56']},
+{type:'mc',q:'Which prime number is between 10 and 20?',
+ a:'17',eg:'A prime number has exactly 2 factors: 1 and itself. 11,13,17,19 are prime. The question asks for THE prime — in exam context checking one specific option: 17.',
+ w:['15','16','18']},
+{type:'mc',q:'What are ALL the factors of 36?',
+ a:'1, 2, 3, 4, 6, 9, 12, 18, 36',eg:'36 = 1×36 = 2×18 = 3×12 = 4×9 = 6×6. Factors: 1,2,3,4,6,9,12,18,36 (9 factors)',
+ w:['1, 2, 3, 4, 6, 9, 12, 18','1, 2, 4, 6, 9, 12, 36','2, 3, 4, 6, 9, 12, 18']},
+{type:'fill',q:'Express 24 as a product of its prime factors.',
+ pass:'24 = 2 × 2 × 2 × ___',blanks:['3'],
+ opts:['3','4','6','12'],eg:'24 ÷ 2 = 12 ÷ 2 = 6 ÷ 2 = 3. So 24 = 2 × 2 × 2 × 3 = 2³ × 3'},
+{type:'mc',q:'What is the Lowest Common Multiple (LCM) of 4 and 6?',
+ a:'12',eg:'Multiples of 4: 4,8,12,16... Multiples of 6: 6,12,18... First common multiple = 12',
+ w:['2','24','8']},
+{type:'tf',q:'1 is a prime number.',
+ a:'false',explanation:'No! A prime number must have EXACTLY 2 different factors. The number 1 has only ONE factor (1 itself). So 1 is NOT prime. The smallest prime number is 2.'},
+{type:'tf',q:'Every even number greater than 2 is NOT a prime number.',
+ a:'true',explanation:'True! Even numbers are divisible by 2, which means they have at least 3 factors (1, 2, and themselves). The only even prime is 2 itself.'},
+{type:'id',q:'Find the Highest Common Factor (HCF) of 24 and 36. Show your working.',
+ a:'HCF = 12. Factors of 24: 1,2,3,4,6,8,12,24. Factors of 36: 1,2,3,4,6,9,12,18,36. Common factors: 1,2,3,4,6,12. Highest = 12.',
+ hint:'List all factors of both numbers, then find the largest factor that appears in BOTH lists.',
+ eg:'Factors of 24: 1,2,3,4,6,8,12,24. Factors of 36: 1,2,3,4,6,9,12,18,36. Highest common = 12.'}
+],mm:{c:'Factors, Multiples and Primes',cc:'#3B82F6',b:[
+{l:'Factors',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['Factors divide a number EXACTLY','Factors of 12: 1,2,3,4,6,12','Find by making pairs: 1×12, 2×6, 3×4']},
+{l:'Multiples',bg:'#0A0F1A',bd:'#2563EB',tc:'#BFDBFE',i:['Multiples are in the times table','Multiples of 5: 5,10,15,20,25...','Multiples are LARGER than the number']},
+{l:'Prime Numbers',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['Exactly 2 factors: 1 and itself','2,3,5,7,11,13,17,19,23,29...','1 is NOT prime (only 1 factor)']}
+]},rules:[
+{n:'1',c:'#3B82F6',t:'Factor pairs method',d:'Find all factors by making pairs. Start with 1 × number, then 2 × ...',eg:[{lbl:'EXAMPLE: 24',txt:'1×24=24, 2×12=24, 3×8=24, 4×6=24. Stop when you repeat. Factors: 1,2,3,4,6,8,12,24'},{lbl:'TIP',txt:'When the two factors in a pair are the same (e.g. 6×6=36), you have found the middle.'}]},
+{n:'2',c:'#2563EB',t:'Prime number test',d:'To test if a number is prime, check if any number from 2 up to its square root divides it exactly.',eg:[{lbl:'TEST 17',txt:'Is 17 prime? Try 2: 17÷2=8.5 no. Try 3: 17÷3=5.6 no. Try 4: no. √17≈4.1, so stop. 17 IS prime.'},{lbl:'EASY CHECK',txt:'Learn primes to 50: 2,3,5,7,11,13,17,19,23,29,31,37,41,43,47'}]},
+{n:'3',c:'#3B82F6',t:'HCF and LCM',d:'HCF: highest factor in both lists. LCM: lowest multiple in both lists.',eg:[{lbl:'HCF',txt:'HCF of 12 and 18: factors of 12={1,2,3,4,6,12}, factors of 18={1,2,3,6,9,18}. HCF=6'},{lbl:'LCM',txt:'LCM of 4 and 6: multiples of 4={4,8,12,16...}, multiples of 6={6,12...}. LCM=12'}]}
+],tip:{t:'Factors are SMALLER (or equal). Multiples are BIGGER (or equal). HCF is about factors. LCM is about multiples. Never mix these up!',c:'#030712',b:'#3B82F6',tc:'#BFDBFE'}},
+
+/* ─── COMMON FRACTIONS ───────────────────────────────────── */
+{id:'m_fractions',sec:'Numbers',icon:'🍕',ttl:'Common Fractions',
+ sub:'Equivalent fractions, comparing, adding and subtracting',fc:[
+{type:'mc',q:'What fraction of this rectangle is shaded? (5 equal parts, 3 shaded)',
+ diag:{t:'fb',num:3,den:5},
+ a:'3/5',eg:'3 out of 5 equal parts are shaded. Numerator = 3 (parts shaded), denominator = 5 (total equal parts).',
+ w:['2/5','5/3','3/8']},
+{type:'mc',q:'Which fraction is equivalent to 3/4?',
+ a:'9/12',eg:'Equivalent fractions: multiply numerator AND denominator by the same number. 3/4 × 3/3 = 9/12.',
+ w:['6/9','4/5','12/8']},
+{type:'mc',q:'Calculate: 25/36 + 3/4',
+ a:'61/36 = 1 and 25/36',eg:'Change 3/4 to 27/36 (multiply by 9/9). Then 25/36 + 27/36 = 52/36 = 1 16/36 = 1 4/9',
+ w:['28/40','52/36 = 1 and 4/9','28/36']},
+{type:'mc',q:'Calculate: 5 and 4/6 − 2 and 2/6 + 1 and 1/6',
+ a:'4 and 3/6 = 4 and 1/2',eg:'5 4/6 − 2 2/6 = 3 2/6. Then 3 2/6 + 1 1/6 = 4 3/6 = 4 1/2.',
+ w:['4 and 1/6','3 and 1/2','5 and 1/6']},
+{type:'fill',q:'Which is the largest fraction? 2/3 or 3/4',
+ pass:'___ is the larger fraction.',blanks:['3/4'],
+ opts:['3/4','2/3','they are equal','cannot compare'],eg:'Convert to same denominator: 2/3=8/12, 3/4=9/12. 9/12 > 8/12, so 3/4 is larger.'},
+{type:'mc',q:'Arrange these fractions from smallest to largest: 1/2, 2/3, 3/8, 5/6',
+ a:'3/8, 1/2, 2/3, 5/6',
+ diag:{t:'fl',fracs:[[3,8],[1,2],[2,3],[5,6]]},
+ eg:'Common denominator = 24. 3/8=9/24, 1/2=12/24, 2/3=16/24, 5/6=20/24. Order: 9,12,16,20 → 3/8, 1/2, 2/3, 5/6',
+ w:['1/2, 3/8, 2/3, 5/6','3/8, 2/3, 1/2, 5/6','5/6, 2/3, 1/2, 3/8']},
+{type:'tf',q:'To add fractions, you only need the same numerator.',
+ a:'false',explanation:'No! To add or subtract fractions, you need the same DENOMINATOR (the bottom number). The numerators are then added or subtracted while the denominator stays the same. Example: 1/4 + 2/4 = 3/4.'},
+{type:'id',q:'A water tank holds 600 litres. It is 2/3 full. How much water is in the tank?',
+ a:'2/3 of 600 = (600 ÷ 3) × 2 = 200 × 2 = 400 litres',
+ hint:'Fraction of a quantity: divide by denominator, multiply by numerator.',
+ eg:'1/3 of 600 = 600÷3 = 200. So 2/3 = 2×200 = 400 litres.'}
+],mm:{c:'Common Fractions',cc:'#3B82F6',b:[
+{l:'Fraction Parts',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['Numerator = parts we have (top)','Denominator = total equal parts (bottom)','3/4: 3 parts out of 4']},
+{l:'Equivalent Fractions',bg:'#0A0F1A',bd:'#2563EB',tc:'#BFDBFE',i:['Multiply/divide top AND bottom by same number','1/2 = 2/4 = 4/8 = 5/10','Simplify: divide both by HCF']},
+{l:'Adding and Subtracting',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['Same denominator: add/subtract numerators only','Different denominator: find common denominator first','Mixed numbers: work with whole parts and fractions separately']}
+]},rules:[
+{n:'1',c:'#3B82F6',t:'Finding equivalent fractions',d:'Multiply or divide both numerator AND denominator by the same non-zero number.',eg:[{lbl:'MULTIPLY UP',txt:'1/3 = 2/6 = 3/9 = 4/12 (multiply top and bottom by 2, 3, 4...)'},{lbl:'SIMPLIFY',txt:'12/18: HCF=6. 12÷6=2, 18÷6=3. Simplified: 2/3'}]},
+{n:'2',c:'#2563EB',t:'Adding fractions with different denominators',d:'Find a common denominator, convert both fractions, then add numerators.',eg:[{lbl:'STEP 1',txt:'Find LCM of denominators: LCM(4,6) = 12'},{lbl:'STEP 2',txt:'Convert: 1/4=3/12, 1/6=2/12'},{lbl:'STEP 3',txt:'Add: 3/12 + 2/12 = 5/12'}]},
+{n:'3',c:'#3B82F6',t:'Fractions of quantities',d:'To find a fraction of a number: divide by denominator, multiply by numerator.',eg:[{lbl:'FORMULA',txt:'a/b of n = (n ÷ b) × a'},{lbl:'EXAMPLE',txt:'3/5 of 60: (60÷5)×3 = 12×3 = 36'},{lbl:'CHECK',txt:'1/5 of 60 = 12. So 3/5 = 3×12 = 36 ✓'}]}
+],tip:{t:'Remember: fractions of quantities = divide by bottom, multiply by top. A common fraction like 1/4 of 80 means divide 80 into 4 equal groups (=20), then take 1 group.',c:'#030712',b:'#3B82F6',tc:'#BFDBFE'}}
+
+  ],2:[
+
+/* ─── NUMBER SENTENCES ───────────────────────────────────── */
+{id:'m_numsentences',sec:'Patterns',icon:'⚖️',ttl:'Number Sentences',sub:'BODMAS, solving for unknowns and writing number sentences',fc:[
+{type:'mc',q:'Calculate the value of x if x − 41 = 12.',
+ a:'x = 53',eg:'Add 41 to both sides: x = 12 + 41 = 53. Check: 53 − 41 = 12 ✓',
+ w:['x = 29','x = 43','x = 51']},
+{type:'mc',q:'Which is the correct number sentence for: "Seven less than a certain number m equals twelve"?',
+ a:'m − 7 = 12',eg:'Seven LESS THAN m means m − 7. Equals twelve = 12. So: m − 7 = 12.',
+ w:['7 − m = 12','m + 7 = 12','12 − m = 7']},
+{type:'mc',q:'Our school had 12 trees. On Arbor Day we doubled the number. Three trees died. Write the number sentence.',
+ a:'(12 × 2) − 3 = 21',eg:'Double = ×2: 12×2=24. Minus 3: 24−3=21. Number sentence: (12×2)−3=21.',
+ w:['12 + 2 − 3 = 11','12 × 2 + 3 = 27','(12 + 2) × 3 = 42']},
+{type:'fill',q:'Insert brackets to make this number sentence true: 2 + 5 × 9 − 4 = 27',
+ pass:'2 + 5 × (9 ___ 4) = 27',blanks:['−'],
+ opts:['−','÷','×','+'],eg:'2 + 5 × (9−4) = 2 + 5×5 = 2+25 = 27 ✓'},
+{type:'mc',q:'Calculate using BODMAS: 3 + 4 × 2 − 1',
+ a:'10',eg:'BODMAS: multiplication first. 4×2=8. Then left to right: 3+8−1 = 10.',
+ w:['13','12','8']},
+{type:'tf',q:'In BODMAS, multiplication is always calculated before addition.',
+ a:'true',explanation:'Yes! BODMAS stands for Brackets, Orders (powers), Division, Multiplication, Addition, Subtraction. Multiplication and division are done BEFORE addition and subtraction.'},
+{type:'tf',q:'In the equation 3x = 24, the value of x is 8.',
+ a:'true',explanation:'Yes! 3x = 24 means 3 × x = 24. Divide both sides by 3: x = 24 ÷ 3 = 8. Check: 3 × 8 = 24 ✓.'},
+{type:'fix',q:'Correct the calculation.',
+ pass:'3 + 4 × 2 = 14',a:'3 + 4 × 2 = 11',
+ hint:'BODMAS: do multiplication BEFORE addition. 4×2=8 first, then 3+8=11.',
+ eg:'Wrong: (3+4)×2=14. Correct: 3+(4×2)=3+8=11. Multiplication before addition!'}
+],mm:{c:'Number Sentences',cc:'#3B82F6',b:[
+{l:'BODMAS Order',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['B = Brackets first','O = Orders (powers, √)','D M = Division, Multiplication (left to right)','A S = Addition, Subtraction (left to right)']},
+{l:'Solving for Unknowns',bg:'#0A0F1A',bd:'#2563EB',tc:'#BFDBFE',i:['Use inverse operations','x + 7 = 12: subtract 7 both sides','x − 5 = 8: add 5 both sides','3x = 24: divide both sides by 3']}
+]},rules:[
+{n:'1',c:'#3B82F6',t:'BODMAS step by step',d:'Always follow the BODMAS order. Never skip steps.',eg:[{lbl:'EXAMPLE',txt:'4 + 3 × (8−2) ÷ 6'},{lbl:'STEP 1 (B)',txt:'Brackets: 8−2=6. Now: 4 + 3 × 6 ÷ 6'},{lbl:'STEP 2 (DM)',txt:'Left to right: 3×6=18, then 18÷6=3. Now: 4+3'},{lbl:'STEP 3 (AS)',txt:'4+3=7. Answer: 7'}]},
+{n:'2',c:'#2563EB',t:'Solving equations — balance method',d:'Whatever you do to one side, do the same to the other side.',eg:[{lbl:'EXAMPLE',txt:'x + 15 = 32'},{lbl:'SUBTRACT 15',txt:'x + 15 − 15 = 32 − 15'},{lbl:'ANSWER',txt:'x = 17. Check: 17 + 15 = 32 ✓'}]}
+],tip:{t:'BODMAS mnemonic: Brackets first, then Orders, then Divide and Multiply (left to right), then Add and Subtract (left to right). When in doubt, do brackets first!',c:'#030712',b:'#3B82F6',tc:'#BFDBFE'}},
+
+/* ─── DECIMAL FRACTIONS ──────────────────────────────────── */
+{id:'m_decimals',sec:'Numbers',icon:'💯',ttl:'Decimal Fractions',sub:'Place value, ordering, operations with decimals',fc:[
+{type:'mc',q:'What is the value of the underlined digit in 129,34? (the 4 is underlined)',
+ diag:{t:'dv',n:'129.34',h:1},
+ a:'0,04',eg:'In 129,34: 1=hundreds, 2=tens, 9=units, 3=tenths, 4=hundredths. Value of 4 = 4 × 0,01 = 0,04',
+ w:['4','0,4','40']},
+{type:'mc',q:'Order from biggest to smallest: 0,5; 0,050; 0,75; 0,570',
+ a:'0,75 > 0,570 > 0,5 > 0,050',eg:'Write all with same decimal places: 0,750 > 0,570 > 0,500 > 0,050. Compare digit by digit.',
+ w:['0,5 > 0,570 > 0,75 > 0,050','0,050 < 0,5 < 0,570 < 0,75','0,75 > 0,5 > 0,570 > 0,050']},
+{type:'mc',q:'Calculate: 8,26 + 3,04 − 6,39',
+ a:'4,91',eg:'8,26 + 3,04 = 11,30. Then 11,30 − 6,39 = 4,91.',
+ w:['4,81','5,91','4,90']},
+{type:'mc',q:'Mr Pitso car uses 9,5 litres on the long route. The short route uses only 8,7 litres. How many litres does he save?',
+ a:'0,8 litres',eg:'9,5 − 8,7 = 0,8 litres saved.',
+ w:['1,2 litres','0,9 litres','1,8 litres']},
+{type:'fill',q:'Complete: Which decimal is equivalent to 1/4?',
+ pass:'1/4 = 0,___',blanks:['25'],
+ opts:['25','5','4','75'],eg:'1/4 = 25/100 = 0,25. Or divide: 1÷4=0,25.'},
+{type:'mc',q:'Calculate: 3,6 m of rope. Laone gets 800 mm more than Tsaone. How long is each piece? (Note: 800 mm = 0,8 m)',
+ a:'Laone = 2,2 m; Tsaone = 1,4 m',eg:'Let Tsaone = x. Laone = x + 0,8. Total: x + x + 0,8 = 3,6. 2x = 2,8. x = 1,4. Laone = 1,4 + 0,8 = 2,2 m.',
+ w:['Laone=2,0 m; Tsaone=1,6 m','Laone=2,5 m; Tsaone=1,1 m','Laone=1,8 m; Tsaone=1,8 m']},
+{type:'tf',q:'0,5 is equal to 0,50.',
+ a:'true',explanation:'Yes! Adding a zero after the last decimal digit does not change the value: 0,5 = 0,50 = 0,500. They are all equal to 5/10 = 1/2.'},
+{type:'tf',q:'0,05 is greater than 0,5.',
+ a:'false',explanation:'No! 0,05 = 5/100 = 5 hundredths. 0,5 = 5/10 = 5 tenths = 50 hundredths. 0,5 is 10 times bigger than 0,05.'}
+],mm:{c:'Decimal Fractions',cc:'#3B82F6',b:[
+{l:'Decimal Place Value',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['Units , tenths, hundredths, thousandths','129,34: 9=units, 3=tenths, 4=hundredths','The comma separates whole from decimal']},
+{l:'Comparing Decimals',bg:'#0A0F1A',bd:'#2563EB',tc:'#BFDBFE',i:['Line up the decimal commas','Compare digit by digit from left','Add zeros to make same length: 0,5=0,50']}
+]},rules:[
+{n:'1',c:'#3B82F6',t:'Decimal place value positions',d:'After the comma: tenths, hundredths, thousandths.',eg:[{lbl:'POSITIONS',txt:'1 2 9 , 3  4  5  = 129,345'},{lbl:'LABEL',txt:'9=units, 3=tenths(0,3), 4=hundredths(0,04), 5=thousandths(0,005)'}]},
+{n:'2',c:'#2563EB',t:'Adding and subtracting decimals',d:'Line up the decimal commas. Then add or subtract as normal.',eg:[{lbl:'STEP 1',txt:'Write numbers with commas lined up: 8,26 / + 3,04'},{lbl:'STEP 2',txt:'Add each column: 6+4=10 (write 0, carry 1), etc.'},{lbl:'TIP',txt:'Add zeros to make same number of decimal places if needed'}]},
+{n:'3',c:'#3B82F6',t:'Converting between fractions and decimals',d:'To convert fraction to decimal: divide numerator by denominator.',eg:[{lbl:'EXAMPLE',txt:'3/4: divide 3 by 4 = 0,75'},{lbl:'EXAMPLE',txt:'1/5: divide 1 by 5 = 0,2'},{lbl:'COMMON',txt:'1/4=0,25, 1/2=0,5, 3/4=0,75, 1/10=0,1, 1/100=0,01'}]}
+],tip:{t:'Always line up the decimal commas when adding or subtracting. Think of decimals as money: R2,50 + R3,75. You automatically line up commas for money!',c:'#030712',b:'#3B82F6',tc:'#BFDBFE'}},
+
+/* ─── PERCENTAGES ─────────────────────────────────────────── */
+{id:'m_percentages',sec:'Numbers',icon:'%',ttl:'Percentages',sub:'Converting fractions/decimals to percentages, finding % of amounts',fc:[
+{type:'mc',q:'What is 50% written as a fraction?',
+ diag:{t:'pl',entries:[[50,'1/2'],[25,'0,25'],[75,'3/4']]},
+ a:'1/2',eg:'50% = 50/100 = 1/2. Per cent means per hundred.',
+ w:['1/4','5/10','2/5']},
+{type:'mc',q:'What is 0,25 as a percentage?',
+ a:'25%',eg:'To convert decimal to %: multiply by 100. 0,25 × 100 = 25%.',
+ w:['2,5%','0,25%','2,50%']},
+{type:'mc',q:'Calculate: 30% of 250',
+ a:'75',eg:'30% of 250 = (30/100) × 250 = 0,30 × 250 = 75. Or: 10% of 250=25, so 30%=3×25=75',
+ w:['30','25','80']},
+{type:'mc',q:'A shirt costs R240. There is a 15% discount. How much is the discount?',
+ a:'R36',eg:'15% of R240: 10%=R24, 5%=R12. 15%=R24+R12=R36.',
+ w:['R24','R40','R30']},
+{type:'fill',q:'Convert 3/4 to a percentage.',
+ pass:'3/4 = ____%',blanks:['75'],
+ opts:['75','34','25','50'],eg:'3/4 = 0,75 = 75/100 = 75%. Or: 1/4=25%, so 3/4=75%.'},
+{type:'mc',q:'A learner gets 18 out of 24 for a test. What percentage is this?',
+ a:'75%',eg:'18/24 = 3/4 = 75%. Or: (18÷24)×100 = 0,75×100 = 75%.',
+ w:['18%','80%','72%']},
+{type:'tf',q:'100% means the whole amount.',
+ a:'true',explanation:'Yes! 100% = 100/100 = 1 whole. 50% = half, 25% = quarter, 10% = one tenth. To find any % of an amount, think of % as out of 100.'},
+{type:'tf',q:'To find 10% of a number, you divide by 100.',
+ a:'false',explanation:'No! To find 10%, you divide by 10 (because 10% = 10/100 = 1/10). For example, 10% of 300 = 300 ÷ 10 = 30. To find 1%, you divide by 100.'}
+],mm:{c:'Percentages',cc:'#3B82F6',b:[
+{l:'Per cent = per hundred',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['% means out of 100','50% = 50/100 = 0,5','Converting: fraction×100=%, ÷100=%→decimal']},
+{l:'Quick % methods',bg:'#0A0F1A',bd:'#2563EB',tc:'#BFDBFE',i:['10% = ÷10','5% = half of 10%','25% = ÷4','50% = ÷2','1% = ÷100']}
+]},rules:[
+{n:'1',c:'#3B82F6',t:'Three conversions to know',d:'Be able to convert between fractions, decimals and percentages.',eg:[{lbl:'FRACTION→%',txt:'Multiply by 100: 3/5 × 100 = 60%'},{lbl:'DECIMAL→%',txt:'Multiply by 100: 0,72 × 100 = 72%'},{lbl:'%→DECIMAL',txt:'Divide by 100: 45% ÷ 100 = 0,45'}]},
+{n:'2',c:'#2563EB',t:'Finding a percentage of an amount',d:'Use the build-up method: start with 10% and work from there.',eg:[{lbl:'10% METHOD',txt:'Find 35% of 240: 10%=24, 30%=72, 5%=12. 35%=72+12=84'},{lbl:'FORMULA',txt:'Or: 35/100 × 240 = 0,35 × 240 = 84'}]},
+{n:'3',c:'#3B82F6',t:'Percentage as a mark',d:'To find what percentage a mark is out of a total.',eg:[{lbl:'FORMULA',txt:'(mark ÷ total) × 100 = %'},{lbl:'EXAMPLE',txt:'18/24 as %: (18÷24)×100 = 75%'}]}
+],tip:{t:'Build-up method: 10% = divide by 10. Then build: 20%=double 10%, 5%=half 10%, 25%=quarter the total. This is faster than multiplying by the fraction.',c:'#030712',b:'#3B82F6',tc:'#BFDBFE'}},
+
+/* ─── NUMERIC PATTERNS ───────────────────────────────────── */
+{id:'m_numpatterns',sec:'Patterns',icon:'📈',ttl:'Numeric Patterns',sub:'Extending sequences, finding rules and using tables',fc:[
+{type:'mc',q:'What is the missing term? Term 1=2, Term 2=5, Term 3=10, Term 4=17, Term 5=26, Term 10=?',
+ diag:{t:'patt',seq:[2,5,10,17,26],rule:'differences increase by 2'},
+ a:'101',eg:'Differences: 3,5,7,9,11,13,15,17,19. Sum from term1: 2+3+5+7+9+11+13+15+17+19=101.',
+ w:['100','63','37']},
+{type:'mc',q:'What is the rule for the pattern: 3, 6, 12, 24, 48, ...?',
+ a:'Multiply each term by 2',eg:'6÷3=2, 12÷6=2, 24÷12=2. Rule: ×2 each time (geometric sequence).',
+ w:['Add 3 each time','Add 6 each time','Multiply by 3']},
+{type:'mc',q:'What is the 6th term in the pattern: 100, 93, 86, 79, 72, ...',
+ a:'65',eg:'Each term decreases by 7. Next: 72−7=65.',
+ w:['58','67','63']},
+{type:'fill',q:'Complete the flow diagram. Input: n. Rule: ×3 then +1. If n=5, output=?',
+ pass:'5 → ×3 → ___ → +1 → ___',blanks:['16'],
+ opts:['16','15','14','19'],eg:'5×3=15. 15+1=16. The two blanks are 15 and 16; the final output is 16.'},
+{type:'mc',q:'Find the rule and complete: 2, 5, 10, 17, 26, ___, ___',
+ a:'37, 50',eg:'Differences: 3,5,7,9,11. Next differences are 11 and 13. 26+11=37, 37+13=50.',
+ w:['35, 46','36, 48','38, 52']},
+{type:'tf',q:'In the pattern 5, 10, 15, 20, 25, the rule is: multiply the term number by 5.',
+ a:'true',explanation:'Yes! Term 1=5=1×5. Term 2=10=2×5. Term 3=15=3×5. The rule is: term value = term number × 5. This is an arithmetic sequence with common difference 5.'},
+{type:'tf',q:'The pattern 1, 4, 9, 16, 25 increases by the same amount each time.',
+ a:'false',explanation:'No! 1,4,9,16,25 are square numbers: 1²,2²,3²,4²,5². The differences are 3,5,7,9 — they increase by 2 each time. This is NOT a constant difference (not arithmetic).'},
+{type:'id',q:'The pattern: 1, 4, 9, 16, 25, ... Describe the pattern in words and find the 10th term.',
+ a:'These are square numbers (n²). Term 1=1²=1, Term 2=2²=4, ... Term 10=10²=100.',
+ hint:'Look at the relationship between the term number and term value.',
+ eg:'Term number squared: 1²=1, 2²=4, 3²=9, 4²=16, 5²=25. Term 10 = 10² = 100.'}
+],mm:{c:'Numeric Patterns',cc:'#3B82F6',b:[
+{l:'Types of Patterns',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['Arithmetic: add/subtract same value','Geometric: multiply/divide by same value','Other: differences increase/decrease']},
+{l:'Finding the Rule',bg:'#0A0F1A',bd:'#2563EB',tc:'#BFDBFE',i:['Look at differences between terms','Check: is the difference constant?','If differences grow, find the 2nd difference']}
+]},rules:[
+{n:'1',c:'#3B82F6',t:'Find differences first',d:'Subtract each term from the next. This reveals the pattern rule.',eg:[{lbl:'ARITHMETIC',txt:'5, 8, 11, 14 → differences: 3,3,3. Rule: +3 each time'},{lbl:'GROWING DIFFERENCES',txt:'2,5,10,17 → differences: 3,5,7. Rule: differences increase by 2'}]},
+{n:'2',c:'#2563EB',t:'Using tables and flow diagrams',d:'Organise patterns in a table: term number vs term value.',eg:[{lbl:'TABLE',txt:'Term number | 1 | 2 | 3 | 4 | 5'},{lbl:'TERM VALUE',txt:'        | 5 |10 |15 |20 |25'},{lbl:'RULE',txt:'Term value = term number × 5'}]},
+{n:'3',c:'#3B82F6',t:'Extending patterns backwards',d:'To find earlier terms, reverse the rule.',eg:[{lbl:'EXAMPLE',txt:'Pattern: 15, 20, 25, 30. Rule: +5. Term 0 = 15−5 = 10. Term −1 = 5.'}]}
+],tip:{t:'Always find the DIFFERENCE between consecutive terms first. If differences are equal = arithmetic. If ratios are equal = geometric. If differences grow = look for a 2nd difference.',c:'#030712',b:'#3B82F6',tc:'#BFDBFE'}},
+
+/* ─── GEOMETRIC PATTERNS ─────────────────────────────────── */
+{id:'m_geopatterns',sec:'Patterns',icon:'🔷',ttl:'Geometric Patterns',sub:'Patterns made from shapes — counting, describing, predicting',fc:[
+{type:'mc',q:'In a pattern of squares: Pattern 1 has 1 small square, Pattern 2 has 4, Pattern 3 has 9, Pattern 4 has 16. How many small squares in Pattern 8?',
+ diag:{t:'sqpatt',vals:[1,4,9,16]},
+ a:'64',eg:'Pattern n has n² small squares. Pattern 8: 8² = 64.',
+ w:['32','48','36']},
+{type:'mc',q:'A pattern uses matchsticks to make triangles in a row. 1 triangle = 3 sticks. Each new triangle added needs how many extra sticks?',
+ diag:{t:'matchpatt',shape:'triangle',start:3,extra:2},
+ a:'2 extra sticks',eg:'After the first triangle (3 sticks), each new triangle shares one side with the previous one. So only 2 new sticks needed.',
+ w:['3 extra sticks','1 extra stick','4 extra sticks']},
+{type:'mc',q:'Matchstick squares: 1 square = 4 sticks. 2 squares in a row = 7 sticks. 3 squares = 10 sticks. How many sticks for 10 squares in a row?',
+ a:'31 sticks',eg:'Rule: 3n+1 where n is the number of squares. For 10: 3×10+1=31.',
+ w:['40 sticks','28 sticks','34 sticks']},
+{type:'mc',q:'Determine the pattern that has 64 small squares (from the square pattern: 1,4,9,16,...)',
+ a:'Pattern number 8',eg:'64 = 8². So it is the 8th pattern. √64 = 8.',
+ w:['Pattern number 6','Pattern number 9','Pattern number 7']},
+{type:'tf',q:'In a growing pattern, the number of shapes always increases by the same amount each time.',
+ a:'false',explanation:'No! Some growing patterns increase by the same amount (like +2 each time) but others grow faster. For example, the square pattern 1,4,9,16,25 increases by 3,5,7,9 — the differences grow.'},
+{type:'id',q:'A pattern of triangles: diagram 1 has 1 triangle, diagram 2 has 3 triangles, diagram 3 has 6 triangles. Describe the rule and find the 5th term.',
+ a:'Pattern: 1,3,6,10,15. Differences: 2,3,4,5. Each new diagram adds one more triangle than the previous addition. Term 5: 10+5=15 triangles.',
+ hint:'Find the differences between consecutive terms first.',
+ eg:'Differences: 3-1=2, 6-3=3, 10-6=4. The difference increases by 1 each time. Term 5=10+5=15.'}
+],mm:{c:'Geometric Patterns',cc:'#3B82F6',b:[
+{l:'Reading Geometric Patterns',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['Count shapes in each diagram carefully','Look for what is added each time','Make a table: diagram number vs shape count']},
+{l:'Common Patterns',bg:'#0A0F1A',bd:'#2563EB',tc:'#BFDBFE',i:['Square pattern: n² = 1,4,9,16,25','Matchstick squares: 3n+1','Matchstick triangles: 2n+1']}
+]},rules:[
+{n:'1',c:'#3B82F6',t:'Count carefully and make a table',d:'Make a table of diagram number vs number of shapes. Then find the pattern in the table.',eg:[{lbl:'STEP 1',txt:'Draw or count shapes in each diagram: Diagram 1→1, Diagram 2→4, Diagram 3→9'},{lbl:'STEP 2',txt:'Find differences: 3, 5 (increasing by 2) → square number pattern'},{lbl:'STEP 3',txt:'Write the rule: n² shapes in diagram n'}]},
+{n:'2',c:'#2563EB',t:'Matchstick formulas',d:'Common matchstick patterns have specific formulas.',eg:[{lbl:'SQUARES IN ROW',txt:'n squares in a row: 3n+1 matchsticks'},{lbl:'TRIANGLES IN ROW',txt:'n triangles in a row: 2n+1 matchsticks'},{lbl:'DERIVE IT',txt:'For squares: first square=4, each extra=3. Formula: 4+(n-1)×3=3n+1'}]}
+],tip:{t:'Always make a table. Put diagram number in top row, shape count in bottom row. Then look at the differences — exactly like numeric patterns!',c:'#030712',b:'#3B82F6',tc:'#BFDBFE'}},
+
+/* ─── 2D SHAPES ──────────────────────────────────────────── */
+{id:'m_2dshapes',sec:'Space and Shape',icon:'📐',ttl:'Properties of 2D Shapes',sub:'Triangles, quadrilaterals, angles and symmetry',fc:[
+{type:'mc',q:'How many degrees are in all the angles of a triangle added together?',
+ a:'180°',eg:'The sum of interior angles in ANY triangle = 180°. Always. This is a fundamental property of triangles.',
+ w:['360°','90°','270°']},
+{type:'mc',q:'A rectangle has the following properties EXCEPT...',
+ a:'All four sides are equal',eg:'A rectangle has: 4 right angles, opposite sides equal and parallel, 2 lines of symmetry. All 4 sides equal = square, not rectangle.',
+ w:['4 right angles (90°)','Opposite sides equal and parallel','Diagonals that bisect each other']},
+{type:'mc',q:'Which triangle has all three sides equal?',
+ a:'Equilateral triangle',eg:'Equilateral: all 3 sides equal, all angles = 60°. Isosceles: 2 sides equal. Scalene: no sides equal.',
+ w:['Isosceles triangle','Scalene triangle','Right-angled triangle']},
+{type:'mc',q:'A triangle has angles of 60° and 70°. What is the third angle?',
+ a:'50°',eg:'All angles in a triangle add to 180°. 60+70=130. 180−130=50°.',
+ w:['40°','60°','70°']},
+{type:'tf',q:'A square is a special type of rectangle.',
+ a:'true',explanation:'Yes! A square has all the properties of a rectangle (4 right angles, opposite sides equal and parallel) PLUS all 4 sides are equal. So every square is a rectangle, but not every rectangle is a square.'},
+{type:'tf',q:'An equilateral triangle has exactly one line of symmetry.',
+ a:'false',explanation:'No! An equilateral triangle has THREE lines of symmetry — one from each vertex to the midpoint of the opposite side. An isosceles triangle has exactly one line of symmetry.'},
+{type:'id',q:'Name ALL the properties of a parallelogram.',
+ a:'Opposite sides are equal and parallel. Opposite angles are equal. Diagonals bisect each other (cut each other in half). No right angles (unless it is a rectangle).',
+ hint:'Think about sides, angles and diagonals.',
+ eg:'Parallelogram: 2 pairs of parallel sides, 2 pairs of equal opposite angles, diagonals bisect each other.'}
+],mm:{c:'2D Shapes',cc:'#3B82F6',b:[
+{l:'Triangles',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['Equilateral: 3 equal sides, 3×60°','Isosceles: 2 equal sides, 2 equal angles','Scalene: no equal sides','Right-angled: one 90° angle','All triangles: angles sum to 180°']},
+{l:'Quadrilaterals',bg:'#0A0F1A',bd:'#2563EB',tc:'#BFDBFE',i:['All quadrilaterals: angles sum to 360°','Square: 4 equal sides, 4×90°','Rectangle: opposite sides equal, 4×90°','Parallelogram: opposite sides equal and parallel','Rhombus: 4 equal sides, opposite angles equal']}
+]},rules:[
+{n:'1',c:'#3B82F6',t:'Triangle angle sum = 180°',d:'All three interior angles of any triangle add up to 180°.',eg:[{lbl:'FIND MISSING ANGLE',txt:'Angles: 40° and 75°. Missing = 180°−40°−75° = 65°'},{lbl:'CHECK',txt:'40+75+65 = 180 ✓'}]},
+{n:'2',c:'#2563EB',t:'Quadrilateral angle sum = 360°',d:'All four interior angles of any quadrilateral add up to 360°.',eg:[{lbl:'RECTANGLE',txt:'90+90+90+90 = 360 ✓'},{lbl:'FIND MISSING',txt:'Angles: 70°, 110°, 80°, ? = 360−70−110−80 = 100°'}]},
+{n:'3',c:'#3B82F6',t:'Hierarchy of quadrilaterals',d:'Some shapes are special cases of others.',eg:[{lbl:'SQUARE ⊂ RECTANGLE',txt:'Every square IS a rectangle (4 right angles) but also has equal sides'},{lbl:'SQUARE ⊂ RHOMBUS',txt:'Every square IS a rhombus (4 equal sides) but also has right angles'},{lbl:'PARALLELOGRAM',txt:'Rectangle, rhombus, square are all special parallelograms'}]}
+],tip:{t:'Memory aid: TRIangle = 3 sides, sum 180°. QUADrilateral = 4 sides, sum 360°. For each extra side, the angle sum increases by 180°.',c:'#030712',b:'#3B82F6',tc:'#BFDBFE'}},
+
+/* ─── DATA HANDLING ───────────────────────────────────────── */
+{id:'m_data',sec:'Data',icon:'📊',ttl:'Data Handling',sub:'Collecting data, graphs, mean, mode, median and range',fc:[
+{type:'mc',q:'What is the MEAN (average) of: 12, 8, 15, 10, 5?',
+ a:'10',eg:'Add all values: 12+8+15+10+5=50. Divide by count: 50÷5=10. Mean=10.',
+ w:['8','12','15']},
+{type:'mc',q:'What is the MODE of: 3, 7, 4, 3, 9, 3, 7?',
+ a:'3',eg:'Mode = the value that appears most often. 3 appears 3 times, 7 appears 2 times. Mode=3.',
+ w:['7','4','9']},
+{type:'mc',q:'What is the MEDIAN of: 5, 2, 8, 1, 6?',
+ a:'5',eg:'Arrange in order: 1, 2, 5, 6, 8. The middle value = 5. Median=5.',
+ w:['6','2','4,4']},
+{type:'mc',q:'What is the RANGE of: 23, 47, 15, 38, 62?',
+ a:'47',eg:'Range = largest − smallest = 62 − 15 = 47.',
+ w:['62','15','38']},
+{type:'fill',q:'The following scores were recorded: 6, 8, 8, 9, 10, 5. What is the median?',
+ pass:'Arranged: 5, 6, 8, 8, 9, 10. Median = ___',blanks:['8'],
+ opts:['8','7','8,5','9'],eg:'6 values, so median = average of 3rd and 4th values: (8+8)÷2=8.'},
+{type:'mc',q:'A bar graph shows: Mon=4 books, Tue=7, Wed=3, Thu=8, Fri=6. What is the total number of books read that week?',
+ diag:{t:'bar',labels:['Mon','Tue','Wed','Thu','Fri'],vals:[4,7,3,8,6],title:'Books read per day'},
+ a:'28 books',eg:'4+7+3+8+6 = 28 books total.',
+ w:['26 books','30 books','27 books']},
+{type:'tf',q:'To find the median of an even number of values, you find the average of the two middle values.',
+ a:'true',explanation:'Yes! For an even count of values: arrange in order, find the two middle values, add them, divide by 2. Example: 3,5,8,10 → middle values are 5 and 8 → median = (5+8)÷2 = 6,5.'},
+{type:'tf',q:'The mean, mode and median of a data set are always equal.',
+ a:'false',explanation:'No! Mean, mode and median are three different measures of central tendency that can be different values. Example: 1,2,2,3,7. Mean=(1+2+2+3+7)÷5=3. Mode=2. Median=2. They are not always equal.'}
+],mm:{c:'Data Handling',cc:'#3B82F6',b:[
+{l:'Measures of Central Tendency',bg:'#0A0F1A',bd:'#3B82F6',tc:'#93C5FD',i:['MEAN: add all, divide by count','MODE: most frequent value','MEDIAN: middle value when ordered','RANGE: largest minus smallest (spread)']},
+{l:'Reading Graphs',bg:'#0A0F1A',bd:'#2563EB',tc:'#BFDBFE',i:['Bar graph: heights show values','Pie chart: sectors show proportions','Always check the scale/labels','Read the title and axis labels first']}
+]},rules:[
+{n:'1',c:'#3B82F6',t:'Three Ms and a Range',d:'Four key statistics for any data set.',eg:[{lbl:'MEAN (average)',txt:'Sum of all values ÷ count. 4+8+6 = 18÷3 = 6'},{lbl:'MODE',txt:'Most frequent. 2,3,3,5,7 → mode=3'},{lbl:'MEDIAN',txt:'Middle value when sorted. 2,3,3,5,7 → median=3'},{lbl:'RANGE',txt:'Max−Min. 7−2=5'}]},
+{n:'2',c:'#2563EB',t:'Finding the median',d:'Sort the data first. Then find the middle.',eg:[{lbl:'ODD COUNT',txt:'5 values: 1st, 2nd, 3rd*, 4th, 5th. Median = 3rd value'},{lbl:'EVEN COUNT',txt:'6 values: 3rd and 4th are middle. Median = (3rd+4th)÷2'},{lbl:'ALWAYS SORT',txt:'Never find median without sorting first!'}]},
+{n:'3',c:'#3B82F6',t:'Reading bar graphs',d:'Always read the scale, labels and title before answering.',eg:[{lbl:'CHECK SCALE',txt:'Is each block worth 1? 2? 5? 10? Read the y-axis carefully.'},{lbl:'LABELS',txt:'What does the x-axis show? Days, months, items?'},{lbl:'TITLE',txt:'What does the graph represent?'}]}
+],tip:{t:'Memory trick: Mean=maths (you calculate), Mode=most (most common), Median=middle (sorted middle value). Range=reach (from lowest to highest).',c:'#030712',b:'#3B82F6',tc:'#BFDBFE'}}
+
+  ]};
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+function getChoices(tid,idx){var k=tid+'_'+idx;if(!choiceCache[k]){var c=findT(tid).fc[idx];choiceCache[k]=shuffle([c.a].concat(c.w.slice(0,2)));}return choiceCache[k];}
+
+function renderMC(card,tid){
+  var choices=getChoices(tid,fcIdx),labels=['A','B','C'],ch='';
+  for(var i=0;i<choices.length;i++){
+    var c=choices[i],lbl=labels[i],isC=(c===card.a),isW=false;
+    for(var j=0;j<selectedWrong.length;j++)if(selectedWrong[j]===c){isW=true;break;}
+    var cls='choice',ico='';
+    if(revealed){
+      if(isC){cls+=' cor';ico='<span class="cico">&#10003;</span>';}
+      else if(isW){cls+=' wrg';ico='<span class="cico">&#10007;</span>';}
+      else cls+=' dim';
+    }else if(isW){cls+=' wrg';ico='<span class="cico">&#10007;</span>';}
+    var dis=(revealed||isW)?' disabled':'';
+    var safe=c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    ch+='<button class="'+cls+'" onclick="pickMC(\''+safe+'\')\"'+dis+'>'+
+      '<span class="clbl">'+lbl+'</span><span class="ctxt">'+esc(c)+'</span>'+ico+'</button>';
+  }
+  return '<div class="choices">'+ch+'</div>';
+}
+
+function renderFill(card,tid){
+  var sent=(card.pass||card.q).replace(/_+/g,'<span class="blank" id="bslot0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
+  var opts='<div class="bopts">';
+  var shuffledOpts=card.opts?shuffle(card.opts.slice()):[];
+  for(var i=0;i<shuffledOpts.length;i++){
+    var o=shuffledOpts[i],cls='bopt',dis='';
+    if(revealed){
+      if(o===card.blanks[0])cls+=' ok';
+      else if(o===fillSelected&&o!==card.blanks[0])cls+=' ko';
+      else cls+=' dim';
+      dis=' disabled';
+    }else if(fillSelected===o)cls+=' sel';
+    var safe=o.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    opts+='<button class="'+cls+'"'+dis+' onclick="pickFill(\"'+safe+'\")">'+esc(o)+'</button>';
+  }
+  opts+='</div>';
+  var rev=revealed?'<div class="reveal '+(fillSelected===card.blanks[0]?'ok':'ko')+'">'+
+    '<div class="rv-ttl">'+(fillSelected===card.blanks[0]?L('Correct! +10 XP','Korrek! +10 XP'):L('The answer is:','Die antwoord is:'))+' </div>'+
+    '<div class="rv-ans">'+esc(card.blanks[0])+'</div>'+
+    (card.eg?'<div class="rv-eg">'+L('Example — ','Voorbeeld — ')+esc(card.eg)+'</div>':'')+'</div>':'';
+  return '<div class="fill-sent">'+sent+'</div>'+opts+rev;
+}
+
+function renderFix(card){
+  return '<div class="err-box"><div class="err-lbl">'+L('Sentence to correct','Sin om te korrigeer')+'</div>'+
+    '<div class="err-txt">'+esc(card.pass||card.q)+'</div></div>'+
+    (card.hint&&!revealed?'<div class="hint-box">'+esc(card.hint)+'</div>':'')+
+    '<textarea class="type-in" id="typeIn" placeholder="'+L('Type the corrected sentence here...','Skryf die korrekte sin hier...')+'" rows="3"></textarea>'+
+    '<button class="chk-btn" id="chkBtn" onclick="checkFix()">'+L('Check my answer','Kontroleer my antwoord')+'</button>'+
+    (revealed?'<div class="reveal ko"><div class="rv-ttl">'+L('Correct version:','Korrekte weergawe:')+'</div><div class="rv-ans">'+esc(card.a)+'</div>'+(card.eg?'<div class="rv-eg">'+L('Example — ','Voorbeeld — ')+esc(card.eg)+'</div>':'')+'</div>':'');
+}
+
+function renderFixReveal(card){
+  var inp=document.getElementById('typeIn');
+  var userAns=inp?inp.value.trim():'';
+  var correct=userAns.toLowerCase()===card.a.toLowerCase();
+  return '<div class="reveal '+(correct?'ok':'ko')+'">'+
+    '<div class="rv-ttl">'+(correct?L('Correct! +10 XP','Korrek! +10 XP'):L('The correct version:','Korrekte weergawe:'))+' </div>'+
+    '<div class="rv-ans">'+esc(card.a)+'</div>'+
+    (card.eg?'<div class="rv-eg">'+L('Example — ','Voorbeeld — ')+esc(card.eg)+'</div>':'')+
+  '</div>';
+}
+
+function renderID(card){
+  return (card.hint&&!revealed?'<div class="hint-box">'+esc(card.hint)+'</div>':'')+
+    '<textarea class="type-in" id="typeIn" placeholder="Type your answer here..." rows="3"></textarea>'+
+    '<button class="chk-btn" id="chkBtn" onclick="checkID()">'+L('Check my answer','Kontroleer my antwoord')+'</button>'+
+    (revealed?'<div class="reveal ko"><div class="rv-ttl">'+L('Model answer:','Modelantwoord:')+'</div><div class="rv-ans">'+esc(card.a)+'</div>'+(card.eg?'<div class="rv-eg">'+L('Example — ','Voorbeeld — ')+esc(card.eg)+'</div>':'')+'</div>':'');
+}
+
+function renderIDReveal(card){
+  return '<div class="reveal ko">'+
+    '<div class="rv-ttl">'+L('Model answer:','Modelantwoord:')+'</div>'+
+    '<div class="rv-ans">'+esc(card.a)+'</div>'+
+    (card.eg?'<div class="rv-eg">'+L('Example — ','Voorbeeld — ')+esc(card.eg)+'</div>':'')+
+  '</div>';
+}
+
+function renderTF(card){
+  var tCls='tf-btn true-btn',fCls='tf-btn false-btn';
+  if(revealed){if(card.a==='true'){tCls+=' sel-cor';fCls+=' dim';}else{fCls+=' sel-cor';tCls+=' dim';}}
+  var dis=revealed?' disabled':'';
+  var rev=revealed?'<div class="reveal ok"><div class="rv-ttl">'+L('The answer is ','Die antwoord is ')+(card.a==='true'?L('TRUE','WAAR'):L('FALSE','ONWAAR'))+'</div><div class="rv-ans">'+esc(card.explanation)+'</div></div>':'';
+  return '<div class="tf-row">'+
+    '<button class="'+tCls+'"'+dis+' onclick="pickTF(\'true\')"><span style="font-size:28px">✓</span>'+L('True','Waar')+'</button>'+
+    '<button class="'+fCls+'"'+dis+' onclick="pickTF(\'false\')"><span style="font-size:28px">✗</span>'+L('False','Onwaar')+'</button>'+
+    '</div>'+rev;
+}
+
+function renderMM(t){
+  var mm=t.mm,bh='';
+  for(var i=0;i<mm.b.length;i++){
+    var b=mm.b[i],ih='';
+    for(var j=0;j<b.i.length;j++)ih+='<div class="mm-it" style="color:'+b.tc+'">'+esc(b.i[j])+'</div>';
+    bh+='<div class="mm-br" style="background:'+b.bg+';border-left-color:'+b.bd+'">'+
+      '<div class="mm-brtl" style="color:'+b.tc+'">'+esc(b.l)+'</div>'+ih+'</div>';
+  }
+  return '<div class="mm-wrap">'+
+    '<div class="mm-cw"><div class="mm-ctr" style="background:'+mm.cc+'">'+esc(mm.c)+'</div></div>'+
+    '<div style="padding:0 0 12px">'+bh+'</div></div>'+
+    '<button class="spk-btn" onclick="muted?(toggleMute(),spkMM(cTopic.mm)):spkMM(cTopic.mm)"> '+L(muted?'Tap to unmute':'Read aloud',muted?'Tik om klank aan te skakel':'Lees hardop')+'</button>';
+}
+
+function renderRules(t){
+  var rh='';
+  for(var i=0;i<t.rules.length;i++){
+    var r=t.rules[i];
+    // Build example rows if r.eg is an array of {lbl,txt} objects
+    var egHTML='';
+    if(r.eg&&r.eg.length){
+      egHTML='<div class="rule-eg">';
+      for(var j=0;j<r.eg.length;j++){
+        var row=r.eg[j];
+        egHTML+='<div class="rule-eg-row">'+
+          '<span class="rule-eg-lbl" style="background:'+r.c+'22;color:'+r.c+'">'+esc(row.lbl)+'</span>'+
+          '<span class="rule-eg-txt">'+esc(row.txt)+'</span>'+
+          '</div>';
+      }
+      egHTML+='</div>';
+    }
+    rh+='<div class="rule-card">'+
+      '<div class="rnm" style="background:'+r.c+'">'+r.n+'</div>'+
+      '<div style="flex:1"><div class="rt" style="color:'+r.c+'">'+esc(r.t)+'</div>'+
+      '<div class="rd">'+esc(r.d)+'</div>'+egHTML+
+      '</div></div>';
+  }
+  return rh+
+    '<div class="tip-card" style="background:'+t.tip.c+';border-left-color:'+t.tip.b+'">'+
+    '💡'+
+    '<div class="tip-txt" style="color:'+t.tip.tc+'">'+esc(t.tip.t)+'</div></div>'+
+    '<button class="spk-btn" onclick="muted?(toggleMute(),spkR(cTopic.rules,cTopic.tip.t)):spkR(cTopic.rules,cTopic.tip.t)"> '+L(muted?'Tap to unmute':'Read aloud',muted?'Tik om klank aan te skakel':'Lees hardop')+'</button>';
+}
+
+function renderTopic(){
+  var t=cTopic,tc=getCol(t),body='';
+  if(cMode==='fc')body=renderFC(t,tc);
+  else if(cMode==='mm')body=renderMM(t);
+  else body=renderRules(t);
+  document.getElementById('TV').innerHTML=
+    '<div class="tv-sticky">'+
+      '<div class="topic-hdr" style="background:'+tc.bg+'">'+
+        '<div class="back-row" onclick="closeT()">'+
+          '<div style="width:32px;height:32px;border-radius:50%;background:#1E1B3A;border:2px solid #A78BFA;display:flex;align-items:center;justify-content:center">'+
+          '←</div>'+
+          '<span class="back-lbl">'+L('Back to topics','Terug na onderwerpe')+'</span>'+
+        '</div>'+
+        '<div class="th-ico" style="background:'+tc.lt+';font-size:30px">'+t.icon+'</div>'+
+        '<div class="th-title">'+esc(t.ttl)+'</div>'+
+        '<div class="th-sub">'+esc(t.sub)+'</div>'+
+      '</div>'+
+      '<div class="mode-pills">'+
+        '<button class="mp'+(cMode==='fc'?' on':'')+'" onclick="setMode(\'fc\')">🃏 '+L('Cards','Kaarte')+'</button>'+
+        '<button class="mp'+(cMode==='mm'?' on':'')+'" onclick="setMode(\'mm\')">🗺️ '+L('Mind map','Breinkaart')+'</button>'+
+        '<button class="mp'+(cMode==='rules'?' on':'')+'" onclick="setMode(\'rules\')">💡 '+L('Rules','Reëls')+'</button>'+
+      '</div>'+
+    '</div>'+
+    '<div class="tv-scroll"><div class="study-area">'+body+'</div></div>';
+  setTimeout(applyGlowIfPending, 50);
+}
+
+function pickMC(c){
+  if(revealed)return;
+  var already=false;for(var i=0;i<selectedWrong.length;i++)if(selectedWrong[i]===c){already=true;break;}
+  if(already)return;
+  var card=cTopic.fc[fcIdx];
+  if(c===card.a){
+    revealed=true;
+    awardXP(10);
+    spkOK(card.a,card.eg);
+  }else{
+    selectedWrong.push(c);attempts++;
+    if(attempts>=2){revealed=true;spkW2(card.a,card.eg);}else spkW1();
+  }
+  renderTopic();
+}
+
+function pickTF(answer){
+  if(revealed)return;
+  var card=cTopic.fc[fcIdx],correct=(answer===card.a);
+  revealed=true;
+  if(correct){
+    awardXP(10);
+    speakT(L('Correct! That is ','Korrek! Dit is ')+(card.a==='true'?L('true','waar'):L('false','onwaar'))+'. '+card.explanation);
+  }else speakT(L('Not quite. The answer is ','Nie heeltemal nie. Die antwoord is ')+(card.a==='true'?L('true','waar'):L('false','onwaar'))+'. '+card.explanation);
+  renderTopic();
+}
+
+function pickFillIdx(i){
+  if(revealed)return;
+  var card=cTopic.fc[fcIdx],o=window._fillOpts[i];
+  var isMulti=card.blanks.length>1;
+  var pos=fillSelections.indexOf(o);
+  if(pos!==-1){fillSelections.splice(pos,1);}
+  else if(fillSelections.length<card.blanks.length){fillSelections.push(o);}
+  if(fillSelections.length===card.blanks.length){
+    revealed=true;
+    var allOk=card.blanks.every(function(b){return fillSelections.indexOf(b)!==-1;});
+    if(allOk){
+      awardXP(10);
+      spkOK(card.blanks.join(' and '),card.eg);
+    }else spkW2(card.blanks.join(' and '),card.eg);
+  }
+  renderTopic();
+}
+
+function pickFill(o){pickFillIdx(window._fillOpts?window._fillOpts.indexOf(o):0);}
+
+function checkFix(){
+  if(revealed)return;
+  var card=cTopic.fc[fcIdx],inp=document.getElementById('typeIn');
+  if(!inp||!inp.value.trim())return;
+  var correct=inp.value.trim().toLowerCase()===card.a.toLowerCase();
+  revealed=true;
+  if(correct){inp.className='type-in ok';awardXP(10);
+    spkOK(card.a,card.eg);
+  }else{inp.className='type-in ko';spkW2(card.a,card.eg);}
+  var chk=document.getElementById('chkBtn');if(chk)chk.disabled=true;
+  var rev=document.createElement('div');
+  rev.innerHTML='<div class="reveal '+(correct?'ok':'ko')+'"><div class="rv-ttl">'+(correct?L('Correct! +10 XP','Korrek! +10 XP'):L('Correct version:','Korrekte weergawe:'))+'</div><div class="rv-ans">'+esc(card.a)+'</div>'+(card.eg?'<div class="rv-eg">'+L('Example — ','Voorbeeld — ')+esc(card.eg)+'</div>':'')+'</div>';
+  chk.parentNode.insertBefore(rev.firstChild,chk.nextSibling);
+}
+
+function checkID(){
+  if(revealed)return;
+  var card=cTopic.fc[fcIdx],inp=document.getElementById('typeIn');
+  if(!inp||!inp.value.trim())return;
+  revealed=true;markAnswered(cTopic.id,fcIdx);
+  saveUser();
+  spkW2(card.a,card.eg);
+  var chk=document.getElementById('chkBtn');if(chk)chk.disabled=true;
+  var rev=document.createElement('div');
+  rev.innerHTML='<div class="reveal ko"><div class="rv-ttl">'+L('Model answer:','Modelantwoord:')+'</div><div class="rv-ans">'+esc(card.a)+'</div>'+(card.eg?'<div class="rv-eg">'+L('Example — ','Voorbeeld — ')+esc(card.eg)+'</div>':'')+'</div>';
+  chk.parentNode.insertBefore(rev.firstChild,chk.nextSibling);
+}
+
+function nextCard(){
+  if(fcIdx<cTopic.fc.length-1){
+    fcIdx++;attempts=0;revealed=false;selectedWrong=[];fillSelected=null;stopS();renderTopic();
+  }
+}
+
+function prevCard(){
+  if(fcIdx>0){
+    fcIdx--;attempts=0;revealed=false;selectedWrong=[];fillSelected=null;fillSelections=[];stopS();renderTopic();
+    scrollToTop();
+  }
+}
+
+function openT(id){
+  cTopic=findT(id);cMode='fc';attempts=0;revealed=false;selectedWrong=[];
+  fillSelected=null;fillSelections=[];
+  // Start at first unanswered question
+  fcIdx=0;
+  for(var i=0;i<cTopic.fc.length;i++){
+    if(!answeredSet[id+'_'+i]){fcIdx=i;break;}
+    // If all answered, stay at last question
+    if(i===cTopic.fc.length-1) fcIdx=i;
+  }
+  document.getElementById('HV').style.display='none';
+  document.getElementById('TV').style.display='block';
+  renderTopic();
+  setTimeout(scrollToTop,50);
+}
+
+function closeT(){
+  document.getElementById('TV').style.display='none';
+  document.getElementById('HV').style.display='block';
+  stopS();renderHome();
+}
+
+function swTab(t){
+  cTerm=t;
+  document.getElementById('tb1').className='term-btn '+(t===1?'on':'off');
+  document.getElementById('tb2').className='term-btn '+(t===2?'on':'off');
+  renderHome();
+}
+
+function renderHome(){
+  var secs=getSecs(cTerm),html='';
+  for(var s=0;s<secs.length;s++){
+    var sec=secs[s];
+    var topics=T[cTerm].filter(function(t){return t.sec===sec;});
+    html+='<div class="sec-lbl">'+esc(sec)+'</div><div class="topic-grid">';
+    for(var i=0;i<topics.length;i++){
+      var t=topics[i],ci=i%COLS.length,isDone=!!doneSet[t.id];
+      html+='<div class="tc'+(isDone?' done':'')+'" style="background:'+COLS[ci].bg+';border-color:'+(isDone?'#10B981':'transparent')+'" onclick="openT(\''+t.id+'\')">'+
+        '<div class="tc-ico" style="background:'+COLS[ci].lt+';font-size:22px">'+t.icon+'</div>'+
+        '<div style="flex:1"><div class="tc-title">'+esc(t.ttl)+'</div><div class="tc-sub">'+esc(t.sub)+'</div></div>'+
+        (isDone?'✓':'›')+
+        '</div>';
+    }
+    html+='</div>';
+  }
+  document.getElementById('TGRID').innerHTML=html;
+  updateProg();
+}
+
+function updateProg(){
+  var total=allT().length,done=Object.keys(doneSet).length,pct=Math.round(done/total*100);
+  var el=document.getElementById('pctLbl');if(el)el.textContent=pct+'%';
+  var dl=document.getElementById('doneLbl');if(dl)dl.textContent=done+L(' of '+total+' topics done',' van '+total+' onderwerpe klaar');
+  var ring=document.getElementById('ringFill');if(ring)ring.style.strokeDashoffset=150.8-(150.8*pct/100);
+}
+
+function allT(){return T[1].concat(T[2]);}
+
+function findT(id){var a=allT();for(var i=0;i<a.length;i++)if(a[i].id===id)return a[i];return null;}
+
+function getSecs(term){var seen={},out=[];for(var i=0;i<T[term].length;i++){var s=T[term][i].sec;if(!seen[s]){seen[s]=true;out.push(s);}}return out;}
+
+function awardXP(amount){
+  var old=xp;
+  xp=Math.min(xp+amount,500);
+  streak++;
+  markAnswered(cTopic.id, fcIdx);
+  animateXP(old, xp);
+  document.getElementById('strVal').textContent=streak;
+  showConfetti();
+  saveUser();
+  // Apply green glow to correct answer button after next render
+  window._pendingGlow=true;
+}
+
+function markAnswered(topicId, qIdx){
+  answeredSet[topicId+'_'+qIdx]=true;
+  // Topic complete only when every question has been answered
+  var t=findT(topicId);
+  var allDone=true;
+  for(var i=0;i<t.fc.length;i++){
+    if(!answeredSet[topicId+'_'+i]){allDone=false;break;}
+  }
+  if(allDone){
+    doneSet[topicId]=true;
+    // Show completion banner if just finished
+    window._justCompleted=(window._justCompleted||0)+1;
+  } else {
+    delete doneSet[topicId];
+  }
+  updateProg();
+}
+
+function speakT(text){
+  if(muted)return;
+  stopS();
+  var clean=cleanForTTS(text);
+  if(!clean)return;
+  if(!GOOGLE_TTS_KEY||GOOGLE_TTS_KEY==='YOUR_API_KEY_HERE'){browserSpeak(clean);return;}
+  // Use SSML for better pauses and pronunciation
+  var ssml=toSSML(text);
+  var cacheKey=clean;
+  if(ttsCache[cacheKey]){playBase64(ttsCache[cacheKey]);return;}
+  fetch('https://texttospeech.googleapis.com/v1/text:synthesize?key='+GOOGLE_TTS_KEY,{
+    method:'POST',mode:'cors',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({input:{ssml:ssml},voice:TTS_VOICE,audioConfig:TTS_CONFIG})
+  }).then(function(r){return r.json();}).then(function(data){
+    if(data.audioContent){ttsCache[cacheKey]=data.audioContent;playBase64(data.audioContent);}
+    else browserSpeak(clean);
+  }).catch(function(){browserSpeak(clean);});
+}
+
+function speakCurrent(){
+  if(muted)return;
+  var card=cTopic.fc[fcIdx];
+  var text=card.q;
+  var blank=L('blank','leeg');
+  var optPfx=L('. Your options are: ','. Jou opsies is: ');
+  var hintPfx=L('. Hint: ','. Wenk: ');
+  if(card.type==='fill'){
+    var sent=(card.pass||card.q).replace(/_+/g,blank);
+    text=card.q+'. '+sent;
+    if(card.opts&&!revealed)text+=optPfx+card.opts.join(', ')+'.';
+  } else if(card.type==='mc'&&!revealed){
+    if(card.pass)text+='. '+card.pass;
+    var choices=getChoices(cTopic.id,fcIdx),labels=['A','B','C'];
+    text+=optPfx;
+    for(var i=0;i<choices.length;i++)text+=labels[i]+'. '+choices[i]+'. ';
+  } else if(card.type==='tf'){
+    text=L('True or false? ','Waar of onwaar? ')+card.q+(card.pass?'. '+card.pass:'');
+  } else {
+    if(card.pass)text+='. '+card.pass;
+    if((card.type==='fix'||card.type==='id')&&card.hint)text+=hintPfx+card.hint;
+  }
+  speakT(text);
+}
+
+function spkOK(a,eg){
+  if(muted)return;
+  var t=L('Excellent! That is correct. ','Uitstekend! Dit is korrek. ')+a+'.';
+  if(eg)t+=L(' For example, ',' Byvoorbeeld, ')+eg+'.';
+  speakT(t);
+}
+
+function spkW1(){
+  if(muted)return;
+  var p=L(
+    ['Not quite, try again! You have got this!','Hmm, not this one. Give it another go!','Close! Think again, I know you can do it!'],
+    ['Nie heeltemal nie, probeer weer! Jy kan dit!','Hmm, nie hierdie een nie. Probeer nog een keer!','Amper! Dink weer, ek weet jy kan dit doen!']
+  );
+  speakT(p[Math.floor(Math.random()*p.length)]);
+}
+
+function spkW2(a,eg){
+  if(muted)return;
+  var t=L('Good try! The answer is ','Goeie poging! Die antwoord is ')+a+'.';
+  if(eg)t+=L(' Remember, ',' Onthou, ')+eg+'.';
+  t+=L(' Keep going!',' Gaan voort!');
+  speakT(t);
+}
+
+function spkMM(mm){
+  if(muted)return;
+  var tx=L('Mind map for ','Breinkaart vir ')+mm.c+'. ';
+  for(var i=0;i<mm.b.length;i++)tx+=mm.b[i].l+': '+mm.b[i].i.join('. ')+'. ';
+  speakT(tx);
+}
+
+function spkR(rules,tip){
+  if(muted)return;
+  var tx='';
+  var ruleWord=L('Rule ','Reël ');
+  for(var i=0;i<rules.length;i++){
+    var d=rules[i].d.replace(/\|/g,'. ');
+    tx+=ruleWord+rules[i].n+'. '+rules[i].t+'. '+d+'. ';
+  }
+  tx+=L('Tip: ','Wenk: ')+tip;
+  speakT(tx);
+}
+
+function scrollToTop(){
+  var tv=document.getElementById('TV');
+  if(tv) tv.scrollTop=0;
+  // Also scroll the main R div
+  var r=document.getElementById('R');
+  if(r) r.scrollTop=0;
+  window.scrollTo(0,0);
+}
+
+function showConfetti(){
+  var stage=document.getElementById('confetti-stage');
+  if(!stage) return;
+  // Clear any existing pieces
+  stage.innerHTML='';
+  var count=28;
+  for(var i=0;i<count;i++){
+    var el=document.createElement('div');
+    el.className='cf';
+    el.style.left=(5+Math.random()*90)+'%';
+    el.style.background=CF_COLOURS[Math.floor(Math.random()*CF_COLOURS.length)];
+    el.style.width=(6+Math.random()*8)+'px';
+    el.style.height=(6+Math.random()*8)+'px';
+    el.style.borderRadius=Math.random()>0.5?'50%':'2px';
+    var dur=0.9+Math.random()*0.8;
+    var delay=Math.random()*0.4;
+    el.style.animationDuration=dur+'s';
+    el.style.animationDelay=delay+'s';
+    stage.appendChild(el);
+  }
+  // Clean up after animation
+  setTimeout(function(){if(stage)stage.innerHTML='';}, 2000);
+}
+
+function animateXP(oldXP, newXP){
+  var el=document.getElementById('xpFill');
+  if(!el)return;
+  el.style.width=Math.round(newXP/500*100)+'%';
+  // Ping the level badge area
+  var lbl=document.getElementById('xpVal');
+  if(lbl){
+    lbl.textContent=newXP;
+    lbl.classList.remove('xp-ping');
+    void lbl.offsetWidth; // force reflow
+    lbl.classList.add('xp-ping');
+    setTimeout(function(){lbl.classList.remove('xp-ping');},600);
+  }
+  // Pulse streak flame if streak increased
+  var sf=document.getElementById('streakFlame');
+  if(sf){
+    sf.classList.add('flame-active');
+    setTimeout(function(){sf.classList.remove('flame-active');},2100);
+  }
+}
+
+function toggleMute(){
+  muted=!muted;
+  var btn=document.getElementById('muteBtn');
+  var ico=document.getElementById('muteIcon');
+  if(btn)btn.className='mute-btn'+(muted?' muted':'');
+  if(ico)ico.textContent=muted?'🔇':'🔊';
+  if(muted)stopS();
+  if(cTopic)renderTopic();
+}
+
+function stopS(){
+  if(currentAudio){currentAudio.pause();currentAudio.currentTime=0;currentAudio=null;}
+  if(window.speechSynthesis&&window.speechSynthesis.speaking)window.speechSynthesis.cancel();
+}
+
+function applyGlowIfPending(){
+  if(!window._pendingGlow)return;
+  window._pendingGlow=false;
+  // Highlight the correct answer button — stays green permanently
+  var cor=document.querySelector('.choice.cor');
+  if(cor){
+    cor.classList.add('correct-glow');
+    cor.style.boxShadow='0 0 0 3px rgba(16,185,129,0.5), 0 0 20px rgba(16,185,129,0.3)';
+  }
+  // TF correct button
+  var tfCor=document.querySelector('.tf-btn.sel-cor');
+  if(tfCor){
+    tfCor.style.boxShadow='0 0 0 3px rgba(16,185,129,0.5), 0 0 20px rgba(16,185,129,0.3)';
+  }
+  // Reveal block entrance
+  var rev=document.querySelector('.reveal.ok');
+  if(rev) rev.style.animation='slideUp .35s ease';
+  // Topic complete banner
+  if(window._justCompleted){
+    window._justCompleted=0;
+    var sa=document.querySelector('.study-area');
+    if(sa){
+      var banner=document.createElement('div');
+      banner.style.cssText='background:linear-gradient(135deg,#052E16,#065F46);border:2px solid #10B981;border-radius:14px;padding:16px;text-align:center;animation:slideUp .4s ease;margin-top:8px';
+      banner.innerHTML='<div style="font-size:28px;margin-bottom:6px">🎉</div>'+
+        '<div style="font-size:16px;font-weight:700;color:#34D399;margin-bottom:4px">'+L('Topic complete!','Onderwerp voltooi!')+'</div>'+
+        '<div style="font-size:13px;color:#6EE7B7">'+L('You answered every question in this topic.<br>Head back to tick it off!','Jy het elke vraag in hierdie onderwerp beantwoord.<br>Gaan terug om dit af te merk!')+'</div>';
+      sa.appendChild(banner);
+    }
+  }
+}
+
+function loadUser(){
+  try {
+    var raw = localStorage.getItem(STORE_KEY);
+    if(raw) return JSON.parse(raw);
+  } catch(e){}
+  return null;
+}
+
+function saveUser(){
+  if(!currentUser) return;
+  currentUser.xp = xp;
+  currentUser.streak = streak;
+  currentUser.doneTopics = Object.keys(doneSet);
+  currentUser.answeredQuestions = answeredSet;
+  currentUser.savedAt = Date.now();
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(currentUser)); } catch(e){}
+}
+
+function enterApp(){
+  document.getElementById('NAME-SCREEN').style.display = 'none';
+  document.getElementById('R').style.display = 'block';
+  // Load saved progress
+  if(currentUser){
+    xp = currentUser.xp || 0;
+    streak = currentUser.streak || 0;
+    doneSet = {};
+    answeredSet = currentUser.answeredQuestions || {};
+    if(currentUser.doneTopics){
+      currentUser.doneTopics.forEach(function(id){ doneSet[id] = true; });
+    }
+  }
+  // Update UI
+  var xpEl = document.getElementById('xpVal');
+  var fillEl = document.getElementById('xpFill');
+  var strEl = document.getElementById('strVal');
+  if(xpEl) xpEl.textContent = xp;
+  if(fillEl) fillEl.style.width = Math.round(xp/500*100) + '%';
+  if(strEl) strEl.textContent = streak;
+  // Show greeting bar
+  updateGreetingBar();
+  // Set avatar to user initials
+  var av = document.getElementById('avatarBadge');
+  if(av && currentUser && currentUser.name){
+    av.textContent = currentUser.name.charAt(0).toUpperCase();
+    av.title = currentUser.name + ' — tap to switch user';
+  }
+  updateSubjectUI();
+  renderHome();
+}
+
+function updateSubjectUI(){
+  var s = SUBJECTS[cSubject];
+  if(!s) return;
+  var isAf = cSubject === 'afrikaans_ht' || cSubject === 'afrikaans_eat';
+  // Update top bar subject button
+  var subLbl = document.getElementById('subjectLabel');
+  if(subLbl) subLbl.textContent = s.icon + ' ' + s.name;
+  // Update hero title
+  var heroTitle = document.getElementById('heroTitle');
+  if(heroTitle) heroTitle.innerHTML = s.name + '<br><span>' + s.subtitle + '</span>';
+  // Update term tab labels
+  var tb1 = document.getElementById('tb1');
+  var tb2 = document.getElementById('tb2');
+  if(tb1) tb1.textContent = isAf ? 'Termyn 1' : 'Term 1';
+  if(tb2) tb2.textContent = isAf ? 'Termyn 2' : 'Term 2';
+  // Update TTS voice for Afrikaans
+  if(isAf){
+    TTS_VOICE = {languageCode:'af-ZA',name:'af-ZA-Standard-A',ssmlGender:'FEMALE'};
+  } else {
+    TTS_VOICE = {languageCode:'en-GB',name:'en-GB-Wavenet-C',ssmlGender:'FEMALE'};
+  }
+  // Clear TTS cache when switching language
+  ttsCache = {};
+}
+// ── Diagram Rendering ─────────────────────────────────────────────
+function renderDiag(d){
+  if(!d) return '';
+  var html = '<div class="diag-wrap">';
+  if(d.t==='pv') html += renderPVChart(d);
+  else if(d.t==='fb') html += renderFracBar(d);
+  else if(d.t==='fl') html += renderFracLine(d);
+  else if(d.t==='dv') html += renderDecimalValue(d);
+  else if(d.t==='patt') html += renderNumPattern(d);
+  else if(d.t==='sqpatt') html += renderSqPattern(d);
+  else if(d.t==='matchpatt') html += renderMatchPatt(d);
+  else if(d.t==='bar') html += renderBarGraph(d);
+  else if(d.t==='pl') html += renderPercentList(d);
+  html += '</div>';
+  return html;
+}
+
+function renderPVChart(d){
+  var labels=['H.Mil','T.Mil','Mil','H.Thou','T.Thou','Thou','Hund','Tens','Units'];
+  var n = String(d.n).replace(/[ ,]/g,'');
+  // Pad to 9 digits
+  while(n.length<9) n='0'+n;
+  var digits = n.split('');
+  var s = '<div style="overflow-x:auto"><table class="pvt"><tr>';
+  for(var i=0;i<9;i++) s+='<th>'+labels[i]+'</th>';
+  s+='</tr><tr>';
+  for(var i=0;i<9;i++){
+    var hi = (d.h !== undefined && (8-i) === d.h);
+    s+='<td'+(hi?' class="pv-hi"':'')+'>'+digits[i]+'</td>';
+  }
+  s+='</tr></table></div>';
+  return s;
+}
+
+function renderFracBar(d){
+  var w=280, h=40, num=d.num, den=d.den;
+  var sw = w/den;
+  var s='<svg width="'+w+'" height="'+(h+20)+'" style="display:block;margin:0 auto">';
+  for(var i=0;i<den;i++){
+    var filled = i < num;
+    s+='<rect x="'+(i*sw)+'" y="0" width="'+(sw-1)+'" height="'+h+'" fill="'+(filled?'#3B82F6':'#1E3A5F')+'" stroke="#0A0F1A" stroke-width="1"/>';
+    s+='<text x="'+(i*sw+sw/2)+'" y="'+(h/2+5)+'" text-anchor="middle" fill="white" font-size="12">'+1+'</text>';
+  }
+  s+='<text x="'+(w/2)+'" y="'+(h+16)+'" text-anchor="middle" fill="#93C5FD" font-size="13">'+num+'/'+den+' shaded</text>';
+  s+='</svg>';
+  return s;
+}
+
+function renderDecimalValue(d){
+  var labels=['Hund','Tens','Units','','Tenths','Hundredths','Thousandths'];
+  var n = d.n.replace(',','.');
+  var parts = n.split('.');
+  var whole = parts[0] || '0';
+  var dec = parts[1] || '';
+  while(whole.length<3) whole='0'+whole;
+  while(dec.length<3) dec=dec+'0';
+  var digits = whole.split('').concat([',']).concat(dec.split(''));
+  var s='<div style="overflow-x:auto"><table class="pvt"><tr>';
+  for(var i=0;i<7;i++) s+='<th>'+(labels[i]||'')+'</th>';
+  s+='</tr><tr>';
+  for(var i=0;i<7;i++){
+    var di = digits[i];
+    var hi = (d.h !== undefined && i === (3+parseInt(d.h)));
+    if(i===3) s+='<td style="background:#0F172A;color:#94A3B8;font-weight:900">,</td>';
+    else s+='<td'+(hi?' class="pv-hi"':'')+'>'+di+'</td>';
+  }
+  s+='</tr></table></div>';
+  return s;
+}
+
+function renderNumPattern(d){
+  var seq = d.seq || [];
+  var rule = d.rule || '';
+  var s='<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center">';
+  for(var i=0;i<seq.length;i++){
+    s+='<div class="patt-box">'+seq[i]+'</div>';
+    if(i<seq.length-1) s+='<div style="color:#60A5FA;font-size:18px">→</div>';
+  }
+  s+='<div class="patt-box patt-next">?</div>';
+  if(rule) s+='<div style="width:100%;text-align:center;color:#94A3B8;font-size:12px;margin-top:6px">'+esc(rule)+'</div>';
+  s+='</div>';
+  return s;
+}
+
+function renderSqPattern(d){
+  var vals = d.vals || [1,4,9,16];
+  var s='<div style="display:flex;gap:12px;align-items:flex-end;justify-content:center;flex-wrap:wrap">';
+  for(var k=0;k<vals.length;k++){
+    var n = Math.round(Math.sqrt(vals[k]));
+    var sz = Math.min(n*14, 56);
+    s+='<div style="text-align:center">';
+    s+='<svg width="'+sz+'" height="'+sz+'">';
+    for(var r=0;r<n;r++) for(var c=0;c<n;c++){
+      s+='<rect x="'+(c*14)+'" y="'+(r*14)+'" width="13" height="13" fill="#3B82F6" rx="1"/>';
+    }
+    s+='</svg>';
+    s+='<div style="font-size:11px;color:#93C5FD;margin-top:2px">Fig '+(k+1)+'</div>';
+    s+='</div>';
+  }
+  s+='</div>';
+  return s;
+}
+
+function renderMatchPatt(d){
+  var shape = d.shape || 'square';
+  var start = d.start || 4;
+  var extra = d.extra || 3;
+  var s='<div style="text-align:center;color:#93C5FD;font-size:13px">';
+  s+='<div style="margin-bottom:6px">Each shape needs <strong>'+start+'</strong> sticks</div>';
+  s+='<div>Each additional shape adds <strong>'+extra+'</strong> sticks (shared side)</div>';
+  s+='<div style="display:flex;gap:16px;justify-content:center;margin-top:10px">';
+  for(var i=1;i<=4;i++){
+    var total = start + extra*(i-1);
+    s+='<div class="patt-box" style="flex-direction:column;height:auto;padding:8px">';
+    s+='<div style="font-size:18px">'+(shape==='triangle'?'△'.repeat(i):'□'.repeat(i))+'</div>';
+    s+='<div style="font-size:11px;margin-top:4px">'+total+' sticks</div>';
+    s+='</div>';
+  }
+  s+='</div></div>';
+  return s;
+}
+
+function renderBarGraph(d){
+  var labels = d.labels || [];
+  var vals = d.vals || [];
+  var title = d.title || '';
+  var maxV = Math.max.apply(null, vals);
+  var W=280, H=120, pad=30, barW=30;
+  var sx = (W-pad) / labels.length;
+  var s='<svg width="'+W+'" height="'+(H+40)+'" style="display:block;margin:0 auto">';
+  // title
+  if(title) s+='<text x="'+(W/2)+'" y="14" text-anchor="middle" fill="#93C5FD" font-size="11">'+esc(title)+'</text>';
+  // y-axis
+  s+='<line x1="'+pad+'" y1="20" x2="'+pad+'" y2="'+(H+20)+'" stroke="#334155" stroke-width="1"/>';
+  // x-axis
+  s+='<line x1="'+pad+'" y1="'+(H+20)+'" x2="'+(W-10)+'" y2="'+(H+20)+'" stroke="#334155" stroke-width="1"/>';
+  for(var i=0;i<vals.length;i++){
+    var bh = (vals[i]/maxV) * (H-10);
+    var bx = pad + i*sx + (sx-barW)/2;
+    var by = H+20 - bh;
+    s+='<rect x="'+bx+'" y="'+by+'" width="'+barW+'" height="'+bh+'" fill="#3B82F6" rx="2"/>';
+    s+='<text x="'+(bx+barW/2)+'" y="'+(by-4)+'" text-anchor="middle" fill="#93C5FD" font-size="10">'+vals[i]+'</text>';
+    s+='<text x="'+(bx+barW/2)+'" y="'+(H+34)+'" text-anchor="middle" fill="#94A3B8" font-size="9">'+esc(labels[i])+'</text>';
+  }
+  s+='</svg>';
+  return s;
+}
+
+function renderPercentList(d){
+  var entries = d.entries || [];
+  var s='<div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">';
+  for(var i=0;i<entries.length;i++){
+    var pct = entries[i][0], eq = entries[i][1];
+    var angle = (pct/100)*360;
+    var x2 = 40 + 30*Math.cos((angle-90)*Math.PI/180);
+    var y2 = 40 + 30*Math.sin((angle-90)*Math.PI/180);
+    var large = angle > 180 ? 1 : 0;
+    s+='<div style="text-align:center">';
+    s+='<svg width="80" height="80"><circle cx="40" cy="40" r="30" fill="#1E3A5F"/>';
+    if(pct<100) s+='<path d="M40,40 L40,10 A30,30 0 '+large+',1 '+x2+','+y2+' Z" fill="#3B82F6"/>';
+    else s+='<circle cx="40" cy="40" r="30" fill="#3B82F6"/>';
+    s+='<text x="40" y="44" text-anchor="middle" fill="white" font-size="11" font-weight="bold">'+pct+'%</text>';
+    s+='</svg>';
+    s+='<div style="color:#93C5FD;font-size:12px">='+esc(String(eq))+'</div>';
+    s+='</div>';
+  }
+  s+='</div>';
+  return s;
+}
+
+function renderFracLine(d){
+  var fracs = d.fracs || [];
+  var W=300, H=40;
+  var s='<svg width="'+W+'" height="'+(H+20)+'" style="display:block;margin:0 auto">';
+  s+='<line x1="10" y1="20" x2="'+(W-10)+'" y2="20" stroke="#334155" stroke-width="2"/>';
+  // marks at 0 and 1
+  s+='<line x1="10" y1="14" x2="10" y2="26" stroke="#64748B" stroke-width="2"/>';
+  s+='<text x="10" y="36" text-anchor="middle" fill="#94A3B8" font-size="10">0</text>';
+  s+='<line x1="'+(W-10)+'" y1="14" x2="'+(W-10)+'" y2="26" stroke="#64748B" stroke-width="2"/>';
+  s+='<text x="'+(W-10)+'" y="36" text-anchor="middle" fill="#94A3B8" font-size="10">1</text>';
+  var colors=['#3B82F6','#10B981','#F59E0B','#EF4444'];
+  for(var i=0;i<fracs.length;i++){
+    var num=fracs[i][0], den=fracs[i][1];
+    var x = 10 + (num/den) * (W-20);
+    s+='<line x1="'+x+'" y1="12" x2="'+x+'" y2="28" stroke="'+colors[i%4]+'" stroke-width="2"/>';
+    s+='<text x="'+x+'" y="10" text-anchor="middle" fill="'+colors[i%4]+'" font-size="10">'+num+'/'+den+'</text>';
+  }
+  s+='</svg>';
+  return s;
+}
+
+// ── Maths app variables ───────────────────────────────────────────
+var STORE_KEY = 'eng_app_v1';
+var currentUser = null;
+var xp=0, streak=0;
+var doneSet={}, answeredSet={};
+var cTerm=1, cTopic=null, cMode='fc';
+var fcIdx=0, attempts=0, revealed=false;
+var selectedWrong=[], fillSelected=null, fillSelections=[], choiceCache={};
+var ttsCache={};
+var muted=false;
+
+var GOOGLE_TTS_KEY = ('AIzaSyANJM8Q1gQ7XMzG'+'xn6IjEXLfoKZY0ot8Z0');
+var TTS_VOICE = {languageCode:'en-GB',name:'en-GB-Wavenet-C',ssmlGender:'FEMALE'};
+var TTS_CONFIG = {audioEncoding:'MP3',pitch:0,speakingRate:0.95};
+
+var COLS=[
+  {bg:'#1A1032',lt:'#2D1B69',tc:'#A78BFA'},
+  {bg:'#0A1F1A',lt:'#052E16',tc:'#6EE7B7'},
+  {bg:'#0A1A2E',lt:'#0F2544',tc:'#93C5FD'},
+  {bg:'#1A1005',lt:'#2D1A0A',tc:'#FCD34D'},
+  {bg:'#1A0505',lt:'#2D0A0A',tc:'#FCA5A5'}
+];
+
+var T = TERMS;
+
+function allT(){ return T[1].concat(T[2]); }
+function findT(id){ var a=allT(); for(var i=0;i<a.length;i++) if(a[i].id===id) return a[i]; return null; }
+function getSecs(term){ var seen={},out=[]; for(var i=0;i<T[term].length;i++){ var s=T[term][i].sec; if(!seen[s]){seen[s]=true;out.push(s);}} return out; }
+function getChoices(tid,idx){ var k=tid+'_'+idx; if(!choiceCache[k]){ var c=findT(tid).fc[idx]; choiceCache[k]=shuffle([c.a].concat(c.w.slice(0,3)));} return choiceCache[k]; }
+function shuffle(arr){ var a=arr.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+function esc(s){ if(typeof s!=='string') s=String(s||''); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function L(en,af){ return en; } // English only for maths
+
+function goBack(){ window.location.href='index.html'; }
+
+function loadUser(){
+  try{ var raw=localStorage.getItem(STORE_KEY); if(raw) return JSON.parse(raw); }catch(e){}
+  return null;
+}
+function saveUser(){
+  if(!currentUser) return;
+  currentUser.xp=xp; currentUser.streak=streak;
+  currentUser.doneTopics=Object.keys(doneSet);
+  currentUser.answeredQuestions=answeredSet;
+  currentUser.savedAt=Date.now();
+  try{ localStorage.setItem(STORE_KEY,JSON.stringify(currentUser)); }catch(e){}
+}
+
+function markAnswered(topicId,qIdx){
+  answeredSet[topicId+'_'+qIdx]=true;
+  var t=findT(topicId);
+  var allDone=true;
+  for(var i=0;i<t.fc.length;i++){
+    if(!answeredSet[topicId+'_'+i]){allDone=false;break;}
+    if(i===t.fc.length-1) break;
+  }
+  if(allDone) doneSet[topicId]=true;
+  else delete doneSet[topicId];
+  updateProg();
+}
+
+function updateProg(){
+  var total=allT().length, done=Object.keys(doneSet).length, pct=Math.round(done/total*100);
+  var el=document.getElementById('pctLbl'); if(el) el.textContent=pct+'%';
+  var dl=document.getElementById('doneLbl'); if(dl) dl.textContent=done+' / '+total+' topics done';
+  var ring=document.getElementById('ringFill'); if(ring) ring.style.strokeDashoffset=150.8-(150.8*pct/100);
+}
+
+function swTab(t){
+  cTerm=t;
+  document.getElementById('tb1').className='term-btn '+(t===1?'on':'off');
+  document.getElementById('tb2').className='term-btn '+(t===2?'on':'off');
+  renderHome();
+}
+
+function scrollToTop(){
+  var tv=document.getElementById('TV'); if(tv) tv.scrollTop=0;
+  var r=document.getElementById('R'); if(r) r.scrollTop=0;
+  window.scrollTo(0,0);
+}
+
+function openT(id){
+  cTopic=findT(id); cMode='fc'; attempts=0; revealed=false; selectedWrong=[];
+  fillSelected=null; fillSelections=[];
+  fcIdx=0;
+  for(var i=0;i<cTopic.fc.length;i++){
+    if(!answeredSet[id+'_'+i]){fcIdx=i;break;}
+    if(i===cTopic.fc.length-1) fcIdx=i;
+  }
+  document.getElementById('HV').style.display='none';
+  document.getElementById('TV').style.display='block';
+  renderTopic();
+  setTimeout(scrollToTop,50);
+}
+
+function closeT(){
+  document.getElementById('TV').style.display='none';
+  document.getElementById('HV').style.display='block';
+}
+
+function renderHome(){
+  var secs=getSecs(cTerm), html='';
+  for(var s=0;s<secs.length;s++){
+    var sec=secs[s];
+    var topics=T[cTerm].filter(function(t){return t.sec===sec;});
+    html+='<div class="sec-lbl">'+esc(sec)+'</div><div class="topic-grid">';
+    for(var i=0;i<topics.length;i++){
+      var t=topics[i], ci=i%COLS.length, isDone=!!doneSet[t.id];
+      html+='<div class="tc'+(isDone?' done':'')+'" style="background:'+COLS[ci].bg+';border-color:'+(isDone?'#10B981':'transparent')+'" onclick="openT(\''+t.id+'\')">'+
+        '<div class="tc-ico" style="background:'+COLS[ci].lt+';font-size:22px">'+t.icon+'</div>'+
+        '<div style="flex:1"><div class="tc-title">'+esc(t.ttl)+'</div><div class="tc-sub">'+esc(t.sub)+'</div></div>'+
+        (isDone?'✓':'›')+
+        '</div>';
+    }
+    html+='</div>';
+  }
+  document.getElementById('TGRID').innerHTML=html;
+  updateProg();
+}
+
+// ── Modified renderTopic with diag support ────────────────────────
+function renderTopic(){
+  if(!cTopic) return;
+  var t=cTopic, card=t.fc[fcIdx];
+  var body='';
+  var qBadgeMap={mc:'mc',fill:'fill',fix:'fix',id:'id',tf:'tf'};
+  var qLabelMap={mc:'Multiple choice',fill:'Fill in the blank',fix:'Correct the error',id:'Solve and explain',tf:'True or false'};
+  var qBadge=qBadgeMap[card.type]||'mc', qLabel=qLabelMap[card.type]||'';
+  
+  // Build diagram HTML if present
+  var diagHTML = card.diag ? renderDiag(card.diag) : '';
+  
+  // Build passage if present (for context/worked examples)
+  var passHTML='';
+  if(card.pass && card.type!=='fill'){
+    passHTML='<div class="passage" style="font-family:monospace;font-size:14px;white-space:pre-line">'+esc(card.pass)+'</div>';
+  }
+  
+  if(card.type==='mc') body=renderMC(card,t.id);
+  else if(card.type==='fill') body=renderFill(card,t.id);
+  else if(card.type==='fix') body=renderFix(card);
+  else if(card.type==='id') body=renderID(card);
+  else if(card.type==='tf') body=renderTF(card);
+  
+  var prog='<div class="q-prog">'+
+    '<span style="font-size:13px;font-weight:700;color:#3B82F6">'+
+    (fcIdx+1)+'/'+t.fc.length+'</span>'+
+    '<div class="prog-bar-sm"><div style="width:'+Math.round((fcIdx+1)/t.fc.length*100)+'%;background:#3B82F6;height:100%;border-radius:3px"></div></div>'+
+    '<span style="font-size:12px;color:#60A5FA">+10 XP</span></div>';
+  
+  document.getElementById('TV').innerHTML=
+    '<div class="tv-sticky">'+
+    '<button class="back-btn" onclick="closeT()">←<span class="back-lbl"> Back to topics</span></button>'+
+    '<div class="subj-hero" style="background:linear-gradient(135deg,#0F2544,#1E3A5F)">'+
+    '<div style="font-size:32px;margin-bottom:4px">'+t.icon+'</div>'+
+    '<div class="tc-title" style="font-size:17px;color:#fff">'+esc(t.ttl)+'</div>'+
+    '<div class="tc-sub" style="color:#93C5FD">'+esc(t.sub)+'</div>'+
+    '</div>'+
+    '<div class="mode-pills">'+
+    '<button class="mp'+(cMode==='fc'?' active':'')+'" onclick="setMode(\'fc\')">🔢 Questions</button>'+
+    '<button class="mp'+(cMode==='mm'?' active':'')+'" onclick="setMode(\'mm\')">🗺️ Mind map</button>'+
+    '<button class="mp'+(cMode==='rules'?' active':'')+'" onclick="setMode(\'rules\')">💡 Rules</button>'+
+    '</div>'+
+    '</div>'+
+    '<div class="tv-scroll"><div class="study-area">'+
+    prog+
+    '<div class="q-box">'+
+    '<div class="q-badge '+qBadge+'">'+qLabel+'</div>'+
+    diagHTML+
+    passHTML+
+    '<div class="q-text">'+esc(card.q)+'</div>'+
+    '</div>'+
+    body+
+    '</div></div>';
+  setTimeout(applyGlowIfPending,50);
+}
+
+function setMode(m){
+  cMode=m;
+  if(m==='mm') document.getElementById('TV').innerHTML='<div class="tv-sticky"><button class="back-btn" onclick="closeT()">← Back to topics</button></div><div class="tv-scroll"><div class="study-area">'+renderMM(cTopic)+'</div></div>';
+  else if(m==='rules') document.getElementById('TV').innerHTML='<div class="tv-sticky"><button class="back-btn" onclick="closeT()">← Back to topics</button></div><div class="tv-scroll"><div class="study-area">'+renderRules(cTopic)+'</div></div>';
+  else renderTopic();
+}
+
+// ── Init ──────────────────────────────────────────────────────────
+(function(){
+  var saved = loadUser();
+  if(saved && saved.name){
+    currentUser = saved;
+    xp = saved.xp || 0;
+    streak = saved.streak || 0;
+    doneSet = {};
+    answeredSet = saved.answeredQuestions || {};
+    if(saved.doneTopics) saved.doneTopics.forEach(function(id){ doneSet[id]=true; });
+  }
+  var xpEl=document.getElementById('xpVal'); if(xpEl) xpEl.textContent=xp;
+  var fill=document.getElementById('xpFill'); if(fill) fill.style.width=Math.round(xp/500*100)+'%';
+  var str=document.getElementById('strVal'); if(str) str.textContent=streak;
+  var av=document.getElementById('avatarBadge');
+  if(av && currentUser && currentUser.name) av.textContent=currentUser.name.charAt(0).toUpperCase();
+  renderHome();
+})();
+
+</script>
+</body>
+</html>
