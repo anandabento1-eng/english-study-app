@@ -1197,22 +1197,6 @@ function prevCard(){
   }
 }
 
-function openT(id){
-  cTopic=findT(id);cMode='fc';attempts=0;revealed=false;selectedWrong=[];
-  fillSelected=null;fillSelections=[];
-  // Start at first unanswered question
-  fcIdx=0;
-  for(var i=0;i<cTopic.fc.length;i++){
-    if(!answeredSet[id+'_'+i]){fcIdx=i;break;}
-    // If all answered, stay at last question
-    if(i===cTopic.fc.length-1) fcIdx=i;
-  }
-  document.getElementById('HV').style.display='none';
-  document.getElementById('TV').style.display='block';
-  renderTopic();
-  setTimeout(scrollToTop,50);
-}
-
 function closeT(){
   document.getElementById('TV').style.display='none';
   document.getElementById('HV').style.display='block';
@@ -1224,26 +1208,6 @@ function swTab(t){
   document.getElementById('tb1').className='term-btn '+(t===1?'on':'off');
   document.getElementById('tb2').className='term-btn '+(t===2?'on':'off');
   renderHome();
-}
-
-function renderHome(){
-  var secs=getSecs(cTerm),html='';
-  for(var s=0;s<secs.length;s++){
-    var sec=secs[s];
-    var topics=T[cTerm].filter(function(t){return t.sec===sec;});
-    html+='<div class="sec-lbl">'+esc(sec)+'</div><div class="topic-grid">';
-    for(var i=0;i<topics.length;i++){
-      var t=topics[i],ci=i%COLS.length,isDone=!!doneSet[t.id];
-      html+='<div class="tc'+(isDone?' done':'')+'" style="background:'+COLS[ci].bg+';border-color:'+(isDone?'#10B981':'transparent')+'" onclick="openT(\''+t.id+'\')">'+
-        '<div class="tc-ico" style="background:'+COLS[ci].lt+';font-size:22px">'+t.icon+'</div>'+
-        '<div style="flex:1"><div class="tc-title">'+esc(t.ttl)+'</div><div class="tc-sub">'+esc(t.sub)+'</div></div>'+
-        (isDone?'✓':'›')+
-        '</div>';
-    }
-    html+='</div>';
-  }
-  document.getElementById('TGRID').innerHTML=html;
-  updateProg();
 }
 
 function updateProg(){
@@ -1853,7 +1817,7 @@ function renderHome(){
     html+='<div class="sec-lbl">'+esc(sec)+'</div><div class="topic-grid">';
     for(var i=0;i<topics.length;i++){
       var t=topics[i], ci=i%COLS.length, isDone=!!doneSet[t.id];
-      html+='<div class="tc'+(isDone?' done':'')+'" style="background:'+COLS[ci].bg+';border-color:'+(isDone?'#10B981':'transparent')+'" onclick="openT(\''+t.id+'\')">'+
+      html+='<div class="tc'+(isDone?' done':'')+'" style="background:'+COLS[ci].bg+';border-color:'+(isDone?'#10B981':'transparent')+'" data-tid="'+t.id+'">'+
         '<div class="tc-ico" style="background:'+COLS[ci].lt+';font-size:22px">'+t.icon+'</div>'+
         '<div style="flex:1"><div class="tc-title">'+esc(t.ttl)+'</div><div class="tc-sub">'+esc(t.sub)+'</div></div>'+
         (isDone?'✓':'›')+
@@ -1862,6 +1826,11 @@ function renderHome(){
     html+='</div>';
   }
   document.getElementById('TGRID').innerHTML=html;
+  // Attach click handlers via event delegation (avoids inline onclick escaping)
+  var cards=document.querySelectorAll('.tc[data-tid]');
+  for(var ci=0;ci<cards.length;ci++){
+    (function(card){card.addEventListener('click',function(){openT(card.getAttribute('data-tid'));});})(cards[ci]);
+  }
   updateProg();
 }
 
