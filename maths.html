@@ -1294,22 +1294,25 @@ function openT(id){
   setTimeout(scrollToTop,30);
 }
 function closeT(){
+  stopS();
   document.getElementById('TV').style.display='none';
   document.getElementById('HV').style.display='block';
   scrollToTop();
 }
 function nextCard(){
   if(fcIdx<cTopic.fc.length-1){
+    stopS();
     fcIdx++;attempts=0;revealed=false;selectedWrong=[];
     fillSelected=null;fillSelections=[];
-    renderTopic();setTimeout(scrollToTop,30);
+    renderTopic();attachHandlers();setTimeout(scrollToTop,30);
   }
 }
 function prevCard(){
   if(fcIdx>0){
+    stopS();
     fcIdx--;attempts=0;revealed=false;selectedWrong=[];
     fillSelected=null;fillSelections=[];
-    renderTopic();setTimeout(scrollToTop,30);
+    renderTopic();attachHandlers();setTimeout(scrollToTop,30);
   }
 }
 function setMode(m){
@@ -1635,7 +1638,7 @@ function renderTopic(){
   
   document.getElementById('TV').innerHTML=
     '<div class="tv-sticky">'+
-    '<button class="back-btn" data-action="close">←<span class="back-lbl"> Back to topics</span></button>'+
+    '<div class="back-row" data-action="close" style="cursor:pointer">'+'<div style="width:32px;height:32px;border-radius:50%;background:#1E1B3A;border:2px solid #A78BFA;display:flex;align-items:center;justify-content:center;color:#A78BFA;font-size:16px">←</div>'+'<span class="back-lbl">Back to topics</span></div>'+
     '<div class="subj-hero" style="background:linear-gradient(135deg,#0A0F1A,#0F2544)">'+
     '<div style="font-size:28px;margin-bottom:2px">'+t.icon+'</div>'+
     '<div class="tc-title" style="font-size:16px;color:#fff">'+esc(t.ttl)+'</div>'+
